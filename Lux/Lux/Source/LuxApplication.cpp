@@ -56,27 +56,6 @@ void Lux::Application::Terminate()
 	glfwTerminate();
 }
 
-bool Lux::Application::LoadContent()
-{
-	return true;
-}
-
-bool Lux::Application::UnloadContent()
-{
-	return true;
-}
-
-void Lux::Application::Render()
-{
-
-}
-
-void Lux::Application::Update()
-{
-	glfwSwapBuffers(m_Window->GetWindowHandle());
-	glfwPollEvents();
-}
-
 const bool Lux::Application::ShouldQuit()
 {
 	bool ret = false;
@@ -86,4 +65,29 @@ const bool Lux::Application::ShouldQuit()
 	}
 
 	return false;
+}
+
+void Lux::Application::PollEvents()
+{
+	glfwPollEvents();
+}
+
+void Lux::Application::Run()
+{
+	bool quit = false;
+	double currTime = 0.0;
+	double lastTime = GetTimeSinceStart();
+	double dt = 0.0;
+
+	// Main loop
+	while (!quit)
+	{
+		currTime = GetTimeSinceStart();
+		dt = currTime - lastTime;
+		lastTime = currTime;
+		PollEvents();
+		Update(dt);
+		Render();
+		quit = ShouldQuit();
+	}
 }

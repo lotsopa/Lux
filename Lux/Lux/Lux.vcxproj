@@ -19,6 +19,7 @@
     <ClInclude Include="Include\LuxLog.h" />
     <ClInclude Include="Include\LuxPCH.h" />
     <ClInclude Include="Include\LuxRenderWindow.h" />
+    <ClInclude Include="Include\LuxTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxInputHandler.cpp" />
@@ -29,6 +30,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\LuxRenderWindow.cpp" />
+    <ClCompile Include="Source\LuxTimer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2E2A77E1-3762-466F-9C23-5704EF8E16E1}</ProjectGuid>

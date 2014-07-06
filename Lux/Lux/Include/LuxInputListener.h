@@ -8,7 +8,7 @@ namespace Lux
 	{
 	public:
 		InputListener();
-		~InputListener();
+		virtual ~InputListener();
 
 		virtual void OnKeyDown(int a_Key, int a_ScanCode);
 		virtual void OnKeyUp(int a_Key, int a_ScanCode);

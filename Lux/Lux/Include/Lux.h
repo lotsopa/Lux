@@ -8,3 +8,4 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxRenderWindow.h"
 #include "LuxInputListener.h"
 #include "LuxInputHandler.h"
+#include "LuxTimer.h"
