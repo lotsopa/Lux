@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxRenderWindow.h"
 #include "LuxApplication.h"
-#include "LuxInputHandler.h"
+#include "LuxEventHandler.h"
 
 static void GLFWErrorCallbackFunc(int error, const char* description)
 {

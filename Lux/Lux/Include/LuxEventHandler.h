@@ -1,15 +1,15 @@
-#ifndef INPUT_HANDLER_H
-#define INPUT_HANDLER_H
+#ifndef LUX_EVENT_HANDLER_H
+#define LUX_EVENT_HANDLER_H
 
 namespace Lux
 {
 	class RenderWindow;
-	class InputListener;
+	class EventListener;
 
-	class InputHandler
+	class EventHandler
 	{
 	public:
-		static InputHandler& GetInstance();
+		static EventHandler& GetInstance();
 
 		void RelayKeyDown(GLFWwindow* a_Window, int a_Key, int a_ScanCode);
 		void RelayKeyUp(GLFWwindow* a_Window, int a_Key, int a_ScanCode);
@@ -26,10 +26,10 @@ namespace Lux
 		bool IsWindowRegistered(RenderWindow* a_Window);
 
 	private:
-		InputHandler();
-		InputHandler(InputHandler const&);// Don't Implement
-		void operator=(InputHandler const&);// Don't implement
-		typedef std::map<GLFWwindow*, InputListener*> InputWindowMap;
+		EventHandler();
+		EventHandler(EventHandler const&);// Don't Implement
+		void operator=(EventHandler const&);// Don't implement
+		typedef std::map<GLFWwindow*, EventListener*> InputWindowMap;
 		InputWindowMap m_InputWindows;
 
 		// GLFW callbacks

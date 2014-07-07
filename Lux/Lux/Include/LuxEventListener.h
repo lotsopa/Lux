@@ -1,14 +1,14 @@
-#ifndef LUX_INPUT_LISTENER_H
-#define LUX_INPUT_LISTENER_H
+#ifndef LUX_EVENT_LISTENER_H
+#define LUX_EVENT_LISTENER_H
 
 namespace Lux
 {
 	class RenderWindow;
-	class InputListener
+	class EventListener
 	{
 	public:
-		InputListener();
-		virtual ~InputListener();
+		EventListener();
+		virtual ~EventListener();
 
 		virtual void OnKeyDown(int a_Key, int a_ScanCode);
 		virtual void OnKeyUp(int a_Key, int a_ScanCode);
