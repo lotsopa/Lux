@@ -17,10 +17,9 @@ namespace Lux
 		virtual bool LoadContent() = 0;
 		virtual bool UnloadContent() = 0;
 
-		virtual void Render() = 0;
-		virtual void Update(const double a_DeltaTime) = 0;
-
-		void PollEvents();
+		virtual bool Update(const float a_DeltaTime) = 0;
+		virtual bool OnFrameStarted(const float a_DeltaTime) = 0;
+		virtual bool OnFrameEnded(const float a_DeltaTime) = 0;
 
 		inline double GetTimeSinceStart() { return glfwGetTime();  }
 
@@ -30,7 +29,9 @@ namespace Lux
 
 	protected:
 		RenderWindow* m_Window;
-
+		void Render(const float a_DeltaTime);
+		void PollEvents();
+		void CheckResult(bool res);
 	};
 }
 

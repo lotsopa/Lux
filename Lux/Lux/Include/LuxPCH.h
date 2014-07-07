@@ -20,8 +20,8 @@
 #include <GLFW/glfw3.h>
 
 // Math library
-#include <Eigen/Eigen>
-#include <unsupported/Eigen/OpenGLSupport>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 // Engine specific include
 #include "LuxLog.h"

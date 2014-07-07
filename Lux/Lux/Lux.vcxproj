@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\Eigen-3.2.1;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -94,7 +94,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\Eigen-3.2.1;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>

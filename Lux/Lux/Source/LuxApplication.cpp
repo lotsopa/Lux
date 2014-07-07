@@ -2,6 +2,7 @@
 #include "LuxRenderWindow.h"
 #include "LuxApplication.h"
 #include "LuxEventHandler.h"
+#include "LuxTimer.h"
 
 static void GLFWErrorCallbackFunc(int error, const char* description)
 {
@@ -75,19 +76,40 @@ void Lux::Application::PollEvents()
 void Lux::Application::Run()
 {
 	bool quit = false;
-	double currTime = 0.0;
-	double lastTime = GetTimeSinceStart();
-	double dt = 0.0;
-
+	Timer timer;
+	float dt = 0.0f;
+	bool result = true;
 	// Main loop
 	while (!quit)
 	{
-		currTime = GetTimeSinceStart();
-		dt = currTime - lastTime;
-		lastTime = currTime;
+		dt = (float)timer.GetAsSeconds();
+		timer.Reset();
 		PollEvents();
-		Update(dt);
-		Render();
+		result = Update(dt);
+		CheckResult(result);
+		Render(dt);
 		quit = ShouldQuit();
+	}
+}
+
+void Lux::Application::Render(const float a_DeltaTime)
+{
+	glfwSwapBuffers(m_Window->GetWindowHandle());
+	bool res = OnFrameStarted(a_DeltaTime);
+	CheckResult(res);
+
+	// TODO : Actual rendering
+
+	res = OnFrameEnded(a_DeltaTime);
+	CheckResult(res);
+}
+
+void Lux::Application::CheckResult(bool res)
+{
+	if (!res)
+	{
+		LUX_LOG(logERROR) << "Fatal error during program execution. Main loop function returned false. Throwing exception...";
+		MessageBox(nullptr, "Fatal error during execution.Aborting program.", "Error", MB_ICONERROR | MB_SETFOREGROUND);
+		throw std::invalid_argument("Main loop function returned false.");
 	}
 }
