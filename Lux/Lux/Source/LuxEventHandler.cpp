@@ -11,6 +11,11 @@ Lux::EventHandler& Lux::EventHandler::GetInstance()
 
 Lux::EventHandler::EventHandler()
 {
+	
+}
+
+Lux::EventHandler::~EventHandler()
+{
 	m_InputWindows.clear();
 }
 

@@ -10,6 +10,7 @@ namespace Lux
 	{
 	public:
 		static EventHandler& GetInstance();
+		~EventHandler();
 
 		void RelayKeyDown(GLFWwindow* a_Window, int a_Key, int a_ScanCode);
 		void RelayKeyUp(GLFWwindow* a_Window, int a_Key, int a_ScanCode);

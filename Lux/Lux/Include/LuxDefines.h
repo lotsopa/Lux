@@ -15,6 +15,7 @@ namespace Lux
 		}
 	}
 
+	using namespace glm;
 	typedef std::string String;
 }
 
