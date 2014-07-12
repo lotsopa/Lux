@@ -11,29 +11,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\LuxKey.h" />
+    <ClInclude Include="Include\LuxMesh.h" />
+    <ClInclude Include="Include\LuxEntity.h" />
     <ClInclude Include="Include\LuxSingleton.h" />
     <ClInclude Include="Include\Lux.h" />
     <ClInclude Include="Include\LuxDefines.h" />
     <ClInclude Include="Include\LuxEventHandler.h" />
     <ClInclude Include="Include\LuxApplication.h" />
     <ClInclude Include="Include\LuxEventListener.h" />
-    <ClInclude Include="Include\LuxFileSystem.h" />
+    <ClInclude Include="Include\LuxFileHandler.h" />
     <ClInclude Include="Include\LuxLog.h" />
     <ClInclude Include="Include\LuxPCH.h" />
     <ClInclude Include="Include\LuxRenderWindow.h" />
     <ClInclude Include="Include\LuxSceneManager.h" />
     <ClInclude Include="Include\LuxTimer.h" />
+    <ClInclude Include="Include\LuxResourceHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxEventHandler.cpp" />
     <ClCompile Include="Source\LuxApplication.cpp" />
     <ClCompile Include="Source\LuxEventListener.cpp" />
-    <ClCompile Include="Source\LuxFileSystem.cpp" />
+    <ClCompile Include="Source\LuxFileHandler.cpp" />
+    <ClCompile Include="Source\LuxKey.cpp" />
+    <ClCompile Include="Source\LuxMesh.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\LuxEntity.cpp" />
     <ClCompile Include="Source\LuxRenderWindow.cpp" />
+    <ClCompile Include="Source\LuxResourceHandler.cpp" />
     <ClCompile Include="Source\LuxSceneManager.cpp" />
     <ClCompile Include="Source\LuxTimer.cpp" />
   </ItemGroup>

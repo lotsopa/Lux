@@ -1,13 +1,13 @@
 #include "LuxPCH.h"
-#include "LuxFileSystem.h"
+#include "LuxFileHandler.h"
 
-Lux::FileSystem& Lux::FileSystem::GetInstance()
+Lux::FileHandler& Lux::FileHandler::GetInstance()
 {
-	static FileSystem instance;
+	static FileHandler instance;
 	return instance;
 }
 
-Lux::FileSystem::~FileSystem()
+Lux::FileHandler::~FileHandler()
 {
 	if (PHYSFS_isInit())
 	{
@@ -22,7 +22,7 @@ Lux::FileSystem::~FileSystem()
 	}
 }
 
-Lux::FileSystem::FileSystem()
+Lux::FileHandler::FileHandler()
 {
 	int res = PHYSFS_init(nullptr);
 
@@ -32,9 +32,10 @@ Lux::FileSystem::FileSystem()
 		errstr.append(PHYSFS_getLastError());
 		ThrowError(errstr);
 	}
+	LUX_LOG(logINFO) << "File system created successfully.";
 }
 
-bool Lux::FileSystem::AddResourcePath(const String a_Path)
+bool Lux::FileHandler::AddResourcePath(const String a_Path)
 {
 	int res = PHYSFS_addToSearchPath(a_Path.c_str(), 0);
 
@@ -47,7 +48,7 @@ bool Lux::FileSystem::AddResourcePath(const String a_Path)
 	return true;
 }
 
-bool Lux::FileSystem::RemoveResourcePath(const String a_Path)
+bool Lux::FileHandler::RemoveResourcePath(const String a_Path)
 {
 	int res = PHYSFS_removeFromSearchPath(a_Path.c_str());
 
@@ -60,7 +61,7 @@ bool Lux::FileSystem::RemoveResourcePath(const String a_Path)
 	return true;
 }
 
-bool Lux::FileSystem::ResourcePathExists(const String a_Path)
+bool Lux::FileHandler::ResourcePathExists(const String a_Path)
 {
 	char** path = PHYSFS_getSearchPath();
 
@@ -85,7 +86,7 @@ bool Lux::FileSystem::ResourcePathExists(const String a_Path)
 	return retval;
 }
 
-bool Lux::FileSystem::FileExists(const String a_Path)
+bool Lux::FileHandler::FileExists(const String a_Path)
 {
 	int res = PHYSFS_exists(a_Path.c_str());
 
@@ -97,18 +98,18 @@ bool Lux::FileSystem::FileExists(const String a_Path)
 	return true;
 }
 
-Lux::OpenedFile* Lux::FileSystem::OpenFile(const String a_File, FileOpenMode a_OpenMode)
+Lux::OpenedFile* Lux::FileHandler::OpenFile(const String a_File, FileOpenMode a_OpenMode)
 {
 	OpenedFile* retFile = nullptr;
 	switch (a_OpenMode)
 	{
-	case Lux::FileSystem::FILE_OPEN_READ:
+	case Lux::FileHandler::FILE_OPEN_READ:
 		retFile = PHYSFS_openRead(a_File.c_str());
 		break;
-	case Lux::FileSystem::FILE_OPEN_WRITE:
+	case Lux::FileHandler::FILE_OPEN_WRITE:
 		retFile = PHYSFS_openWrite(a_File.c_str());
 		break;
-	case Lux::FileSystem::FILE_OPEN_APPEND:
+	case Lux::FileHandler::FILE_OPEN_APPEND:
 		retFile = PHYSFS_openAppend(a_File.c_str());
 		break;
 	default:
@@ -124,7 +125,7 @@ Lux::OpenedFile* Lux::FileSystem::OpenFile(const String a_File, FileOpenMode a_O
 	return retFile;
 }
 
-Lux::FileInfo* Lux::FileSystem::LoadFileInMemory(const String a_Path)
+Lux::FileInfo* Lux::FileHandler::LoadFileInMemory(const String a_Path)
 {
 	FileInfo* retInfo = nullptr;
 
@@ -133,10 +134,11 @@ Lux::FileInfo* Lux::FileSystem::LoadFileInMemory(const String a_Path)
 
 	retInfo = new FileInfo((unsigned int)fileSize);
 	LoadFileDataInto(filePtr, retInfo);
+	CloseOpenedFile(filePtr);
 	return retInfo;
 }
 
-Lux::int64 Lux::FileSystem::GetFileLength(OpenedFile* a_File)
+Lux::int64 Lux::FileHandler::GetFileLength(OpenedFile* a_File)
 {
 	int64 ret = PHYSFS_fileLength(a_File);
 
@@ -150,7 +152,7 @@ Lux::int64 Lux::FileSystem::GetFileLength(OpenedFile* a_File)
 	return ret;
 }
 
-void Lux::FileSystem::LoadFileDataInto(OpenedFile* a_File, FileInfo* a_Dest)
+void Lux::FileHandler::LoadFileDataInto(OpenedFile* a_File, FileInfo* a_Dest)
 {
 	int64 length_read = PHYSFS_read(a_File, a_Dest->m_RawData, a_Dest->m_DataLength, 1);
 
@@ -162,12 +164,12 @@ void Lux::FileSystem::LoadFileDataInto(OpenedFile* a_File, FileInfo* a_Dest)
 	}
 }
 
-void Lux::FileSystem::DeleteLoadedFileInfo(FileInfo* a_FileInfo)
+void Lux::FileHandler::DeleteLoadedFileInfo(FileInfo* a_FileInfo)
 {
 	SafePtrDelete(a_FileInfo);
 }
 
-void Lux::FileSystem::CloseOpenedFile(OpenedFile* a_File)
+void Lux::FileHandler::CloseOpenedFile(OpenedFile* a_File)
 {
 	if (a_File == nullptr)
 	{

@@ -1,5 +1,5 @@
-#ifndef LUX_FILE_SYSTEM_H
-#define LUX_FILE_SYSTEM_H
+#ifndef LUX_FILE_HANDLER_H
+#define LUX_FILE_HANDLER_H
 
 namespace Lux
 {
@@ -23,7 +23,7 @@ namespace Lux
 
 		~FileInfo()
 		{
-			SafePtrDelete(m_RawData);
+			SafeArrayDelete(m_RawData);
 		}
 
 		char* m_RawData;
@@ -35,11 +35,11 @@ namespace Lux
 	 It's use to the user is just to be passed around to the different API functions*/
 	typedef PHYSFS_File OpenedFile;
 
-	class FileSystem
+	class FileHandler
 	{
 	public:
-		static FileSystem& GetInstance();
-		~FileSystem();
+		static FileHandler& GetInstance();
+		~FileHandler();
 
 		// Resource path functions
 		bool AddResourcePath(const String a_Path);
@@ -65,7 +65,7 @@ namespace Lux
 		// The caller must take ownership of the returned pointer and is responsible for managing its lifetime.
 		FileInfo* LoadFileInMemory(const String a_Path);
 
-		// Gets the file length of an opened file. NOT thread safe. Throws if the length cannot be read.
+		// Gets the file length of an opened file. Throws if the length cannot be read.
 		int64 GetFileLength(OpenedFile* a_File);
 
 		// Load the file data from the specified already opened file into memory. Throws if the data read is invalid.
@@ -78,9 +78,9 @@ namespace Lux
 		void DeleteLoadedFileInfo(FileInfo* a_FileInfo);
 
 	private:
-		FileSystem();
-		FileSystem(FileSystem const&);// Don't Implement
-		void operator=(FileSystem const&);// Don't implement
+		FileHandler();
+		FileHandler(FileHandler const&);// Don't Implement
+		void operator=(FileHandler const&);// Don't implement
 	};
 }
 

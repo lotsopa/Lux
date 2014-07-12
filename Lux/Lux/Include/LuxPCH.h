@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <mutex>
 #include <assert.h>
 
 // OpenGL window management and extension wrangler

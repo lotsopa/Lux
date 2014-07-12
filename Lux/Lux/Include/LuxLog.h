@@ -1,6 +1,6 @@
 #ifndef LUX_LOG_H
 #define LUX_LOG_H
-
+#define LUX_LOGGING_ENABLED TRUE
 // Original implementation from Dr.Dobbs
 
 namespace Lux
@@ -126,10 +126,14 @@ namespace Lux
 #define FILELOG_MAX_LEVEL Lux::logDEBUG4
 #endif
 
+#if LUX_LOGGING_ENABLED == TRUE
 #define LUX_LOG(level) \
     if (level > FILELOG_MAX_LEVEL) ;\
 			    else if (level > Lux::FILELog::ReportingLevel() || !Lux::Output2FILE::Stream()) ; \
 			    else Lux::FILELog().Get(level)
+#else
+	LUX_LOG(level) ; // Empty
+#endif
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 

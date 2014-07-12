@@ -5,7 +5,7 @@
 Lux::EventListener::EventListener() :
 m_WindowOwner(0)
 {
-
+	
 }
 
 Lux::EventListener::~EventListener()

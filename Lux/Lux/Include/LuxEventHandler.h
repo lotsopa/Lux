@@ -12,15 +12,6 @@ namespace Lux
 		static EventHandler& GetInstance();
 		~EventHandler();
 
-		void RelayKeyDown(GLFWwindow* a_Window, int a_Key, int a_ScanCode);
-		void RelayKeyUp(GLFWwindow* a_Window, int a_Key, int a_ScanCode);
-		void RelayMouseButtonDown(GLFWwindow* a_Window, int a_Btn);
-		void RelayMouseButtonUp(GLFWwindow* a_Window, int a_Btn);
-		void RelayMouseScroll(GLFWwindow* a_Window, double a_X, double a_Y);
-		void RelayMouseEnterWindow(GLFWwindow* a_Window);
-		void RelayMouseLeaveWindow(GLFWwindow* a_Window);
-		void RelayMousePosition(GLFWwindow* a_Window, double a_X, double a_Y);
-
 		void RegisterInputListenerWindow(RenderWindow* a_Window);
 		void UnregisterInputListenerWindow(RenderWindow* a_Window);
 
@@ -39,6 +30,15 @@ namespace Lux
 		static void MouseScrollCallback(GLFWwindow* window, double x, double y);
 		static void CursorEnterCallback(GLFWwindow* window, int val);
 		static void CursorPosCallback(GLFWwindow* window, double a_X, double a_Y);
+
+		void RelayKeyDown(GLFWwindow* a_Window, int a_Key, int a_ScanCode);
+		void RelayKeyUp(GLFWwindow* a_Window, int a_Key, int a_ScanCode);
+		void RelayMouseButtonDown(GLFWwindow* a_Window, int a_Btn);
+		void RelayMouseButtonUp(GLFWwindow* a_Window, int a_Btn);
+		void RelayMouseScroll(GLFWwindow* a_Window, double a_X, double a_Y);
+		void RelayMouseEnterWindow(GLFWwindow* a_Window);
+		void RelayMouseLeaveWindow(GLFWwindow* a_Window);
+		void RelayMousePosition(GLFWwindow* a_Window, double a_X, double a_Y);
 
 		friend class RenderWindow;
 	};

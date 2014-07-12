@@ -11,7 +11,7 @@ Lux::EventHandler& Lux::EventHandler::GetInstance()
 
 Lux::EventHandler::EventHandler()
 {
-	
+	LUX_LOG(logINFO) << "Event Handler created successfully.";
 }
 
 Lux::EventHandler::~EventHandler()

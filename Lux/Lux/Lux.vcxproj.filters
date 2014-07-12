@@ -45,10 +45,22 @@
     <ClInclude Include="Include\LuxEventListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxFileSystem.h">
+    <ClInclude Include="Include\LuxSingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxSingleton.h">
+    <ClInclude Include="Include\LuxFileHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxResourceHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxKey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,7 +86,19 @@
     <ClCompile Include="Source\LuxEventListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxFileSystem.cpp">
+    <ClCompile Include="Source\LuxFileHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxResourceHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxKey.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
