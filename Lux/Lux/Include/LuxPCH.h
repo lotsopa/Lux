@@ -15,6 +15,14 @@
 #include <mutex>
 #include <assert.h>
 
+#ifndef TRUE
+#define TRUE 1
+#endif
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+
 // OpenGL window management and extension wrangler
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -34,5 +42,6 @@
 #include <assimp/postprocess.h>     // Post processing flags
 
 // Engine specific include
-#include "LuxLog.h"
 #include "LuxDefines.h"
+#include "LuxLog.h"
+#include "LuxHelpers.h"

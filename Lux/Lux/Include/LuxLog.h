@@ -1,6 +1,6 @@
 #ifndef LUX_LOG_H
 #define LUX_LOG_H
-#define LUX_LOGGING_ENABLED TRUE
+
 // Original implementation from Dr.Dobbs
 
 namespace Lux

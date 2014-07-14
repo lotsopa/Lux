@@ -11,7 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\LuxHelpers.h" />
     <ClInclude Include="Include\LuxKey.h" />
+    <ClInclude Include="Include\LuxMaterial.h" />
     <ClInclude Include="Include\LuxMesh.h" />
     <ClInclude Include="Include\LuxEntity.h" />
     <ClInclude Include="Include\LuxSingleton.h" />
@@ -33,7 +35,9 @@
     <ClCompile Include="Source\LuxApplication.cpp" />
     <ClCompile Include="Source\LuxEventListener.cpp" />
     <ClCompile Include="Source\LuxFileHandler.cpp" />
+    <ClCompile Include="Source\LuxHelpers.cpp" />
     <ClCompile Include="Source\LuxKey.cpp" />
+    <ClCompile Include="Source\LuxMaterial.cpp" />
     <ClCompile Include="Source\LuxMesh.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -94,8 +98,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>..\Extern\Assimp-3.1.1\lib\Debug;..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Debug\Win32;..\Extern\physfs\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;assimpd.lib;glew32sd.lib;physfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Debug\Win32;..\Extern\physfs\lib\Debug;..\Extern\Assimp-3.1.1\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32sd.lib;opengl32.lib;glfw3.lib;physfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,8 +121,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>..\Extern\Assimp-3.1.1\lib\Release;..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Release\Win32;..\Extern\physfs\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;assimp.lib;glew32s.lib;physfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Release\Win32;..\Extern\physfs\lib\Release;..\Extern\Assimp-3.1.1\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;physfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

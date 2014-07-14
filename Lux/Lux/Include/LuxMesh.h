@@ -3,12 +3,12 @@
 
 namespace Lux
 {
-	// TODO
-
+	class Material;
 	class Mesh
 	{
 	public:
 		Mesh();
+		Mesh(aiMesh& a_Mesh);
 		~Mesh();
 
 		struct VertexBoneWeight
@@ -69,12 +69,15 @@ namespace Lux
 		};
 
 		Mesh operator=(aiMesh& a_Mesh);
+
+		Material* GetMaterial();
+		void SetMaterial(Material* a_Mat);
 		
 	private:
 		unsigned int m_NumVertices;
 		unsigned int m_NumIndices;
 		unsigned int m_NumBones;
-		unsigned int m_MaterialIndex;
+		Material* m_Material;
 		unsigned int m_NumComponentsPerTexCoordSet[AI_MAX_NUMBER_OF_TEXTURECOORDS];
 
 		vec3* m_Vertices;
