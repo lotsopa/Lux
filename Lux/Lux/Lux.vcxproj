@@ -16,6 +16,7 @@
     <ClInclude Include="Include\LuxMaterial.h" />
     <ClInclude Include="Include\LuxMesh.h" />
     <ClInclude Include="Include\LuxEntity.h" />
+    <ClInclude Include="Include\LuxEntityAnimation.h" />
     <ClInclude Include="Include\LuxSingleton.h" />
     <ClInclude Include="Include\Lux.h" />
     <ClInclude Include="Include\LuxDefines.h" />
@@ -39,6 +40,7 @@
     <ClCompile Include="Source\LuxKey.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
     <ClCompile Include="Source\LuxMesh.cpp" />
+    <ClCompile Include="Source\LuxEntityAnimation.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

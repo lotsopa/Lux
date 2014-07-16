@@ -68,8 +68,6 @@ namespace Lux
 			mat4x4 m_OffsetMatrix;
 		};
 
-		Mesh operator=(aiMesh& a_Mesh);
-
 		Material* GetMaterial();
 		void SetMaterial(Material* a_Mat);
 		

@@ -3,6 +3,7 @@
 #include "LuxMaterial.h"
 #include "LuxMesh.h"
 #include "LuxEntity.h"
+#include "LuxEntityAnimation.h"
 #include "LuxResourceHandler.h"
 #include "LuxFileHandler.h"
 
@@ -67,7 +68,7 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromFile(const String a_File, con
 	}
 
 	// Creating an entity and adding meshes
-	Entity* retEntity = new Entity(scene->mNumMeshes);
+	Entity* retEntity = new Entity(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
@@ -78,6 +79,16 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromFile(const String a_File, con
 		Mesh* mesh = new Mesh(*scene->mMeshes[i]);
 		mesh->SetMaterial(meshMat);
 		retEntity->AddMesh(mesh);
+	}
+
+	// Animation data (if it exists)
+	if (scene->HasAnimations())
+	{
+		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
+		{
+			EntityAnimation* animData = new EntityAnimation(*scene->mAnimations[i]);
+			retEntity->AddAnimation(animData);
+		}
 	}
 
 	AddEntityToMap(a_EntityName, retEntity);
@@ -97,14 +108,43 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, cons
 
 	if (scene->mNumMeshes < 1)
 	{
-		return nullptr;
+		String errStr("The file does not contain any meshes.");
+		ThrowError(errStr);
 	}
 
-	Entity* retEntity = new Entity(scene->mNumMeshes);
+	// Materials
+	for (unsigned int i = 0; i < scene->mNumMaterials; i++)
+	{
+		aiMaterial* impMat = scene->mMaterials[i];
+		aiString str;
+		impMat->Get(AI_MATKEY_NAME, str);
+		String matName = str.C_Str();
+		Material* myMat = new Material(*impMat);
+		AddMaterialToMap(matName, myMat);
+	}
+
+	// Creating an entity and adding meshes
+	Entity* retEntity = new Entity(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
+		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
+		aiString str;
+		impMat->Get(AI_MATKEY_NAME, str);
+		String matName = str.C_Str();
+		Material* meshMat = GetMaterial(matName);
 		Mesh* mesh = new Mesh(*scene->mMeshes[i]);
+		mesh->SetMaterial(meshMat);
 		retEntity->AddMesh(mesh);
+	}
+
+	// Animation data (if it exists)
+	if (scene->HasAnimations())
+	{
+		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
+		{
+			EntityAnimation* animData = new EntityAnimation(*scene->mAnimations[i]);
+			retEntity->AddAnimation(animData);
+		}
 	}
 
 	AddEntityToMap(a_EntityName, retEntity);

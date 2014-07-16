@@ -58,6 +58,16 @@ namespace Lux
 		return vec4(a_Vec.r, a_Vec.g, a_Vec.b, a_Vec.a);
 	}
 
+	static vec3 ConvertVec3AssimpToGLM(aiVector3D& a_Vec)
+	{
+		return vec3(a_Vec.x, a_Vec.y, a_Vec.z);
+	}
+
+	static quat ConvertQuatAssimpToGLM(aiQuaternion& a_Quat)
+	{
+		return quat(a_Quat.x, a_Quat.y, a_Quat.z, a_Quat.w);
+	}
+
 	static void ThrowError(const String a_String)
 	{
 		LUX_LOG(logERROR) << a_String;

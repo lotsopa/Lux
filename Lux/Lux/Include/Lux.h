@@ -10,6 +10,8 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxEventHandler.h"
 #include "LuxTimer.h"
 #include "LuxMaterial.h"
+#include "LuxEntityAnimation.h"
+#include "LuxEntity.h"
 #include "LuxMesh.h"
 #include "LuxKey.h"
 #include "LuxSceneManager.h"
