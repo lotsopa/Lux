@@ -91,7 +91,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -100,7 +100,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Debug\Win32;..\Extern\physfs\lib\Debug;..\Extern\Assimp-3.1.1\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Debug\Win32;..\Extern\physfs\lib\Debug;..\Extern\Assimp-3.1.1\lib\Debug;%(AdditionalLibraryDirectories);..\Extern\FreeImage\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32sd.lib;opengl32.lib;glfw3.lib;physfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
@@ -111,7 +111,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -123,7 +123,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Release\Win32;..\Extern\physfs\lib\Release;..\Extern\Assimp-3.1.1\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Release\Win32;..\Extern\physfs\lib\Release;..\Extern\Assimp-3.1.1\lib\Release;%(AdditionalLibraryDirectories);..\Extern\FreeImage\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;physfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>

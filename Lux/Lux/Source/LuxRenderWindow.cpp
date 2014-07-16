@@ -31,7 +31,9 @@ bool Lux::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_Height, 
 		return false;
 	}
 
-	glfwMakeContextCurrent(m_WindowHandle); // Initialize GLEW 
+	glfwMakeContextCurrent(m_WindowHandle); 
+	// Initialize GLEW 
+	glewExperimental = GL_TRUE;
 	int initResult = glewInit();
 	if (initResult != GLEW_OK)
 	{

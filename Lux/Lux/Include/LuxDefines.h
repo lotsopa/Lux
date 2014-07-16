@@ -12,6 +12,7 @@ namespace Lux
 	// Some typedefs
 	typedef std::string String;
 	typedef long long int64;
+	typedef unsigned int TextureIndex;
 	
 }
 

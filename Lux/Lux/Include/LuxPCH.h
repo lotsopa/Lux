@@ -36,6 +36,9 @@
 // File system library
 #include <physfs.h>
 
+// Image loading library
+#include <FreeImage.h>
+
 // Assimp
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
