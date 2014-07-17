@@ -3,7 +3,7 @@
 
 namespace Lux
 {
-	class EntityAnimation
+	class MeshAnimation
 	{
 	public:
 
@@ -77,9 +77,9 @@ namespace Lux
 
 		};
 
-		EntityAnimation();
-		EntityAnimation(aiAnimation& a_Anim);
-		~EntityAnimation();
+		MeshAnimation();
+		MeshAnimation(aiAnimation& a_Anim);
+		~MeshAnimation();
 
 	private:
 		String m_Name;

@@ -1,9 +1,9 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
 #include "LuxMaterial.h"
+#include "LuxSubMesh.h"
 #include "LuxMesh.h"
-#include "LuxEntity.h"
-#include "LuxEntityAnimation.h"
+#include "LuxMeshAnimation.h"
 #include "LuxResourceHandler.h"
 #include "LuxFileHandler.h"
 
@@ -45,7 +45,7 @@ Lux::ResourceHandler::ResourceHandler()
 	LUX_LOG(logINFO) << "Resource Handler created successfully.";
 }
 
-Lux::Entity* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Mesh* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
 
@@ -90,8 +90,8 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, co
 		LoadAllTexturesOfTypeFromMaterial(impMat, aiTextureType_UNKNOWN);
 	}
 
-	// Creating an entity and adding meshes
-	Entity* retEntity = new Entity(scene->mNumMeshes, scene->mNumAnimations);
+	// Creating a mesh and adding submeshes
+	Mesh* retEntity = new Mesh(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
@@ -99,7 +99,7 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, co
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
 		Material* meshMat = GetMaterial(matName);
-		Mesh* mesh = new Mesh(*scene->mMeshes[i]);
+		SubMesh* mesh = new SubMesh(*scene->mMeshes[i]);
 		mesh->SetMaterial(meshMat);
 		retEntity->AddMesh(mesh);
 	}
@@ -109,7 +109,7 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, co
 	{
 		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
 		{
-			EntityAnimation* animData = new EntityAnimation(*scene->mAnimations[i]);
+			MeshAnimation* animData = new MeshAnimation(*scene->mAnimations[i]);
 			retEntity->AddAnimation(animData);
 		}
 	}
@@ -118,7 +118,7 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, co
 	return retEntity;
 }
 
-Lux::Entity* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Mesh* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	if (a_Info == nullptr)
 	{
@@ -167,7 +167,7 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, cons
 	}
 
 	// Creating an entity and adding meshes
-	Entity* retEntity = new Entity(scene->mNumMeshes, scene->mNumAnimations);
+	Mesh* retEntity = new Mesh(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
@@ -175,7 +175,7 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, cons
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
 		Material* meshMat = GetMaterial(matName);
-		Mesh* mesh = new Mesh(*scene->mMeshes[i]);
+		SubMesh* mesh = new SubMesh(*scene->mMeshes[i]);
 		mesh->SetMaterial(meshMat);
 		retEntity->AddMesh(mesh);
 	}
@@ -185,7 +185,7 @@ Lux::Entity* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, cons
 	{
 		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
 		{
-			EntityAnimation* animData = new EntityAnimation(*scene->mAnimations[i]);
+			MeshAnimation* animData = new MeshAnimation(*scene->mAnimations[i]);
 			retEntity->AddAnimation(animData);
 		}
 	}
@@ -324,12 +324,12 @@ void Lux::ResourceHandler::UnbindCurrentTexture()
 
 
 #if LUX_THREAD_SAFE == TRUE
-void Lux::ResourceHandler::AddEntityToMap(const String& a_Str, Entity* a_Ent)
+void Lux::ResourceHandler::AddEntityToMap(const String& a_Str, Mesh* a_Ent)
 {
 	std::unique_lock<std::mutex> lock(m_EntityMapMutex); // Upon construction of the lock the mutex will be immediately locked
 	m_EntityMap.insert(std::make_pair(Key(a_Str), a_Ent));
 }
-Lux::Entity* Lux::ResourceHandler::GetEntity(const String& a_Name)
+Lux::Mesh* Lux::ResourceHandler::GetEntity(const String& a_Name)
 {
 	std::unique_lock<std::mutex> lock(m_EntityMapMutex); // Upon construction of the lock the mutex will be immediately locked
 	return m_EntityMap.at(Key(a_Name));
@@ -418,12 +418,12 @@ bool Lux::ResourceHandler::DeleteTexture(const String& a_Name)
 }
 
 #else
-void Lux::ResourceHandler::AddEntityToMap(const String& a_Str, Entity* a_Ent)
+void Lux::ResourceHandler::AddEntityToMap(const String& a_Str, Mesh* a_Ent)
 {
 	m_EntityMap.insert(std::make_pair(Key(a_Str), a_Ent));
 }
 
-Lux::Entity* Lux::ResourceHandler::GetEntity(const String& a_Name)
+Lux::Mesh* Lux::ResourceHandler::GetEntity(const String& a_Name)
 {
 	return m_EntityMap.at(Key(a_Name));
 }

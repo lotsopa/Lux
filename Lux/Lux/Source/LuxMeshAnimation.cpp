@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
-#include "LuxEntityAnimation.h"
+#include "LuxMeshAnimation.h"
 
-Lux::EntityAnimation::NodeChannel::NodeChannel(String& a_Name, unsigned int a_NumPosKeys, unsigned int a_NumScaleKeys, unsigned int a_NumRotKeys) :
+Lux::MeshAnimation::NodeChannel::NodeChannel(String& a_Name, unsigned int a_NumPosKeys, unsigned int a_NumScaleKeys, unsigned int a_NumRotKeys) :
 m_Name(a_Name),
 m_NumPositionKeys(a_NumPosKeys),
 m_NumRotationKeys(a_NumRotKeys),
@@ -15,7 +15,7 @@ m_NumScalingKeys(a_NumScaleKeys)
 	m_ScalingKeys = new VectorKey[m_NumScalingKeys];
 }
 
-Lux::EntityAnimation::NodeChannel::NodeChannel(aiNodeAnim& a_NodeAnim)
+Lux::MeshAnimation::NodeChannel::NodeChannel(aiNodeAnim& a_NodeAnim)
 {
 	m_NumPositionKeys = a_NodeAnim.mNumPositionKeys;
 	m_NumRotationKeys = a_NodeAnim.mNumRotationKeys;
@@ -44,14 +44,14 @@ Lux::EntityAnimation::NodeChannel::NodeChannel(aiNodeAnim& a_NodeAnim)
 	}
 }
 
-Lux::EntityAnimation::NodeChannel::~NodeChannel()
+Lux::MeshAnimation::NodeChannel::~NodeChannel()
 {
 	SafeArrayDelete(m_PositionKeys);
 	SafeArrayDelete(m_RotationKeys);
 	SafeArrayDelete(m_ScalingKeys);
 }
 
-Lux::EntityAnimation::AnimBehaviour Lux::EntityAnimation::NodeChannel::ConvertAssimpAnimBehaviour(aiAnimBehaviour b)
+Lux::MeshAnimation::AnimBehaviour Lux::MeshAnimation::NodeChannel::ConvertAssimpAnimBehaviour(aiAnimBehaviour b)
 {
 	AnimBehaviour ret;
 	switch (b)
@@ -79,12 +79,12 @@ Lux::EntityAnimation::AnimBehaviour Lux::EntityAnimation::NodeChannel::ConvertAs
 	return ret;
 }
 
-Lux::EntityAnimation::MeshChannel::MeshChannel(unsigned int a_NumMeshKeys, String& a_Name) : m_Name(a_Name), m_NumKeys(a_NumMeshKeys)
+Lux::MeshAnimation::MeshChannel::MeshChannel(unsigned int a_NumMeshKeys, String& a_Name) : m_Name(a_Name), m_NumKeys(a_NumMeshKeys)
 {
 	m_MeshKeys = new MeshKey[m_NumKeys];
 }
 
-Lux::EntityAnimation::MeshChannel::MeshChannel(aiMeshAnim& a_MeshAnim)
+Lux::MeshAnimation::MeshChannel::MeshChannel(aiMeshAnim& a_MeshAnim)
 {
 	m_Name = a_MeshAnim.mName.C_Str();
 	m_NumKeys = a_MeshAnim.mNumKeys;
@@ -95,78 +95,78 @@ Lux::EntityAnimation::MeshChannel::MeshChannel(aiMeshAnim& a_MeshAnim)
 	}
 }
 
-Lux::EntityAnimation::MeshChannel::~MeshChannel()
+Lux::MeshAnimation::MeshChannel::~MeshChannel()
 {
 	SafeArrayDelete(m_MeshKeys);
 }
 
-Lux::EntityAnimation::VectorKey::VectorKey(aiVectorKey& a_Key)
+Lux::MeshAnimation::VectorKey::VectorKey(aiVectorKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = ConvertVec3AssimpToGLM(a_Key.mValue);
 }
 
-Lux::EntityAnimation::VectorKey::VectorKey() : m_Time(0.0), m_Value()
+Lux::MeshAnimation::VectorKey::VectorKey() : m_Time(0.0), m_Value()
 {
 
 }
 
-Lux::EntityAnimation::VectorKey::~VectorKey()
+Lux::MeshAnimation::VectorKey::~VectorKey()
 {
 
 }
 
-void Lux::EntityAnimation::VectorKey::Set(aiVectorKey& a_Key)
+void Lux::MeshAnimation::VectorKey::Set(aiVectorKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = ConvertVec3AssimpToGLM(a_Key.mValue);
 }
 
-Lux::EntityAnimation::QuaternionKey::QuaternionKey(aiQuatKey& a_Key)
+Lux::MeshAnimation::QuaternionKey::QuaternionKey(aiQuatKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = ConvertQuatAssimpToGLM(a_Key.mValue);
 }
 
-Lux::EntityAnimation::QuaternionKey::QuaternionKey() : m_Time(0.0), m_Value()
+Lux::MeshAnimation::QuaternionKey::QuaternionKey() : m_Time(0.0), m_Value()
 {
 
 }
 
-Lux::EntityAnimation::QuaternionKey::~QuaternionKey()
+Lux::MeshAnimation::QuaternionKey::~QuaternionKey()
 {
 
 }
 
-void Lux::EntityAnimation::QuaternionKey::Set(aiQuatKey& a_Key)
+void Lux::MeshAnimation::QuaternionKey::Set(aiQuatKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = ConvertQuatAssimpToGLM(a_Key.mValue);
 }
 
-Lux::EntityAnimation::MeshKey::MeshKey(aiMeshKey& a_Key)
+Lux::MeshAnimation::MeshKey::MeshKey(aiMeshKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = a_Key.mValue;
 }
 
-Lux::EntityAnimation::MeshKey::MeshKey() : m_Time(0.0), m_Value(0)
+Lux::MeshAnimation::MeshKey::MeshKey() : m_Time(0.0), m_Value(0)
 {
 
 }
 
-Lux::EntityAnimation::MeshKey::~MeshKey()
+Lux::MeshAnimation::MeshKey::~MeshKey()
 {
 
 }
 
-void Lux::EntityAnimation::MeshKey::Set(aiMeshKey& a_Key)
+void Lux::MeshAnimation::MeshKey::Set(aiMeshKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = a_Key.mValue;
 }
 
-Lux::EntityAnimation::EntityAnimation() :
+Lux::MeshAnimation::MeshAnimation() :
 m_MeshChannels(nullptr),
 m_NodeChannels(nullptr),
 m_NumMeshChannels(0),
@@ -177,7 +177,7 @@ m_TicksPerSecond(0.0)
 
 }
 
-Lux::EntityAnimation::EntityAnimation(aiAnimation& a_Anim)
+Lux::MeshAnimation::MeshAnimation(aiAnimation& a_Anim)
 {
 	m_Duration = a_Anim.mDuration;
 	m_NumMeshChannels = a_Anim.mNumMeshChannels;
@@ -199,7 +199,7 @@ Lux::EntityAnimation::EntityAnimation(aiAnimation& a_Anim)
 	}
 }
 
-Lux::EntityAnimation::~EntityAnimation()
+Lux::MeshAnimation::~MeshAnimation()
 {
 	if (m_NodeChannels && m_NumNodeChannels)
 	{

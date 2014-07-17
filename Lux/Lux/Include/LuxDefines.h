@@ -3,7 +3,7 @@
 
 #define LuxAssert(a) assert(a)
 
-#define LUX_THREAD_SAFE TRUE
+#define LUX_THREAD_SAFE FALSE
 #define LUX_LOGGING_ENABLED TRUE
 namespace Lux
 {

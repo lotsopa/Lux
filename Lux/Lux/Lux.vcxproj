@@ -11,12 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\LuxComponent.h" />
+    <ClInclude Include="Include\LuxDefaultComponents.h" />
+    <ClInclude Include="Include\LuxEntity.h" />
     <ClInclude Include="Include\LuxHelpers.h" />
     <ClInclude Include="Include\LuxKey.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
+    <ClInclude Include="Include\LuxSubMesh.h" />
     <ClInclude Include="Include\LuxMesh.h" />
-    <ClInclude Include="Include\LuxEntity.h" />
-    <ClInclude Include="Include\LuxEntityAnimation.h" />
+    <ClInclude Include="Include\LuxMeshAnimation.h" />
+    <ClInclude Include="Include\LuxSceneNode.h" />
     <ClInclude Include="Include\LuxSingleton.h" />
     <ClInclude Include="Include\Lux.h" />
     <ClInclude Include="Include\LuxDefines.h" />
@@ -32,6 +36,9 @@
     <ClInclude Include="Include\LuxResourceHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\LuxComponent.cpp" />
+    <ClCompile Include="Source\LuxDefaultComponents.cpp" />
+    <ClCompile Include="Source\LuxEntity.cpp" />
     <ClCompile Include="Source\LuxEventHandler.cpp" />
     <ClCompile Include="Source\LuxApplication.cpp" />
     <ClCompile Include="Source\LuxEventListener.cpp" />
@@ -39,13 +46,14 @@
     <ClCompile Include="Source\LuxHelpers.cpp" />
     <ClCompile Include="Source\LuxKey.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
-    <ClCompile Include="Source\LuxMesh.cpp" />
-    <ClCompile Include="Source\LuxEntityAnimation.cpp" />
+    <ClCompile Include="Source\LuxSceneNode.cpp" />
+    <ClCompile Include="Source\LuxSubMesh.cpp" />
+    <ClCompile Include="Source\LuxMeshAnimation.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\LuxEntity.cpp" />
+    <ClCompile Include="Source\LuxMesh.cpp" />
     <ClCompile Include="Source\LuxRenderWindow.cpp" />
     <ClCompile Include="Source\LuxResourceHandler.cpp" />
     <ClCompile Include="Source\LuxSceneManager.cpp" />
