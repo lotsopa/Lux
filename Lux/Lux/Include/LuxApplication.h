@@ -4,6 +4,7 @@
 namespace Lux
 {
 	class RenderWindow;
+	class SceneManager;
 	class Application
 	{
 	public:
@@ -26,12 +27,13 @@ namespace Lux
 		const virtual bool ShouldQuit();
 
 	private:
-
-	protected:
-		RenderWindow* m_Window;
 		void Render(const float a_DeltaTime);
 		void PollEvents();
 		void CheckResult(bool res);
+
+	protected:
+		RenderWindow* m_Window;
+		SceneManager* m_SceneManager;
 	};
 }
 

@@ -2,6 +2,12 @@
 #include "LuxRenderWindow.h"
 #include "LuxApplication.h"
 #include "LuxEventHandler.h"
+#include "LuxObjectPool.h"
+#include "LuxEntity.h"
+#include "LuxKey.h"
+#include "LuxComponentFactory.h"
+#include "LuxEntityFactory.h"
+#include "LuxSceneManager.h"
 #include "LuxTimer.h"
 
 static void GLFWErrorCallbackFunc(int error, const char* description)
@@ -10,7 +16,7 @@ static void GLFWErrorCallbackFunc(int error, const char* description)
 }
 
 Lux::Application::Application() :
-m_Window(0)
+m_Window(nullptr), m_SceneManager(nullptr)
 {
 
 }
@@ -48,6 +54,8 @@ bool Lux::Application::Initialize(unsigned int a_Width, unsigned int a_Height, S
 	{
 		return false;
 	}
+
+	m_SceneManager = new SceneManager();
 
 	return true;
 }

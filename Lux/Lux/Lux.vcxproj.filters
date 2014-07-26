@@ -63,9 +63,6 @@
     <ClInclude Include="Include\LuxHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxSceneNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxSubMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,13 +72,22 @@
     <ClInclude Include="Include\LuxMeshAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxDefaultComponents.h">
+    <ClInclude Include="Include\LuxTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxEntityFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxObjectPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxComponentFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -131,16 +137,22 @@
     <ClCompile Include="Source\LuxMeshAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxSceneNode.cpp">
+    <ClCompile Include="Source\LuxComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxTransform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxComponent.cpp">
+    <ClCompile Include="Source\LuxEntityFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxDefaultComponents.cpp">
+    <ClCompile Include="Source\LuxObjectPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxComponentFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

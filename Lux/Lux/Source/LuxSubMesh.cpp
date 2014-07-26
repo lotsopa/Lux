@@ -26,7 +26,8 @@ m_VertexBitangents(nullptr)
 	}
 }
 
-Lux::SubMesh::SubMesh(aiMesh& a_Mesh)
+Lux::SubMesh::SubMesh(aiMesh& a_Mesh) : 
+SubMesh()
 {
 	// Fill vertices
 	m_NumVertices = a_Mesh.mNumVertices;
@@ -67,9 +68,10 @@ Lux::SubMesh::SubMesh(aiMesh& a_Mesh)
 	{
 		if (a_Mesh.HasVertexColors(i))
 		{
+			m_VertexColorSets[i] = new vec4[m_NumVertices];
 			for (unsigned int j = 0; j < m_NumVertices; j++) // RGBA
 			{
-				m_VertexColorSets[i] = new vec4(a_Mesh.mColors[i][j].r, a_Mesh.mColors[i][j].g, a_Mesh.mColors[i][j].b, a_Mesh.mColors[i][j].a);
+				m_VertexColorSets[i][j] = vec4(a_Mesh.mColors[i][j].r, a_Mesh.mColors[i][j].g, a_Mesh.mColors[i][j].b, a_Mesh.mColors[i][j].a);
 			}
 		}
 
@@ -79,9 +81,10 @@ Lux::SubMesh::SubMesh(aiMesh& a_Mesh)
 	{
 		if (a_Mesh.HasTextureCoords(i))
 		{
+			m_TextureCoordSets[i] = new vec3[m_NumVertices];
 			for (unsigned int j = 0; j < m_NumVertices; j++)
 			{
-				m_TextureCoordSets[i] = new vec3(a_Mesh.mTextureCoords[i][j].x, a_Mesh.mTextureCoords[i][j].y, a_Mesh.mTextureCoords[i][j].z);
+				m_TextureCoordSets[i][j] = vec3(a_Mesh.mTextureCoords[i][j].x, a_Mesh.mTextureCoords[i][j].y, a_Mesh.mTextureCoords[i][j].z);
 			}
 		}
 		m_NumComponentsPerTexCoordSet[i] = a_Mesh.mNumUVComponents[i];
@@ -97,11 +100,15 @@ Lux::SubMesh::SubMesh(aiMesh& a_Mesh)
 		}
 	}
 	m_NumIndices = indexVec.size();
-	m_Indices = new unsigned int[m_NumIndices];
 
-	for (unsigned int i = 0; i < m_NumIndices; i++)
+	if (m_NumIndices)
 	{
-		m_Indices[i] = indexVec[i];
+		m_Indices = new unsigned int[m_NumIndices];
+
+		for (unsigned int i = 0; i < m_NumIndices; i++)
+		{
+			m_Indices[i] = indexVec[i];
+		}
 	}
 
 	// Fill bones
@@ -112,6 +119,93 @@ Lux::SubMesh::SubMesh(aiMesh& a_Mesh)
 		for (unsigned int i = 0; i < m_NumBones; i++)
 		{
 			m_Bones[i] = new Bone(*a_Mesh.mBones[i]);
+		}
+	}
+}
+
+Lux::SubMesh::SubMesh(const SubMesh& a_SubMesh)
+{
+	// Fill vertices
+	m_NumVertices = a_SubMesh.m_NumVertices;
+	m_Vertices = new vec3[m_NumVertices];
+	for (unsigned int i = 0; i < m_NumVertices; i++)
+	{
+		m_Vertices[i] = a_SubMesh.m_Vertices[i];
+	}
+
+	// Fill tangents and bi tangents
+	if (a_SubMesh.m_VertexTangents != nullptr && a_SubMesh.m_VertexBitangents != nullptr)
+	{
+		m_VertexTangents = new vec3[m_NumVertices];
+		for (unsigned int i = 0; i < m_NumVertices; i++)
+		{
+			m_VertexTangents[i] = a_SubMesh.m_VertexTangents[i];
+		}
+
+		m_VertexBitangents = new vec3[m_NumVertices];
+		for (unsigned int i = 0; i < m_NumVertices; i++)
+		{
+			m_VertexBitangents[i] = a_SubMesh.m_VertexBitangents[i];
+		}
+	}
+
+	// Fill normals
+	if (a_SubMesh.m_VertexNormals != nullptr)
+	{
+		m_VertexNormals = new vec3[m_NumVertices];
+		for (unsigned int i = 0; i < m_NumVertices; i++)
+		{
+			m_VertexNormals[i] = a_SubMesh.m_VertexNormals[i];
+		}
+	}
+
+	// Fill color data
+	for (unsigned int i = 0; i < AI_MAX_NUMBER_OF_COLOR_SETS; i++)
+	{
+		if (a_SubMesh.m_VertexColorSets[i] != nullptr)
+		{
+			m_VertexColorSets[i] = new vec4[m_NumVertices];
+			for (unsigned int j = 0; j < m_NumVertices; j++) // RGBA
+			{
+				m_VertexColorSets[i][j] = vec4(*a_SubMesh.m_VertexColorSets[i]);
+			}
+		}
+	}
+	// Fill texture coordinate data
+	for (unsigned int i = 0; i < AI_MAX_NUMBER_OF_TEXTURECOORDS; i++)
+	{
+		if (a_SubMesh.m_TextureCoordSets[i] != nullptr)
+		{
+			m_TextureCoordSets[i] = new vec3[m_NumVertices];
+			for (unsigned int j = 0; j < m_NumVertices; j++)
+			{
+				m_TextureCoordSets[i][j] = vec3(*a_SubMesh.m_TextureCoordSets[i]);
+			}
+		}
+		m_NumComponentsPerTexCoordSet[i] = a_SubMesh.m_NumComponentsPerTexCoordSet[i];
+	}
+
+	// Filling indices
+	m_NumIndices = a_SubMesh.m_NumIndices;
+
+	if (m_NumIndices)
+	{
+		m_Indices = new unsigned int[m_NumIndices];
+
+		for (unsigned int i = 0; i < m_NumIndices; i++)
+		{
+			m_Indices[i] = a_SubMesh.m_Indices[i];
+		}
+	}
+
+	// Fill bones
+	m_NumBones = a_SubMesh.m_NumBones;
+	if (m_NumBones)
+	{
+		m_Bones = new Bone*[m_NumBones];
+		for (unsigned int i = 0; i < m_NumBones; i++)
+		{
+			m_Bones[i] = new Bone(*a_SubMesh.m_Bones[i]);
 		}
 	}
 }

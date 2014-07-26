@@ -8,6 +8,7 @@ namespace Lux
 	{
 	public:
 		SubMesh();
+		SubMesh(const SubMesh& a_SubMesh);
 		SubMesh(aiMesh& a_Mesh);
 		~SubMesh();
 
@@ -41,6 +42,20 @@ namespace Lux
 			{
 
 			};
+
+			Bone(const Bone& a_Bone)
+			{
+				m_NumBoneWeights = a_Bone.m_NumBoneWeights;
+				m_Name = a_Bone.m_Name;
+				m_BoneWeights = new VertexBoneWeight[m_NumBoneWeights];
+				m_OffsetMatrix = a_Bone.m_OffsetMatrix;
+
+				for (unsigned int i = 0; i < m_NumBoneWeights; i++)
+				{
+					m_BoneWeights[i].m_VertexId = a_Bone.m_BoneWeights[i].m_VertexId;
+					m_BoneWeights[i].m_Weight = a_Bone.m_BoneWeights[i].m_Weight;
+				}
+			}
 
 			Bone(aiBone& a_Bone)
 			{

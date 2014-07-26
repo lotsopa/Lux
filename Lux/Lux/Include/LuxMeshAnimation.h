@@ -21,6 +21,7 @@ namespace Lux
 			VectorKey();;
 			VectorKey(aiVectorKey& a_Key);
 			void Set(aiVectorKey& a_Key);
+			void Set(const VectorKey& a_Key);
 			~VectorKey();
 			double m_Time;
 			vec3 m_Value;
@@ -31,6 +32,7 @@ namespace Lux
 			QuaternionKey();;
 			QuaternionKey(aiQuatKey& a_Key);
 			void Set(aiQuatKey& a_Key);
+			void Set(const QuaternionKey& a_Key);
 			~QuaternionKey();
 			double m_Time;
 			quat m_Value;
@@ -41,6 +43,7 @@ namespace Lux
 			MeshKey();;
 			MeshKey(aiMeshKey& a_Key);
 			void Set(aiMeshKey& a_Key);
+			void Set(const MeshKey& a_Key);
 			~MeshKey();
 			double m_Time;
 			unsigned int m_Value;
@@ -50,6 +53,7 @@ namespace Lux
 		{
 			NodeChannel(String& a_Name, unsigned int a_NumPosKeys, unsigned int a_NumScaleKeys, unsigned int a_NumRotKeys);
 			NodeChannel(aiNodeAnim& a_NodeAnim);
+			NodeChannel(const NodeChannel& a_Channel);
 			~NodeChannel();
 
 			String m_Name;
@@ -69,6 +73,7 @@ namespace Lux
 		{
 			MeshChannel(unsigned int a_NumMeshKeys, String& a_Name);
 			MeshChannel(aiMeshAnim& a_MeshAnim);
+			MeshChannel(const MeshChannel& a_CHannel);
 			~MeshChannel();
 
 			String m_Name;
@@ -78,6 +83,7 @@ namespace Lux
 		};
 
 		MeshAnimation();
+		MeshAnimation(const MeshAnimation& a_Anim);
 		MeshAnimation(aiAnimation& a_Anim);
 		~MeshAnimation();
 

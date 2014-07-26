@@ -24,23 +24,74 @@ Lux::MeshAnimation::NodeChannel::NodeChannel(aiNodeAnim& a_NodeAnim)
 	m_PostState = ConvertAssimpAnimBehaviour(a_NodeAnim.mPostState);
 	m_Name = a_NodeAnim.mNodeName.C_Str();
 
-	m_PositionKeys = new VectorKey[m_NumPositionKeys];
-	m_RotationKeys = new QuaternionKey[m_NumRotationKeys];
-	m_ScalingKeys = new VectorKey[m_NumScalingKeys];
-
-	for (unsigned int i = 0; i < m_NumPositionKeys; i++)
+	if (m_NumPositionKeys)
 	{
-		m_PositionKeys[i].Set(a_NodeAnim.mPositionKeys[i]);
+		m_PositionKeys = new VectorKey[m_NumPositionKeys];
+
+		for (unsigned int i = 0; i < m_NumPositionKeys; i++)
+		{
+			m_PositionKeys[i].Set(a_NodeAnim.mPositionKeys[i]);
+		}
 	}
 
-	for (unsigned int i = 0; i < m_NumRotationKeys; i++)
+	if (m_NumRotationKeys)
 	{
-		m_RotationKeys[i].Set(a_NodeAnim.mRotationKeys[i]);
+		m_RotationKeys = new QuaternionKey[m_NumRotationKeys];
+
+		for (unsigned int i = 0; i < m_NumRotationKeys; i++)
+		{
+			m_RotationKeys[i].Set(a_NodeAnim.mRotationKeys[i]);
+		}
 	}
 
-	for (unsigned int i = 0; i < m_NumScalingKeys; i++)
+	if (m_NumScalingKeys)
 	{
-		m_ScalingKeys[i].Set(a_NodeAnim.mScalingKeys[i]);
+		m_ScalingKeys = new VectorKey[m_NumScalingKeys];
+
+		for (unsigned int i = 0; i < m_NumScalingKeys; i++)
+		{
+			m_ScalingKeys[i].Set(a_NodeAnim.mScalingKeys[i]);
+		}
+	}
+}
+
+Lux::MeshAnimation::NodeChannel::NodeChannel(const NodeChannel& a_Channel)
+{
+	m_NumPositionKeys = a_Channel.m_NumPositionKeys;
+	m_NumRotationKeys = a_Channel.m_NumRotationKeys;
+	m_NumScalingKeys = a_Channel.m_NumScalingKeys;
+	m_PreState = a_Channel.m_PreState;
+	m_PostState = a_Channel.m_PostState;
+	m_Name = a_Channel.m_Name;
+
+	if (m_NumPositionKeys)
+	{
+		m_PositionKeys = new VectorKey[m_NumPositionKeys];
+
+		for (unsigned int i = 0; i < m_NumPositionKeys; i++)
+		{
+			m_PositionKeys[i].Set(a_Channel.m_PositionKeys[i]);
+		}
+	}
+
+	if (m_NumRotationKeys)
+	{
+		m_RotationKeys = new QuaternionKey[m_NumRotationKeys];
+
+		for (unsigned int i = 0; i < m_NumRotationKeys; i++)
+		{
+			m_RotationKeys[i].Set(a_Channel.m_RotationKeys[i]);
+		}
+	}
+	
+	if (m_NumScalingKeys)
+	{
+		m_ScalingKeys = new VectorKey[m_NumScalingKeys];
+
+		for (unsigned int i = 0; i < m_NumScalingKeys; i++)
+		{
+			m_ScalingKeys[i].Set(a_Channel.m_ScalingKeys[i]);
+		}
 	}
 }
 
@@ -95,6 +146,17 @@ Lux::MeshAnimation::MeshChannel::MeshChannel(aiMeshAnim& a_MeshAnim)
 	}
 }
 
+Lux::MeshAnimation::MeshChannel::MeshChannel(const MeshChannel& a_Channel)
+{
+	m_Name = a_Channel.m_Name;
+	m_NumKeys = a_Channel.m_NumKeys;
+	m_MeshKeys = new MeshKey[m_NumKeys];
+	for (unsigned int i = 0; i < m_NumKeys; i++)
+	{
+		m_MeshKeys[i].Set(a_Channel.m_MeshKeys[i]);
+	}
+}
+
 Lux::MeshAnimation::MeshChannel::~MeshChannel()
 {
 	SafeArrayDelete(m_MeshKeys);
@@ -122,6 +184,12 @@ void Lux::MeshAnimation::VectorKey::Set(aiVectorKey& a_Key)
 	m_Value = ConvertVec3AssimpToGLM(a_Key.mValue);
 }
 
+void Lux::MeshAnimation::VectorKey::Set(const VectorKey& a_Key)
+{
+	m_Time = a_Key.m_Time;
+	m_Value = a_Key.m_Value;
+}
+
 Lux::MeshAnimation::QuaternionKey::QuaternionKey(aiQuatKey& a_Key)
 {
 	m_Time = a_Key.mTime;
@@ -142,6 +210,12 @@ void Lux::MeshAnimation::QuaternionKey::Set(aiQuatKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = ConvertQuatAssimpToGLM(a_Key.mValue);
+}
+
+void Lux::MeshAnimation::QuaternionKey::Set(const QuaternionKey& a_Key)
+{
+	m_Time = a_Key.m_Time;
+	m_Value = a_Key.m_Value;
 }
 
 Lux::MeshAnimation::MeshKey::MeshKey(aiMeshKey& a_Key)
@@ -166,6 +240,12 @@ void Lux::MeshAnimation::MeshKey::Set(aiMeshKey& a_Key)
 	m_Value = a_Key.mValue;
 }
 
+void Lux::MeshAnimation::MeshKey::Set(const MeshKey& a_Key)
+{
+	m_Time = a_Key.m_Time;
+	m_Value = a_Key.m_Value;
+}
+
 Lux::MeshAnimation::MeshAnimation() :
 m_MeshChannels(nullptr),
 m_NodeChannels(nullptr),
@@ -185,17 +265,54 @@ Lux::MeshAnimation::MeshAnimation(aiAnimation& a_Anim)
 	m_TicksPerSecond = a_Anim.mTicksPerSecond;
 	m_Name = a_Anim.mName.C_Str();
 
-	m_MeshChannels = new MeshChannel*[m_NumMeshChannels];
-	m_NodeChannels = new NodeChannel*[m_NumNodeChannels];
-
-	for (unsigned int i = 0; i < m_NumMeshChannels; i++)
+	if (m_NumMeshChannels)
 	{
-		m_MeshChannels[i] = new MeshChannel(*a_Anim.mMeshChannels[i]);
+		m_MeshChannels = new MeshChannel*[m_NumMeshChannels];
+
+		for (unsigned int i = 0; i < m_NumMeshChannels; i++)
+		{
+			m_MeshChannels[i] = new MeshChannel(*a_Anim.mMeshChannels[i]);
+		}
 	}
 
-	for (unsigned int i = 0; i < m_NumNodeChannels; i++)
+	if (m_NumNodeChannels)
 	{
-		m_NodeChannels[i] = new NodeChannel(*a_Anim.mChannels[i]);
+		m_NodeChannels = new NodeChannel*[m_NumNodeChannels];
+
+		for (unsigned int i = 0; i < m_NumNodeChannels; i++)
+		{
+			m_NodeChannels[i] = new NodeChannel(*a_Anim.mChannels[i]);
+		}
+	}
+
+}
+
+Lux::MeshAnimation::MeshAnimation(const MeshAnimation& a_Anim)
+{
+	m_Duration = a_Anim.m_Duration;
+	m_NumMeshChannels = a_Anim.m_NumMeshChannels;
+	m_NumNodeChannels = a_Anim.m_NumNodeChannels;
+	m_Name = a_Anim.m_Name;
+	m_TicksPerSecond = a_Anim.m_TicksPerSecond;
+	
+	if (m_NumMeshChannels)
+	{
+		m_MeshChannels = new MeshChannel*[m_NumMeshChannels];
+
+		for (unsigned int i = 0; i < m_NumMeshChannels; i++)
+		{
+			m_MeshChannels[i] = new MeshChannel(*a_Anim.m_MeshChannels[i]);
+		}
+	}
+
+	if (m_NumNodeChannels)
+	{
+		m_NodeChannels = new NodeChannel*[m_NumNodeChannels];
+
+		for (unsigned int i = 0; i < m_NumNodeChannels; i++)
+		{
+			m_NodeChannels[i] = new NodeChannel(*a_Anim.m_NodeChannels[i]);
+		}
 	}
 }
 

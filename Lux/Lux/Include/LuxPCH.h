@@ -14,6 +14,8 @@
 #include <map>
 #include <mutex>
 #include <assert.h>
+#include <queue>
+#include <typeinfo>
 
 #ifndef TRUE
 #define TRUE 1

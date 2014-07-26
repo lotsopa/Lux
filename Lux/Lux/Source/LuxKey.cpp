@@ -13,6 +13,11 @@ Lux::Key::Key(const String& a_Name) : m_Name(a_Name)
 	m_HashedValue = m_StringHasher(m_Name);
 }
 
+Lux::Key::Key(const char* a_Name) : m_Name(a_Name)
+{
+	m_HashedValue = m_StringHasher(m_Name);
+}
+
 Lux::Key::~Key()
 {
 

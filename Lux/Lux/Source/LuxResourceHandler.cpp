@@ -15,13 +15,13 @@ Lux::ResourceHandler& Lux::ResourceHandler::GetInstance()
 
 Lux::ResourceHandler::~ResourceHandler()
 {
-	EntityMap::iterator it;
+	MeshMap::iterator it;
 
-	for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
+	for (it = m_MeshMap.begin(); it != m_MeshMap.end(); ++it)
 	{
 		delete it->second;
 	}
-	m_EntityMap.clear();
+	m_MeshMap.clear();
 
 	MaterialMap::iterator it2;
 
@@ -45,7 +45,7 @@ Lux::ResourceHandler::ResourceHandler()
 	LUX_LOG(logINFO) << "Resource Handler created successfully.";
 }
 
-Lux::Mesh* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Mesh* Lux::ResourceHandler::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
 
@@ -101,7 +101,7 @@ Lux::Mesh* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, cons
 		Material* meshMat = GetMaterial(matName);
 		SubMesh* mesh = new SubMesh(*scene->mMeshes[i]);
 		mesh->SetMaterial(meshMat);
-		retEntity->AddMesh(mesh);
+		retEntity->AddSubMesh(mesh);
 	}
 
 	// Animation data (if it exists)
@@ -114,11 +114,11 @@ Lux::Mesh* Lux::ResourceHandler::CreateEntityFromFile(const String& a_File, cons
 		}
 	}
 
-	AddEntityToMap(a_EntityName, retEntity);
+	AddMeshToMap(a_EntityName, retEntity);
 	return retEntity;
 }
 
-Lux::Mesh* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Mesh* Lux::ResourceHandler::CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	if (a_Info == nullptr)
 	{
@@ -177,7 +177,7 @@ Lux::Mesh* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, const 
 		Material* meshMat = GetMaterial(matName);
 		SubMesh* mesh = new SubMesh(*scene->mMeshes[i]);
 		mesh->SetMaterial(meshMat);
-		retEntity->AddMesh(mesh);
+		retEntity->AddSubMesh(mesh);
 	}
 
 	// Animation data (if it exists)
@@ -190,7 +190,7 @@ Lux::Mesh* Lux::ResourceHandler::CreateEntityFromMemory(FileInfo* a_Info, const 
 		}
 	}
 
-	AddEntityToMap(a_EntityName, retEntity);
+	AddMeshToMap(a_EntityName, retEntity);
 	return retEntity;
 }
 
@@ -324,15 +324,15 @@ void Lux::ResourceHandler::UnbindCurrentTexture()
 
 
 #if LUX_THREAD_SAFE == TRUE
-void Lux::ResourceHandler::AddEntityToMap(const String& a_Str, Mesh* a_Ent)
+void Lux::ResourceHandler::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
-	std::unique_lock<std::mutex> lock(m_EntityMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	m_EntityMap.insert(std::make_pair(Key(a_Str), a_Ent));
+	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
+	m_MeshMap.insert(std::make_pair(Key(a_Str), a_Ent));
 }
-Lux::Mesh* Lux::ResourceHandler::GetEntity(const String& a_Name)
+Lux::Mesh* Lux::ResourceHandler::GetMesh(const String& a_Name)
 {
-	std::unique_lock<std::mutex> lock(m_EntityMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	return m_EntityMap.at(Key(a_Name));
+	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
+	return m_MeshMap.at(Key(a_Name));
 }
 
 void Lux::ResourceHandler::AddMaterialToMap(const String& a_Str, Material* a_Mat)
@@ -361,11 +361,11 @@ bool Lux::ResourceHandler::MaterialExists(const String& a_Name)
 	return false;
 }
 
-bool Lux::ResourceHandler::EntityExists(const String& a_Name)
+bool Lux::ResourceHandler::MeshExists(const String& a_Name)
 {
 	Key k(a_Name);
-	std::unique_lock<std::mutex> lock(m_EntityMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	unsigned int count = m_EntityMap.count(k);
+	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
+	unsigned int count = m_MeshMap.count(k);
 
 	if (count > 0)
 	{
@@ -418,14 +418,14 @@ bool Lux::ResourceHandler::DeleteTexture(const String& a_Name)
 }
 
 #else
-void Lux::ResourceHandler::AddEntityToMap(const String& a_Str, Mesh* a_Ent)
+void Lux::ResourceHandler::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
-	m_EntityMap.insert(std::make_pair(Key(a_Str), a_Ent));
+	m_MeshMap.insert(std::make_pair(Key(a_Str), a_Ent));
 }
 
-Lux::Mesh* Lux::ResourceHandler::GetEntity(const String& a_Name)
+Lux::Mesh* Lux::ResourceHandler::GetMesh(const String& a_Name)
 {
-	return m_EntityMap.at(Key(a_Name));
+	return m_MeshMap.at(Key(a_Name));
 }
 
 void Lux::ResourceHandler::AddMaterialToMap(const String& a_Str, Material* a_Mat)
@@ -451,10 +451,10 @@ bool Lux::ResourceHandler::MaterialExists(const String& a_Name)
 	return false;
 }
 
-bool Lux::ResourceHandler::EntityExists(const String& a_Name)
+bool Lux::ResourceHandler::MeshExists(const String& a_Name)
 {
 	Key k(a_Name);
-	unsigned int count = m_EntityMap.count(k);
+	unsigned int count = m_MeshMap.count(k);
 
 	if (count > 0)
 	{

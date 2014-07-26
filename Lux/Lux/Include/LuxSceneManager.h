@@ -3,11 +3,18 @@
 
 namespace Lux
 {
+	class ComponentFactory;
+	class EntityFactory;
+
 	class SceneManager
 	{
 	public:
+		SceneManager();
+		~SceneManager();
 
 	private:
+		ComponentFactory m_ComponentFactory;
+		EntityFactory m_EntityFactory;
 	};
 }
 

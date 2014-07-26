@@ -8,6 +8,7 @@ namespace Lux
 	public:
 		Key();
 		Key(const String& a_Name);
+		Key(const char* a_Name);
 		~Key();
 
 		const std::string& GetName() const;

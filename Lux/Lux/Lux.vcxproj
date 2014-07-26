@@ -11,16 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\LuxComponentFactory.h" />
+    <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
-    <ClInclude Include="Include\LuxDefaultComponents.h" />
     <ClInclude Include="Include\LuxEntity.h" />
     <ClInclude Include="Include\LuxHelpers.h" />
     <ClInclude Include="Include\LuxKey.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
+    <ClInclude Include="Include\LuxObjectPool.h" />
     <ClInclude Include="Include\LuxSubMesh.h" />
     <ClInclude Include="Include\LuxMesh.h" />
     <ClInclude Include="Include\LuxMeshAnimation.h" />
-    <ClInclude Include="Include\LuxSceneNode.h" />
     <ClInclude Include="Include\LuxSingleton.h" />
     <ClInclude Include="Include\Lux.h" />
     <ClInclude Include="Include\LuxDefines.h" />
@@ -34,10 +35,12 @@
     <ClInclude Include="Include\LuxSceneManager.h" />
     <ClInclude Include="Include\LuxTimer.h" />
     <ClInclude Include="Include\LuxResourceHandler.h" />
+    <ClInclude Include="Include\LuxTransform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\LuxComponentFactory.cpp" />
+    <ClCompile Include="Source\LuxEntityFactory.cpp" />
     <ClCompile Include="Source\LuxComponent.cpp" />
-    <ClCompile Include="Source\LuxDefaultComponents.cpp" />
     <ClCompile Include="Source\LuxEntity.cpp" />
     <ClCompile Include="Source\LuxEventHandler.cpp" />
     <ClCompile Include="Source\LuxApplication.cpp" />
@@ -46,7 +49,7 @@
     <ClCompile Include="Source\LuxHelpers.cpp" />
     <ClCompile Include="Source\LuxKey.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
-    <ClCompile Include="Source\LuxSceneNode.cpp" />
+    <ClCompile Include="Source\LuxObjectPool.cpp" />
     <ClCompile Include="Source\LuxSubMesh.cpp" />
     <ClCompile Include="Source\LuxMeshAnimation.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">
@@ -58,6 +61,7 @@
     <ClCompile Include="Source\LuxResourceHandler.cpp" />
     <ClCompile Include="Source\LuxSceneManager.cpp" />
     <ClCompile Include="Source\LuxTimer.cpp" />
+    <ClCompile Include="Source\LuxTransform.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2E2A77E1-3762-466F-9C23-5704EF8E16E1}</ProjectGuid>
