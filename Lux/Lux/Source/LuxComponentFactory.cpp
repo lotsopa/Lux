@@ -1,8 +1,8 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
-#include "LuxObjectPool.h"
 #include "LuxMesh.h"
 #include "LuxTransform.h"
+#include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
 
 Lux::ComponentFactory::ComponentFactory()

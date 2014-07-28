@@ -15,6 +15,7 @@ namespace Lux
 		void Run();
 		void Terminate();
 
+		virtual bool LoadComponentTypes();
 		virtual bool LoadContent() = 0;
 		virtual bool UnloadContent() = 0;
 

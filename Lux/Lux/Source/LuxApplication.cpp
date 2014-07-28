@@ -2,9 +2,11 @@
 #include "LuxRenderWindow.h"
 #include "LuxApplication.h"
 #include "LuxEventHandler.h"
-#include "LuxObjectPool.h"
 #include "LuxEntity.h"
 #include "LuxKey.h"
+#include "LuxMesh.h"
+#include "LuxTransform.h"
+#include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
 #include "LuxSceneManager.h"
@@ -24,6 +26,7 @@ m_Window(nullptr), m_SceneManager(nullptr)
 Lux::Application::~Application()
 {
 	SafePtrDelete(m_Window);
+	SafePtrDelete(m_SceneManager);
 }
 
 bool Lux::Application::Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_GLVerMajor, unsigned int a_GLVerMinor, unsigned int a_AA, TLogLevel a_LogLevel)
@@ -56,7 +59,7 @@ bool Lux::Application::Initialize(unsigned int a_Width, unsigned int a_Height, S
 	}
 
 	m_SceneManager = new SceneManager();
-
+	LoadComponentTypes();
 	return true;
 }
 
@@ -120,4 +123,11 @@ void Lux::Application::CheckResult(bool res)
 		MessageBox(nullptr, "Fatal error during execution.Aborting program.", "Error", MB_ICONERROR | MB_SETFOREGROUND);
 		throw std::invalid_argument("Main loop function returned false.");
 	}
+}
+
+bool Lux::Application::LoadComponentTypes()
+{
+	m_SceneManager->RegisterNewComponentType<Transform>();
+	m_SceneManager->RegisterNewComponentType<Mesh>();
+	return true;
 }

@@ -84,7 +84,6 @@ namespace Lux
 
 		typedef std::map<Key, std::function<void(void)>> ComponentDelFuncMap;
 		typedef std::map<Key, void*> ComponentPoolMap;
-		unsigned int m_MaxComponentsPerType;
 		ComponentPoolMap m_ComponentPoolMap;
 		ComponentDelFuncMap m_ComponentDeleteMap;
 	};
