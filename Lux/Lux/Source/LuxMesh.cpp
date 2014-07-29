@@ -4,7 +4,6 @@
 #include "LuxMesh.h"
 
 Lux::Mesh::Mesh(unsigned int a_NumMeshes, unsigned int a_NumAnims) :
-Component(),
 m_NumSubMeshes(a_NumMeshes), 
 m_AnimationData(nullptr), 
 m_NumAnimations(a_NumAnims)
@@ -57,7 +56,20 @@ Lux::Mesh::Mesh(const Mesh& a_Mesh)
 
 Lux::Mesh::~Mesh()
 {
-	Reset();
+	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
+	{
+		SafePtrDelete(m_SubMeshes[i]);
+	}
+	SafeArrayDelete(m_SubMeshes);
+
+	for (unsigned int i = 0; i < m_NumAnimations; i++)
+	{
+		SafePtrDelete(m_AnimationData[i]);
+	}
+	SafeArrayDelete(m_AnimationData);
+
+	m_NumSubMeshes = 0;
+	m_NumAnimations = 0;
 }
 
 void Lux::Mesh::AddSubMesh(SubMesh* a_Mesh)
@@ -86,22 +98,4 @@ void Lux::Mesh::AddAnimation(MeshAnimation* a_Anim)
 
 	m_AnimationData[ctr] = a_Anim;
 	ctr++;
-}
-
-void Lux::Mesh::Reset()
-{
-	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-	{
-		SafePtrDelete(m_SubMeshes[i]);
-	}
-	SafeArrayDelete(m_SubMeshes);
-
-	for (unsigned int i = 0; i < m_NumAnimations; i++)
-	{
-		SafePtrDelete(m_AnimationData[i]);
-	}
-	SafeArrayDelete(m_AnimationData);
-
-	m_NumSubMeshes = 0;
-	m_NumAnimations = 0;
 }

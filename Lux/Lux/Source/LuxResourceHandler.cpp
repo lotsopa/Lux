@@ -47,6 +47,13 @@ Lux::ResourceHandler::ResourceHandler()
 
 Lux::Mesh* Lux::ResourceHandler::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
+	// Have we already loaded this mesh before? If we have just return it.
+	Mesh* loadedMesh = GetLoadedMesh(a_File);
+	if (loadedMesh != nullptr)
+	{
+		return loadedMesh;
+	}
+
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
 
 	Assimp::Importer importer;
@@ -91,7 +98,7 @@ Lux::Mesh* Lux::ResourceHandler::CreateMeshFromFile(const String& a_File, const 
 	}
 
 	// Creating a mesh and adding submeshes
-	Mesh* retEntity = new Mesh(scene->mNumMeshes, scene->mNumAnimations);
+	Mesh* retMesh = new Mesh(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
@@ -101,7 +108,7 @@ Lux::Mesh* Lux::ResourceHandler::CreateMeshFromFile(const String& a_File, const 
 		Material* meshMat = GetMaterial(matName);
 		SubMesh* mesh = new SubMesh(*scene->mMeshes[i]);
 		mesh->SetMaterial(meshMat);
-		retEntity->AddSubMesh(mesh);
+		retMesh->AddSubMesh(mesh);
 	}
 
 	// Animation data (if it exists)
@@ -110,12 +117,13 @@ Lux::Mesh* Lux::ResourceHandler::CreateMeshFromFile(const String& a_File, const 
 		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
 		{
 			MeshAnimation* animData = new MeshAnimation(*scene->mAnimations[i]);
-			retEntity->AddAnimation(animData);
+			retMesh->AddAnimation(animData);
 		}
 	}
 
-	AddMeshToMap(a_EntityName, retEntity);
-	return retEntity;
+	AddMeshToMap(a_EntityName, retMesh);
+	AddFileNameToMap(a_File, retMesh);
+	return retMesh;
 }
 
 Lux::Mesh* Lux::ResourceHandler::CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
@@ -417,6 +425,25 @@ bool Lux::ResourceHandler::DeleteTexture(const String& a_Name)
 	return true;
 }
 
+void Lux::ResourceHandler::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
+{
+	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
+	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), a_Ent));
+}
+
+Lux::Mesh* Lux::ResourceHandler::GetLoadedMesh(const String& a_FileStr)
+{
+	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
+	MeshMap::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
+
+	if (it != m_LoadedFilenameMeshes.end())
+	{
+		return it->second;
+	}
+
+	return nullptr;
+}
+
 #else
 void Lux::ResourceHandler::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
@@ -500,4 +527,22 @@ bool Lux::ResourceHandler::DeleteTexture(const String& a_Name)
 
 	return true;
 }
+
+void Lux::ResourceHandler::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
+{
+	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), a_Ent));
+}
+
+Lux::Mesh* Lux::ResourceHandler::GetLoadedMesh(const String& a_FileStr)
+{
+	MeshMap::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
+
+	if (it != m_LoadedFilenameMeshes.end())
+	{
+		return it->second;
+	}
+
+	return nullptr;
+}
+
 #endif // LUX_THREAD_SAFE

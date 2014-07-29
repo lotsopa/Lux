@@ -13,6 +13,7 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxObjectPool.h"
 #include "LuxComponent.h"
 #include "LuxTransform.h"
+#include "LuxMeshRenderer.h"
 #include "LuxEntity.h"
 #include "LuxEntityFactory.h"
 #include "LuxMaterial.h"

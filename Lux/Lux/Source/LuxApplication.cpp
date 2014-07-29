@@ -4,7 +4,7 @@
 #include "LuxEventHandler.h"
 #include "LuxEntity.h"
 #include "LuxKey.h"
-#include "LuxMesh.h"
+#include "LuxMeshRenderer.h"
 #include "LuxTransform.h"
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
@@ -128,6 +128,6 @@ void Lux::Application::CheckResult(bool res)
 bool Lux::Application::LoadComponentTypes()
 {
 	m_SceneManager->RegisterNewComponentType<Transform>();
-	m_SceneManager->RegisterNewComponentType<Mesh>();
+	m_SceneManager->RegisterNewComponentType<MeshRenderer>();
 	return true;
 }

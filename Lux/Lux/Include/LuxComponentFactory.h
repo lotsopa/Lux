@@ -4,7 +4,7 @@
 namespace Lux
 {
 	class Component;
-	class Mesh;
+	class MeshRenderer;
 	class Transfrom;
 	class ComponentFactory
 	{

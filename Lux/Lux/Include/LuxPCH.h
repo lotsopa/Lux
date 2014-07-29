@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <mutex>
 #include <assert.h>
 #include <queue>

@@ -9,7 +9,6 @@ namespace Lux
 	class Key;
 	struct FileInfo;
 
-	// TODO - Work on making this class thread safe
 	class ResourceHandler
 	{
 	public:
@@ -40,6 +39,7 @@ namespace Lux
 		typedef std::map<Key, Mesh*> MeshMap;
 		typedef std::map<Key, Material*> MaterialMap;
 		MeshMap m_MeshMap;
+		MeshMap m_LoadedFilenameMeshes;
 		MaterialMap m_MaterialMap;
 		TextureMap m_TextureMap;
 
@@ -50,6 +50,8 @@ namespace Lux
 #endif
 
 		void AddMeshToMap(const String& a_Str, Mesh* a_Ent);
+		void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
+		Mesh* GetLoadedMesh(const String& a_FileStr);
 		void AddMaterialToMap(const String& a_Str, Material* a_Mat);
 		void AddTextureToMap(const String& a_Str, TextureIndex a_Idx);
 		void LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType);

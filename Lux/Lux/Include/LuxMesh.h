@@ -1,16 +1,16 @@
 #ifndef LUX_MESH_H
 #define LUX_MESH_H
-#include "LuxComponent.h"
 
 namespace Lux
 {
 	class SubMesh;
 	class MeshAnimation;
+
 	/*
 	Mesh component which can be added to an entity.
 	A mesh can be composed of one or more sub meshes.
 	*/
-	class Mesh : public Component
+	class Mesh
 	{
 	public:
 		Mesh();
@@ -27,9 +27,6 @@ namespace Lux
 		void AddAnimation(MeshAnimation* a_Anim);
 		friend class ResourceHandler;
 
-	protected:
-		void Reset();
-		friend class ComponentFactory;
 	};
 }
 

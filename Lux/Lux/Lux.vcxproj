@@ -19,6 +19,7 @@
     <ClInclude Include="Include\LuxKey.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
+    <ClInclude Include="Include\LuxRenderingSystem.h" />
     <ClInclude Include="Include\LuxSubMesh.h" />
     <ClInclude Include="Include\LuxMesh.h" />
     <ClInclude Include="Include\LuxMeshAnimation.h" />
@@ -36,6 +37,7 @@
     <ClInclude Include="Include\LuxTimer.h" />
     <ClInclude Include="Include\LuxResourceHandler.h" />
     <ClInclude Include="Include\LuxTransform.h" />
+    <ClInclude Include="Include\LuxMeshRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
@@ -49,7 +51,9 @@
     <ClCompile Include="Source\LuxHelpers.cpp" />
     <ClCompile Include="Source\LuxKey.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
+    <ClCompile Include="Source\LuxMeshRenderer.cpp" />
     <ClCompile Include="Source\LuxObjectPool.cpp" />
+    <ClCompile Include="Source\LuxRenderingSystem.cpp" />
     <ClCompile Include="Source\LuxSubMesh.cpp" />
     <ClCompile Include="Source\LuxMeshAnimation.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">

@@ -181,7 +181,7 @@ namespace Lux
 
 		ComponentFactory* m_ComponentFactory;
 		EntityFactory* m_EntityFactory;
-		typedef std::map<Entity*, ComponentLayout> EntityComponentMap;
+		typedef std::unordered_map<Entity*, ComponentLayout> EntityComponentMap;
 		typedef std::map<Key, unsigned int> ComponentIndexMap;
 		typedef std::map<unsigned int, std::function<void(Component*)>> ComponentDelFuncMap;
 		EntityComponentMap m_EntityComponentMap;
