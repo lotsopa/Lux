@@ -4,13 +4,16 @@
 namespace Lux
 {
 	class ComponentFactory;
+	class SystemFactory;
 	class EntityFactory;
 	class Entity;
+	class System;
+	class RenderWindow;
 
 	class SceneManager
 	{
 	public:
-		SceneManager();
+		SceneManager(RenderWindow* a_RenderWindow);
 		~SceneManager();
 
 		/*
@@ -117,6 +120,31 @@ namespace Lux
 			return true;
 		}
 
+		/*
+		Registers a new type of System and notifies the program of its existence.
+		After registering a new system type, one instance of the that type will be automatically created.
+		That's the reason there is no Create Function for the Systems. 
+		More than one system of each type is not allowed for obvious reasons.
+		*/
+		template<class T>
+		void RegisterNewSystemType()
+		{
+			m_SystemFactory->AddSystemTypeToFactory<T>();
+			System* sys = m_SystemFactory->InstantiateNewSystem<T>();
+			bool res = sys->Init(this);
+
+			if (!res)
+			{
+				ThrowError("Could not initialize system.");
+			}
+
+			m_SystemsVector.push_back(sys);
+		}
+
+		void ProcessUpdate(const float a_Dt);
+
+		inline RenderWindow* GetRenderWindow() { return m_RenderWindow; }
+
 	private:
 
 		template<class T>
@@ -179,15 +207,21 @@ namespace Lux
 			SceneManager* m_SceneManager;
 		};
 
+		void ProcessSystems(const float a_DeltaTime);
+
 		ComponentFactory* m_ComponentFactory;
 		EntityFactory* m_EntityFactory;
+		SystemFactory* m_SystemFactory;
 		typedef std::unordered_map<Entity*, ComponentLayout> EntityComponentMap;
 		typedef std::map<Key, unsigned int> ComponentIndexMap;
 		typedef std::map<unsigned int, std::function<void(Component*)>> ComponentDelFuncMap;
+		typedef std::vector<System*> SystemsVector;
 		EntityComponentMap m_EntityComponentMap;
 		ComponentIndexMap m_ComponentIndexMap;
 		ComponentDelFuncMap m_DelFuncMap;
 		unsigned int m_NumComponentTypes;
+		SystemsVector m_SystemsVector;
+		RenderWindow* m_RenderWindow;
 	};
 }
 

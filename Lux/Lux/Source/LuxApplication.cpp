@@ -9,6 +9,9 @@
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
+#include "LuxSystem.h"
+#include "LuxRenderingSystem.h"
+#include "LuxSystemFactory.h"
 #include "LuxSceneManager.h"
 #include "LuxTimer.h"
 
@@ -58,8 +61,10 @@ bool Lux::Application::Initialize(unsigned int a_Width, unsigned int a_Height, S
 		return false;
 	}
 
-	m_SceneManager = new SceneManager();
+	// Init the Scene Manager
+	m_SceneManager = new SceneManager(m_Window);
 	LoadComponentTypes();
+	LoadSystemTypes();
 	return true;
 }
 
@@ -98,21 +103,14 @@ void Lux::Application::Run()
 		PollEvents();
 		result = Update(dt);
 		CheckResult(result);
-		Render(dt);
+		InternalUpdate(dt);
 		quit = ShouldQuit();
 	}
 }
 
-void Lux::Application::Render(const float a_DeltaTime)
+void Lux::Application::InternalUpdate(const float a_DeltaTime)
 {
-	glfwSwapBuffers(m_Window->GetWindowHandle());
-	bool res = OnFrameStarted(a_DeltaTime);
-	CheckResult(res);
-
-	// TODO : Actual rendering
-
-	res = OnFrameEnded(a_DeltaTime);
-	CheckResult(res);
+	m_SceneManager->ProcessUpdate(a_DeltaTime);
 }
 
 void Lux::Application::CheckResult(bool res)
@@ -129,5 +127,11 @@ bool Lux::Application::LoadComponentTypes()
 {
 	m_SceneManager->RegisterNewComponentType<Transform>();
 	m_SceneManager->RegisterNewComponentType<MeshRenderer>();
+	return true;
+}
+
+bool Lux::Application::LoadSystemTypes()
+{
+	m_SceneManager->RegisterNewSystemType<RenderingSystem>();
 	return true;
 }

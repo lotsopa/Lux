@@ -34,6 +34,8 @@
     <ClInclude Include="Include\LuxPCH.h" />
     <ClInclude Include="Include\LuxRenderWindow.h" />
     <ClInclude Include="Include\LuxSceneManager.h" />
+    <ClInclude Include="Include\LuxSystem.h" />
+    <ClInclude Include="Include\LuxSystemFactory.h" />
     <ClInclude Include="Include\LuxTimer.h" />
     <ClInclude Include="Include\LuxResourceHandler.h" />
     <ClInclude Include="Include\LuxTransform.h" />
@@ -64,6 +66,8 @@
     <ClCompile Include="Source\LuxRenderWindow.cpp" />
     <ClCompile Include="Source\LuxResourceHandler.cpp" />
     <ClCompile Include="Source\LuxSceneManager.cpp" />
+    <ClCompile Include="Source\LuxSystem.cpp" />
+    <ClCompile Include="Source\LuxSystemFactory.cpp" />
     <ClCompile Include="Source\LuxTimer.cpp" />
     <ClCompile Include="Source\LuxTransform.cpp" />
   </ItemGroup>

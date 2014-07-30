@@ -16,19 +16,20 @@ namespace Lux
 		void Terminate();
 
 		virtual bool LoadComponentTypes();
+		virtual bool LoadSystemTypes();
 		virtual bool LoadContent() = 0;
 		virtual bool UnloadContent() = 0;
 
-		virtual bool Update(const float a_DeltaTime) = 0;
-		virtual bool OnFrameStarted(const float a_DeltaTime) = 0;
-		virtual bool OnFrameEnded(const float a_DeltaTime) = 0;
+		virtual bool Update(const float a_DeltaTime) = 0; // Not sure about this one
+		//virtual bool OnFrameStarted(const float a_DeltaTime) = 0;
+		//virtual bool OnFrameEnded(const float a_DeltaTime) = 0;
 
 		inline double GetTimeSinceStart() { return glfwGetTime();  }
 
 		const virtual bool ShouldQuit();
 
 	private:
-		void Render(const float a_DeltaTime);
+		void InternalUpdate(const float a_DeltaTime);
 		void PollEvents();
 		void CheckResult(bool res);
 

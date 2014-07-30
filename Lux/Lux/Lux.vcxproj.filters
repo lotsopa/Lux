@@ -96,6 +96,12 @@
     <ClInclude Include="Include\LuxRenderingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxSystemFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -165,6 +171,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxRenderingSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxSystemFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

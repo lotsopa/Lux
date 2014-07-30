@@ -3,9 +3,20 @@
 
 namespace Lux
 {
-	class RenderingSystem
+	class SceneManager;
+	class RenderWindow;
+
+	class RenderingSystem : public System
 	{
 		// TODO
+	public:
+		RenderingSystem();
+		~RenderingSystem();
+
+		virtual void ProcessUpdate(const float a_DeltaTime);
+		virtual bool Init(SceneManager* a_SceneManager);
+	private:
+		RenderWindow* m_RenderWindow;
 	};
 }
 
