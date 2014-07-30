@@ -9,7 +9,7 @@
 #include "LuxSceneManager.h"
 #include "LuxSystem.h"
 
-Lux::System::System()
+Lux::System::System() : m_SceneManager(nullptr)
 {
 
 }

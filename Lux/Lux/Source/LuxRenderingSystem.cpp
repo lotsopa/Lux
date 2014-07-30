@@ -11,7 +11,8 @@
 #include "LuxSystem.h"
 #include "LuxRenderingSystem.h"
 
-Lux::RenderingSystem::RenderingSystem()
+Lux::RenderingSystem::RenderingSystem() :
+System(), m_RenderWindow(nullptr)
 {
 
 }
