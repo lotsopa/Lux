@@ -29,19 +29,19 @@ Lux::SceneManager::~SceneManager()
 	SafePtrDelete(m_EntityFactory);
 	SafePtrDelete(m_SystemFactory);
 
-	SystemsVector::iterator sysIt;
+	SystemsMap::iterator sysIt;
 
-	for (sysIt = m_SystemsVector.begin(); sysIt != m_SystemsVector.end(); ++sysIt)
+	for (sysIt = m_SystemsMap.begin(); sysIt != m_SystemsMap.end(); ++sysIt)
 	{
-		delete (*sysIt);
+		delete sysIt->second;
 	}
-	m_SystemsVector.clear();
+	m_SystemsMap.clear();
 }
 
 Lux::Entity* Lux::SceneManager::CreateEntity()
 {
 	Entity* ent = m_EntityFactory->CreateEntity();
-	m_EntityComponentMap.insert(std::make_pair(ent, SceneManager::ComponentLayout(m_NumComponentTypes, this)));
+	m_EntityComponentMap.insert(std::make_pair(ent, SceneManager::ComponentLayout(m_NumComponentTypes, ent, this)));
 	return ent;
 }
 
@@ -59,11 +59,11 @@ void Lux::SceneManager::ProcessUpdate(const float a_Dt)
 
 void Lux::SceneManager::ProcessSystems(const float a_DeltaTime)
 {
-	SystemsVector::iterator sysIt;
+	SystemsMap::iterator sysIt;
 
-	for (sysIt = m_SystemsVector.begin(); sysIt != m_SystemsVector.end(); ++sysIt)
+	for (sysIt = m_SystemsMap.begin(); sysIt != m_SystemsMap.end(); ++sysIt)
 	{
-		System* systemPtr = (*sysIt);
+		System* systemPtr = sysIt->second;
 		systemPtr->ProcessUpdate(a_DeltaTime);
 	}
 }

@@ -36,10 +36,12 @@
     <ClInclude Include="Include\LuxSceneManager.h" />
     <ClInclude Include="Include\LuxSystem.h" />
     <ClInclude Include="Include\LuxSystemFactory.h" />
+    <ClInclude Include="Include\LuxThreadSafeQueue.h" />
     <ClInclude Include="Include\LuxTimer.h" />
     <ClInclude Include="Include\LuxResourceHandler.h" />
     <ClInclude Include="Include\LuxTransform.h" />
     <ClInclude Include="Include\LuxMeshRenderer.h" />
+    <ClInclude Include="Include\LuxSystemMessage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
@@ -68,6 +70,7 @@
     <ClCompile Include="Source\LuxSceneManager.cpp" />
     <ClCompile Include="Source\LuxSystem.cpp" />
     <ClCompile Include="Source\LuxSystemFactory.cpp" />
+    <ClCompile Include="Source\LuxThreadSafeQueue.cpp" />
     <ClCompile Include="Source\LuxTimer.cpp" />
     <ClCompile Include="Source\LuxTransform.cpp" />
   </ItemGroup>

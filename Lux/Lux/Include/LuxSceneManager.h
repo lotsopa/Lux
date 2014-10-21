@@ -35,13 +35,13 @@ namespace Lux
 		Registering component types MUST be done before the first entity is created in the program flow.
 		Registering new component types after even one entity has been created may lead to undefined behaviour.
 		*/
-		template<class T>
+		template<class ComponentType>
 		void RegisterNewComponentType()
 		{
-			Key k(typeid(T).name());
-			m_ComponentFactory->CreateComponentType<T>(LUX_COMPONENT_MEMORY_POOL_INITIAL_SIZE, LUX_COMPONENT_MEMORY_POOL_GROW_AMOUNT);
+			Key k(typeid(ComponentType).name());
+			m_ComponentFactory->CreateComponentType<ComponentType>(LUX_COMPONENT_MEMORY_POOL_INITIAL_SIZE, LUX_COMPONENT_MEMORY_POOL_GROW_AMOUNT);
 			m_ComponentIndexMap.insert(std::make_pair(k, m_NumComponentTypes));
-			m_DelFuncMap.insert(std::make_pair(m_NumComponentTypes, std::bind(&SceneManager::DestroyComponent<T>, this, std::placeholders::_1)));
+			m_DelFuncMap.insert(std::make_pair(m_NumComponentTypes, std::bind(&SceneManager::DestroyComponent<ComponentType>, this, std::placeholders::_1, std::placeholders::_2)));
 			m_NumComponentTypes++;
 		}
 
@@ -49,13 +49,13 @@ namespace Lux
 		Gets a Component of type T from an entity. Returns NULL if the entity does not have a component of this type attached.
 		Throws an exception if the passed Entity pointer is NULL or the component type is not registered.
 		*/
-		template<class T>
-		T* GetComponent(Entity* a_Ent)
+		template<class ComponentType>
+		ComponentType* GetComponent(Entity* a_Ent)
 		{
 			ComponentLayout& layout = m_EntityComponentMap.at(a_Ent);
-			unsigned int idx = m_ComponentIndexMap.at(Key(typeid(T).name()));
+			unsigned int idx = m_ComponentIndexMap.at(Key(typeid(ComponentType).name()));
 			
-			T* retVal = (T*)layout.m_Components[idx];
+			ComponentType* retVal = (ComponentType*)layout.m_Components[idx];
 			return retVal;
 		}
 
@@ -64,21 +64,32 @@ namespace Lux
 		Returns NULL if the entity already has a component of this type attached.
 		Throws an exception if the passed Entity pointer is NULL or the component type is unregistered.
 		*/
-		template <class T>
-		T* AttachNewComponent(Entity* a_Ent)
+		template <class ComponentType>
+		ComponentType* AttachNewComponent(Entity* a_Ent)
 		{
-			bool hasComponent = HasComponent<T>(a_Ent);
+			bool hasComponent = HasComponent<ComponentType>(a_Ent);
 
 			if (hasComponent)
 			{
 				return nullptr;
 			}
 
-			T* comp = m_ComponentFactory->CreateComponent<T>();
+			ComponentType* comp = m_ComponentFactory->CreateComponent<ComponentType>();
 			ComponentLayout& layout = m_EntityComponentMap.at(a_Ent);
-			Key k(typeid(T).name());
+			Key k(typeid(ComponentType).name());
 			unsigned int idx = m_ComponentIndexMap.at(k);
-			layout.m_Components[idx] = (Component*)comp;
+			Component* genericComp = (Component*)comp;
+			layout.m_Components[idx] = genericComp;
+
+			// Notify all Systems that are registered for this component type
+			std::pair<ComponentSystemMultiMap::iterator, ComponentSystemMultiMap::iterator> ret;
+			ret = m_ComponentSystemMap.equal_range(k);
+			ComponentSystemMultiMap::iterator iter;
+			for (iter = ret.first; iter != ret.second; ++iter)
+			{
+				iter->second->AddComponent(genericComp, a_Ent);
+			}
+
 			return comp;
 		}
 
@@ -87,11 +98,11 @@ namespace Lux
 		Returns true if there is a component of this type attached to the entity, false otherwise.
 		Throws an exception if the passed Entity pointer is NULL.
 		*/
-		template<class T>
+		template<class ComponentType>
 		bool HasComponent(Entity* a_Ent)
 		{
 			ComponentLayout& layout = m_EntityComponentMap.at(a_Ent);
-			Key k(typeid(T).name());
+			Key k(typeid(ComponentType).name());
 			unsigned int idx = m_ComponentIndexMap.at(k);
 			if (layout.m_Components[idx] == nullptr)
 			{
@@ -105,18 +116,19 @@ namespace Lux
 		Detaches a component of type T from the specified entity.
 		Throws an exception if the passed Entity pointer is NULL or the component type is unregistered.
 		*/
-		template<class T>
+		template<class ComponentType>
 		bool DetachComponent(Entity* a_Ent)
 		{
 			ComponentLayout& layout = m_EntityComponentMap.at(a_Ent);
-			unsigned int idx = m_ComponentIndexMap.at(Key(typeid(T).name()));
+			Key k(typeid(ComponentType).name());
+			unsigned int idx = m_ComponentIndexMap.at(k);
 
 			if (layout.m_Components[idx] == nullptr)
 			{
 				return false;
 			}
 
-			DestroyComponent<T>(layout.m_Components[idx]);
+			DestroyComponent<ComponentType>(layout.m_Components[idx], a_Ent);
 			return true;
 		}
 
@@ -126,19 +138,34 @@ namespace Lux
 		That's the reason there is no Create Function for the Systems. 
 		More than one system of each type is not allowed for obvious reasons.
 		*/
-		template<class T>
+		template<class SystemType>
 		void RegisterNewSystemType()
 		{
-			m_SystemFactory->AddSystemTypeToFactory<T>();
-			System* sys = m_SystemFactory->InstantiateNewSystem<T>();
+			m_SystemFactory->AddSystemTypeToFactory<SystemType>();
+			System* sys = m_SystemFactory->InstantiateNewSystem<SystemType>();
 			bool res = sys->Init(this);
 
 			if (!res)
 			{
 				ThrowError("Could not initialize system.");
 			}
+			Key k(typeid(SystemType).name());
+			m_SystemsMap.insert(std::make_pair(k,sys));
+		}
 
-			m_SystemsVector.push_back(sys);
+		/*
+		Registers the Component type with the system type. 
+		This notifies the program which kind of components it should forward to each system after they are created.
+		For example: When a Transform component is created, all systems which operate on a Transform type
+		will be automatically notified of its creation so they can operate on it.
+		*/
+		template<class ComponentType, class SystemType>
+		void RegisterComponentTypeWithSystem()
+		{
+			Key k(typeid(SystemType).name());
+			System* system = m_SystemsMap.at(k);
+			Key compKey(typeid(ComponentType).name());
+			m_ComponentSystemMap.insert(std::make_pair(compKey, system));
 		}
 
 		void ProcessUpdate(const float a_Dt);
@@ -147,11 +174,21 @@ namespace Lux
 
 	private:
 
-		template<class T>
-		void DestroyComponent(Component* a_Comp)
+		template<class ComponentType>
+		void DestroyComponent(Component* a_Comp, Entity* a_Entity)
 		{
+			Key k(typeid(ComponentType).name());
+			// Notify all Systems that are registered for this component type
+			std::pair<ComponentSystemMultiMap::iterator, ComponentSystemMultiMap::iterator> ret;
+			ret = m_ComponentSystemMap.equal_range(k);
+			ComponentSystemMultiMap::iterator iter;
+			for (iter = ret.first; iter != ret.second; ++iter)
+			{
+				iter->second->RemoveComponent(a_Comp, a_Entity);
+			}
+
 			// Cast down to appropriate type
-			T* realComp = (T*)a_Comp;
+			ComponentType* realComp = (ComponentType*)a_Comp;
 			if (m_ComponentFactory->DestroyComponent(realComp))
 			{
 				a_Comp = nullptr;
@@ -165,8 +202,8 @@ namespace Lux
 
 		struct ComponentLayout
 		{
-			ComponentLayout(const unsigned int a_NumComponents, SceneManager* a_Manager) :
-				m_NumComponents(a_NumComponents), m_SceneManager(a_Manager)
+			ComponentLayout(const unsigned int a_NumComponents, Entity* a_Owner, SceneManager* a_Manager) :
+				m_NumComponents(a_NumComponents), m_Owner(a_Owner), m_SceneManager(a_Manager)
 			{
 				m_Components = new Component*[m_NumComponents];
 				for (unsigned int i = 0; i < m_NumComponents; i++)
@@ -178,6 +215,7 @@ namespace Lux
 			ComponentLayout(const ComponentLayout& a_Other)
 			{
 				m_SceneManager = a_Other.m_SceneManager;
+				m_Owner = a_Other.m_Owner;
 				m_NumComponents = a_Other.m_NumComponents;
 				m_Components = new Component*[m_NumComponents];
 				for (unsigned int i = 0; i < m_NumComponents; i++)
@@ -195,7 +233,7 @@ namespace Lux
 				{
 					if (m_Components[it->first] != nullptr)
 					{
-						it->second(m_Components[it->first]);
+						it->second(m_Components[it->first], m_Owner);
 					}
 				}
 
@@ -205,6 +243,7 @@ namespace Lux
 			Component** m_Components;
 			unsigned int m_NumComponents;
 			SceneManager* m_SceneManager;
+			Entity* m_Owner;
 		};
 
 		void ProcessSystems(const float a_DeltaTime);
@@ -214,13 +253,15 @@ namespace Lux
 		SystemFactory* m_SystemFactory;
 		typedef std::unordered_map<Entity*, ComponentLayout> EntityComponentMap;
 		typedef std::map<Key, unsigned int> ComponentIndexMap;
-		typedef std::map<unsigned int, std::function<void(Component*)>> ComponentDelFuncMap;
-		typedef std::vector<System*> SystemsVector;
+		typedef std::map<unsigned int, std::function<void(Component*, Entity*)>> ComponentDelFuncMap;
+		typedef std::map<Key, System*> SystemsMap;
+		typedef std::multimap<Key, System*> ComponentSystemMultiMap;
 		EntityComponentMap m_EntityComponentMap;
 		ComponentIndexMap m_ComponentIndexMap;
 		ComponentDelFuncMap m_DelFuncMap;
 		unsigned int m_NumComponentTypes;
-		SystemsVector m_SystemsVector;
+		SystemsMap m_SystemsMap;
+		ComponentSystemMultiMap m_ComponentSystemMap;
 		RenderWindow* m_RenderWindow;
 	};
 }

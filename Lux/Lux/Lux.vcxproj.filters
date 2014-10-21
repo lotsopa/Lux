@@ -102,6 +102,12 @@
     <ClInclude Include="Include\LuxSystemFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxSystemMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxThreadSafeQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -177,6 +183,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxSystemFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxThreadSafeQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

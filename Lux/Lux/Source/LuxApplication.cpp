@@ -133,5 +133,6 @@ bool Lux::Application::LoadComponentTypes()
 bool Lux::Application::LoadSystemTypes()
 {
 	m_SceneManager->RegisterNewSystemType<RenderingSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Transform, RenderingSystem>();
 	return true;
 }
