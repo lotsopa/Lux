@@ -1,12 +1,12 @@
 #include "LuxPCH.h"
 #include "LuxEntity.h"
 
-Lux::Entity::Entity() : m_Index(-1)
+Lux::Core::Entity::Entity() : m_Index(-1)
 {
 	Reset();
 }
 
-Lux::Entity::~Entity()
+Lux::Core::Entity::~Entity()
 {
 
 }
@@ -16,7 +16,7 @@ Lux::Entity::~Entity()
 //	return m_Components[a_Type];
 //}
 
-void Lux::Entity::Reset()
+void Lux::Core::Entity::Reset()
 {
 	//for (unsigned int i = 0; i < COMPONENTS_SIZE; i++)
 	//{

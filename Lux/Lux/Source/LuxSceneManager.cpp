@@ -11,7 +11,7 @@
 #include "LuxSystemFactory.h"
 #include "LuxSceneManager.h"
 
-Lux::SceneManager::SceneManager(RenderWindow* a_RenderWindow) : 
+Lux::Core::SceneManager::SceneManager(RenderWindow* a_RenderWindow) : 
 m_NumComponentTypes(0),
 m_RenderWindow(a_RenderWindow)
 {
@@ -20,14 +20,14 @@ m_RenderWindow(a_RenderWindow)
 	m_SystemFactory = new SystemFactory();
 }
 
-Lux::SceneManager::~SceneManager()
+Lux::Core::SceneManager::~SceneManager()
 {
 	m_ComponentIndexMap.clear();
 	m_EntityComponentMap.clear();
 	m_DelFuncMap.clear();
-	SafePtrDelete(m_ComponentFactory);
-	SafePtrDelete(m_EntityFactory);
-	SafePtrDelete(m_SystemFactory);
+	Utility::SafePtrDelete(m_ComponentFactory);
+	Utility::SafePtrDelete(m_EntityFactory);
+	Utility::SafePtrDelete(m_SystemFactory);
 
 	SystemsMap::iterator sysIt;
 
@@ -38,26 +38,26 @@ Lux::SceneManager::~SceneManager()
 	m_SystemsMap.clear();
 }
 
-Lux::Entity* Lux::SceneManager::CreateEntity()
+Lux::Core::Entity* Lux::Core::SceneManager::CreateEntity()
 {
 	Entity* ent = m_EntityFactory->CreateEntity();
 	m_EntityComponentMap.insert(std::make_pair(ent, SceneManager::ComponentLayout(m_NumComponentTypes, ent, this)));
 	return ent;
 }
 
-bool Lux::SceneManager::DestroyEntity(Entity* a_Ent)
+bool Lux::Core::SceneManager::DestroyEntity(Entity* a_Ent)
 {
 	m_EntityComponentMap.erase(a_Ent);
 	bool ret = m_EntityFactory->DestroyEntity(a_Ent);
 	return ret;
 }
 
-void Lux::SceneManager::ProcessUpdate(const float a_Dt)
+void Lux::Core::SceneManager::ProcessUpdate(const float a_Dt)
 {
 	ProcessSystems(a_Dt);
 }
 
-void Lux::SceneManager::ProcessSystems(const float a_DeltaTime)
+void Lux::Core::SceneManager::ProcessSystems(const float a_DeltaTime)
 {
 	SystemsMap::iterator sysIt;
 

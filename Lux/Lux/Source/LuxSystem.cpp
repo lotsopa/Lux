@@ -10,17 +10,17 @@
 #include "LuxSceneManager.h"
 #include "LuxSystem.h"
 
-Lux::System::System() : m_SceneManager(nullptr)
+Lux::Core::System::System() : m_SceneManager(nullptr)
 {
 
 }
 
-Lux::System::~System()
+Lux::Core::System::~System()
 {
 
 }
 
-bool Lux::System::Init(SceneManager* a_SceneManager)
+bool Lux::Core::System::Init(SceneManager* a_SceneManager)
 {
 	LuxAssert(a_SceneManager);
 

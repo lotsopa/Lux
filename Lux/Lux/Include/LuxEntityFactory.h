@@ -3,23 +3,26 @@
 
 namespace Lux
 {
-	/*
-	The Entity Factory is responsible for creating and destroying entities 
-	and also keeps a list of all currently available entities. 
-	*/
-	class EntityFactory
+	namespace Core
 	{
-	public:
-		EntityFactory(const unsigned int a_InitialPoolSize, const unsigned int a_GrowSize);
-		~EntityFactory();
+		/*
+		The Entity Factory is responsible for creating and destroying entities
+		and also keeps a list of all currently available entities.
+		*/
+		class EntityFactory
+		{
+		public:
+			EntityFactory(const unsigned int a_InitialPoolSize, const unsigned int a_GrowSize);
+			~EntityFactory();
 
-		Entity* CreateEntity();
-		bool DestroyEntity(Entity* a_Entity);
-		// TODO - Figure out how to handle components
+			Entity* CreateEntity();
+			bool DestroyEntity(Entity* a_Entity);
+			// TODO - Figure out how to handle components
 
-	private:
-		ObjectPool<Entity> m_EntityMemoryPool;
-	};
+		private:
+			ObjectPool<Entity> m_EntityMemoryPool;
+		};
+	}
 }
 
 #endif

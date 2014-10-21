@@ -4,30 +4,30 @@
 #include "LuxObjectPool.h"
 #include "LuxEntityFactory.h"
 
-Lux::EntityFactory::EntityFactory(const unsigned int a_InitialPoolSize, const unsigned int a_GrowSize) :
+Lux::Core::EntityFactory::EntityFactory(const unsigned int a_InitialPoolSize, const unsigned int a_GrowSize) :
 m_EntityMemoryPool(a_InitialPoolSize, a_GrowSize)
 {
 
 }
 
-Lux::EntityFactory::~EntityFactory()
+Lux::Core::EntityFactory::~EntityFactory()
 {
 
 }
 
-Lux::Entity* Lux::EntityFactory::CreateEntity()
+Lux::Core::Entity* Lux::Core::EntityFactory::CreateEntity()
 {
 	Entity* ent = m_EntityMemoryPool.CreateObject();
 
 	if (ent == nullptr)
 	{
-		ThrowError("Fatal error. Could not create Entity.");
+		Utility::ThrowError("Fatal error. Could not create Entity.");
 	}
 	ent->Reset();
 	return ent;
 }
 
-bool Lux::EntityFactory::DestroyEntity(Entity* a_Entity)
+bool Lux::Core::EntityFactory::DestroyEntity(Entity* a_Entity)
 {
 	return m_EntityMemoryPool.DeleteObject(a_Entity);
 }

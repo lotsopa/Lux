@@ -5,12 +5,12 @@
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
 
-Lux::ComponentFactory::ComponentFactory()
+Lux::Core::ComponentFactory::ComponentFactory()
 {
 
 }
 
-Lux::ComponentFactory::~ComponentFactory()
+Lux::Core::ComponentFactory::~ComponentFactory()
 {
 	ComponentDelFuncMap::iterator it;
 

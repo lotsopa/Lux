@@ -7,13 +7,13 @@
 #include "LuxResourceHandler.h"
 #include "LuxFileHandler.h"
 
-Lux::ResourceHandler& Lux::ResourceHandler::GetInstance()
+Lux::Core::ResourceHandler& Lux::Core::ResourceHandler::GetInstance()
 {
 	static ResourceHandler instance;
 	return instance;
 }
 
-Lux::ResourceHandler::~ResourceHandler()
+Lux::Core::ResourceHandler::~ResourceHandler()
 {
 	MeshMap::iterator it;
 
@@ -40,12 +40,12 @@ Lux::ResourceHandler::~ResourceHandler()
 	m_TextureMap.clear();
 }
 
-Lux::ResourceHandler::ResourceHandler()
+Lux::Core::ResourceHandler::ResourceHandler()
 {
-	LUX_LOG(logINFO) << "Resource Handler created successfully.";
+	LUX_LOG(Utility::logINFO) << "Resource Handler created successfully.";
 }
 
-Lux::Mesh* Lux::ResourceHandler::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Core::Mesh* Lux::Core::ResourceHandler::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	// Have we already loaded this mesh before? If we have just return it.
 	Mesh* loadedMesh = GetLoadedMesh(a_File);
@@ -62,13 +62,13 @@ Lux::Mesh* Lux::ResourceHandler::CreateMeshFromFile(const String& a_File, const 
 	{
 		String errStr("Failed to read file. ");
 		errStr.append(importer.GetErrorString());
-		ThrowError(errStr);
+		Utility::ThrowError(errStr);
 	}
 
 	if (scene->mNumMeshes < 1)
 	{
 		String errStr("The file " + a_File + " does not contain any meshes.");
-		ThrowError(errStr);
+		Utility::ThrowError(errStr);
 	}
 
 	// Materials
@@ -126,11 +126,11 @@ Lux::Mesh* Lux::ResourceHandler::CreateMeshFromFile(const String& a_File, const 
 	return retMesh;
 }
 
-Lux::Mesh* Lux::ResourceHandler::CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Core::Mesh* Lux::Core::ResourceHandler::CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	if (a_Info == nullptr)
 	{
-		ThrowError("Failed to create entity from Memory. The passed FileInfo pointer is NULL.");
+		Utility::ThrowError("Failed to create entity from Memory. The passed FileInfo pointer is NULL.");
 	}
 
 	Assimp::Importer importer;
@@ -139,13 +139,13 @@ Lux::Mesh* Lux::ResourceHandler::CreateMeshFromMemory(FileInfo* a_Info, const St
 	{
 		String errStr("Failed to read file. ");
 		errStr.append(importer.GetErrorString());
-		ThrowError(errStr);
+		Utility::ThrowError(errStr);
 	}
 
 	if (scene->mNumMeshes < 1)
 	{
 		String errStr("The file does not contain any meshes.");
-		ThrowError(errStr);
+		Utility::ThrowError(errStr);
 	}
 
 	// Materials
@@ -202,7 +202,7 @@ Lux::Mesh* Lux::ResourceHandler::CreateMeshFromMemory(FileInfo* a_Info, const St
 	return retEntity;
 }
 
-void Lux::ResourceHandler::LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType)
+void Lux::Core::ResourceHandler::LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType)
 {
 	aiString texName;
 	unsigned int numTextures = a_Mat->GetTextureCount(a_TexType);
@@ -217,14 +217,14 @@ void Lux::ResourceHandler::LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, 
 		aiReturn texFound = a_Mat->GetTexture(a_TexType, i, &texName);
 		if (texFound != AI_SUCCESS)
 		{
-			LUX_LOG(logWARNING) << "Could not find texture " << texName.C_Str();
+			LUX_LOG(Utility::logWARNING) << "Could not find texture " << texName.C_Str();
 			continue;
 		}
 		CreateTextureFromFile(String(texName.C_Str()), String(texName.C_Str()));
 	}
 }
 
-const Lux::TextureIndex Lux::ResourceHandler::CreateTextureFromFile(const String& a_File, const String& a_TexName)
+const Lux::TextureIndex Lux::Core::ResourceHandler::CreateTextureFromFile(const String& a_File, const String& a_TexName)
 {
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
 
@@ -240,7 +240,7 @@ const Lux::TextureIndex Lux::ResourceHandler::CreateTextureFromFile(const String
 		if (imgFormat == FIF_UNKNOWN)
 		{
 			String err("The file " + a_File + " Could not be loaded. Unknown format.");
-			ThrowError(err);
+			Utility::ThrowError(err);
 		}
 	}
 
@@ -248,7 +248,7 @@ const Lux::TextureIndex Lux::ResourceHandler::CreateTextureFromFile(const String
 	if (!FreeImage_FIFSupportsReading(imgFormat))
 	{
 		String err("The file " + a_File + " Could not be loaded. The file extension does not support reading.");
-		ThrowError(err);
+		Utility::ThrowError(err);
 	}
 
 	// Load the file in a bitmap
@@ -258,7 +258,7 @@ const Lux::TextureIndex Lux::ResourceHandler::CreateTextureFromFile(const String
 	if (convertedBitmap == nullptr)
 	{
 		String err("The file " + a_File + " Could not be loaded. Loading function returned NULL.");
-		ThrowError(err);
+		Utility::ThrowError(err);
 	}
 
 	unsigned int imgWidth = FreeImage_GetWidth(convertedBitmap);
@@ -269,7 +269,7 @@ const Lux::TextureIndex Lux::ResourceHandler::CreateTextureFromFile(const String
 	if (imgWidth == 0 || imgHeight == 0 || bits == nullptr)
 	{
 		String err("The file " + a_File + " Could not be created. Failed to retrieve proper data from the loaded file.");
-		ThrowError(err);
+		Utility::ThrowError(err);
 	}
 
 	// Check if a texture with this name already exists
@@ -290,7 +290,7 @@ const Lux::TextureIndex Lux::ResourceHandler::CreateTextureFromFile(const String
 	if (!BindTexture(a_TexName))
 	{
 		String err("The file " + a_File + " Could not be created. Failed to bind OpenGL texture.");
-		ThrowError(err);
+		Utility::ThrowError(err);
 	}
 
 	//store the texture data for OpenGL use (FreeImage loads in BGRA order)
@@ -307,7 +307,7 @@ const Lux::TextureIndex Lux::ResourceHandler::CreateTextureFromFile(const String
 }
 
 
-bool Lux::ResourceHandler::BindTexture(const String& a_Name)
+bool Lux::Core::ResourceHandler::BindTexture(const String& a_Name)
 {
 	bool result = true;
 	//if this texture ID mapped, bind it's texture as current
@@ -325,37 +325,37 @@ bool Lux::ResourceHandler::BindTexture(const String& a_Name)
 }
 
 
-void Lux::ResourceHandler::UnbindCurrentTexture()
+void Lux::Core::ResourceHandler::UnbindCurrentTexture()
 {
 	glBindTexture(GL_TEXTURE_2D, NULL);
 }
 
 
 #if LUX_THREAD_SAFE == TRUE
-void Lux::ResourceHandler::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
+void Lux::Core::ResourceHandler::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
 	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
 	m_MeshMap.insert(std::make_pair(Key(a_Str), a_Ent));
 }
-Lux::Mesh* Lux::ResourceHandler::GetMesh(const String& a_Name)
+Lux::Core::Mesh* Lux::Core::ResourceHandler::GetMesh(const String& a_Name)
 {
 	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
 	return m_MeshMap.at(Key(a_Name));
 }
 
-void Lux::ResourceHandler::AddMaterialToMap(const String& a_Str, Material* a_Mat)
+void Lux::Core::ResourceHandler::AddMaterialToMap(const String& a_Str, Material* a_Mat)
 {
 	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
 	m_MaterialMap.insert(std::make_pair(Key(a_Str), a_Mat));
 }
 
-Lux::Material* Lux::ResourceHandler::GetMaterial(const String& a_Name)
+Lux::Core::Material* Lux::Core::ResourceHandler::GetMaterial(const String& a_Name)
 {
 	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
 	return m_MaterialMap.at(Key(a_Name));
 }
 
-bool Lux::ResourceHandler::MaterialExists(const String& a_Name)
+bool Lux::Core::ResourceHandler::MaterialExists(const String& a_Name)
 {
 	Key k(a_Name);
 	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
@@ -369,7 +369,7 @@ bool Lux::ResourceHandler::MaterialExists(const String& a_Name)
 	return false;
 }
 
-bool Lux::ResourceHandler::MeshExists(const String& a_Name)
+bool Lux::Core::ResourceHandler::MeshExists(const String& a_Name)
 {
 	Key k(a_Name);
 	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
@@ -383,7 +383,7 @@ bool Lux::ResourceHandler::MeshExists(const String& a_Name)
 	return false;
 }
 
-bool Lux::ResourceHandler::TextureExists(const String& a_Name)
+bool Lux::Core::ResourceHandler::TextureExists(const String& a_Name)
 {
 	Key k(a_Name);
 	std::unique_lock<std::mutex> lock(m_TextureMapMutex); // Upon construction of the lock the mutex will be immediately locked
@@ -397,19 +397,19 @@ bool Lux::ResourceHandler::TextureExists(const String& a_Name)
 	return false;
 }
 
-Lux::TextureIndex Lux::ResourceHandler::GetTextureIndex(const String& a_Name)
+Lux::TextureIndex Lux::Core::ResourceHandler::GetTextureIndex(const String& a_Name)
 {
 	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
 	return m_TextureMap.at(Key(a_Name));
 }
 
-void Lux::ResourceHandler::AddTextureToMap(const String& a_Str, TextureIndex a_Idx)
+void Lux::Core::ResourceHandler::AddTextureToMap(const String& a_Str, TextureIndex a_Idx)
 {
 	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
 	m_TextureMap.insert(std::make_pair(Key(a_Str), a_Idx));
 }
 
-bool Lux::ResourceHandler::DeleteTexture(const String& a_Name)
+bool Lux::Core::ResourceHandler::DeleteTexture(const String& a_Name)
 {
 	if (!TextureExists(a_Name))
 	{
@@ -425,7 +425,7 @@ bool Lux::ResourceHandler::DeleteTexture(const String& a_Name)
 	return true;
 }
 
-void Lux::ResourceHandler::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
+void Lux::Core::ResourceHandler::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
 {
 	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
 	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), a_Ent));
@@ -445,27 +445,27 @@ Lux::Mesh* Lux::ResourceHandler::GetLoadedMesh(const String& a_FileStr)
 }
 
 #else
-void Lux::ResourceHandler::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
+void Lux::Core::ResourceHandler::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
 	m_MeshMap.insert(std::make_pair(Key(a_Str), a_Ent));
 }
 
-Lux::Mesh* Lux::ResourceHandler::GetMesh(const String& a_Name)
+Lux::Core::Mesh* Lux::Core::ResourceHandler::GetMesh(const String& a_Name)
 {
 	return m_MeshMap.at(Key(a_Name));
 }
 
-void Lux::ResourceHandler::AddMaterialToMap(const String& a_Str, Material* a_Mat)
+void Lux::Core::ResourceHandler::AddMaterialToMap(const String& a_Str, Material* a_Mat)
 {
 	m_MaterialMap.insert(std::make_pair(Key(a_Str), a_Mat));
 }
 
-Lux::Material* Lux::ResourceHandler::GetMaterial(const String& a_Name)
+Lux::Core::Material* Lux::Core::ResourceHandler::GetMaterial(const String& a_Name)
 {
 	return m_MaterialMap.at(Key(a_Name));
 }
 
-bool Lux::ResourceHandler::MaterialExists(const String& a_Name)
+bool Lux::Core::ResourceHandler::MaterialExists(const String& a_Name)
 {
 	Key k(a_Name);
 	unsigned int count = m_MaterialMap.count(k);
@@ -478,7 +478,7 @@ bool Lux::ResourceHandler::MaterialExists(const String& a_Name)
 	return false;
 }
 
-bool Lux::ResourceHandler::MeshExists(const String& a_Name)
+bool Lux::Core::ResourceHandler::MeshExists(const String& a_Name)
 {
 	Key k(a_Name);
 	unsigned int count = m_MeshMap.count(k);
@@ -491,7 +491,7 @@ bool Lux::ResourceHandler::MeshExists(const String& a_Name)
 	return false;
 }
 
-bool Lux::ResourceHandler::TextureExists(const String& a_Name)
+bool Lux::Core::ResourceHandler::TextureExists(const String& a_Name)
 {
 	Key k(a_Name);
 	unsigned int count = m_TextureMap.count(k);
@@ -504,21 +504,21 @@ bool Lux::ResourceHandler::TextureExists(const String& a_Name)
 	return false;
 }
 
-Lux::TextureIndex Lux::ResourceHandler::GetTextureIndex(const String& a_Name)
+Lux::TextureIndex Lux::Core::ResourceHandler::GetTextureIndex(const String& a_Name)
 {
 	return m_TextureMap.at(Key(a_Name));
 }
 
-void Lux::ResourceHandler::AddTextureToMap(const String& a_Str, TextureIndex a_Idx)
+void Lux::Core::ResourceHandler::AddTextureToMap(const String& a_Str, TextureIndex a_Idx)
 {
 	m_TextureMap.insert(std::make_pair(Key(a_Str), a_Idx));
 }
 
-bool Lux::ResourceHandler::DeleteTexture(const String& a_Name)
+bool Lux::Core::ResourceHandler::DeleteTexture(const String& a_Name)
 {
 	if (!TextureExists(a_Name))
 	{
-		LUX_LOG(logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
+		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
 		return false;
 	}
 	TextureIndex idx = GetTextureIndex(a_Name);
@@ -528,12 +528,12 @@ bool Lux::ResourceHandler::DeleteTexture(const String& a_Name)
 	return true;
 }
 
-void Lux::ResourceHandler::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
+void Lux::Core::ResourceHandler::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
 {
 	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), a_Ent));
 }
 
-Lux::Mesh* Lux::ResourceHandler::GetLoadedMesh(const String& a_FileStr)
+Lux::Core::Mesh* Lux::Core::ResourceHandler::GetLoadedMesh(const String& a_FileStr)
 {
 	MeshMap::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
 

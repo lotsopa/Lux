@@ -4,12 +4,12 @@
 #include "LuxRenderingSystem.h"
 #include "LuxSystemFactory.h"
 
-Lux::SystemFactory::SystemFactory()
+Lux::Core::SystemFactory::SystemFactory()
 {
 
 }
 
-Lux::SystemFactory::~SystemFactory()
+Lux::Core::SystemFactory::~SystemFactory()
 {
 	m_SystemTypeMap.clear();
 }

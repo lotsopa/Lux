@@ -3,26 +3,29 @@
 
 namespace Lux
 {
-	class EventListener;
-
-	class RenderWindow
+	namespace Core
 	{
-	public:
-		RenderWindow();
-		~RenderWindow();
+		class EventListener;
 
-		bool Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_GLVerMajor, unsigned int a_GLVerMinor, unsigned int a_AA);
+		class RenderWindow
+		{
+		public:
+			RenderWindow();
+			~RenderWindow();
 
-		inline GLFWwindow* GetWindowHandle() { return m_WindowHandle; }
-		inline EventListener* GetInputListener() { return m_Input; }
+			bool Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_AA);
 
-		void SetInputListener(EventListener* a_Listener);
+			inline GLFWwindow* GetWindowHandle() { return m_WindowHandle; }
+			inline EventListener* GetInputListener() { return m_Input; }
 
-	private:
-		GLFWwindow* m_WindowHandle;
-		EventListener* m_Input;
+			void SetInputListener(EventListener* a_Listener);
 
-	};
+		private:
+			GLFWwindow* m_WindowHandle;
+			EventListener* m_Input;
+
+		};
+	}
 }
 
 #endif

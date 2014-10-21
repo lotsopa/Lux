@@ -3,31 +3,34 @@
 
 namespace Lux
 {
-	class SubMesh;
-	class MeshAnimation;
-
-	/*
-	Mesh component which can be added to an entity.
-	A mesh can be composed of one or more sub meshes.
-	*/
-	class Mesh
+	namespace Core
 	{
-	public:
-		Mesh();
-		Mesh(const Mesh& a_Mesh);
-		Mesh(unsigned int a_NumMeshes, unsigned int a_NumAnims);
-		~Mesh();
+		class SubMesh;
+		class MeshAnimation;
 
-	private:
-		SubMesh** m_SubMeshes;
-		MeshAnimation** m_AnimationData;
-		unsigned int m_NumSubMeshes;
-		unsigned int m_NumAnimations;
-		void AddSubMesh(SubMesh* a_Mesh);
-		void AddAnimation(MeshAnimation* a_Anim);
-		friend class ResourceHandler;
+		/*
+		Mesh component which can be added to an entity.
+		A mesh can be composed of one or more sub meshes.
+		*/
+		class Mesh
+		{
+		public:
+			Mesh();
+			Mesh(const Mesh& a_Mesh);
+			Mesh(unsigned int a_NumMeshes, unsigned int a_NumAnims);
+			~Mesh();
 
-	};
+		private:
+			SubMesh** m_SubMeshes;
+			MeshAnimation** m_AnimationData;
+			unsigned int m_NumSubMeshes;
+			unsigned int m_NumAnimations;
+			void AddSubMesh(SubMesh* a_Mesh);
+			void AddAnimation(MeshAnimation* a_Anim);
+			friend class ResourceHandler;
+
+		};
+	}
 }
 
 #endif

@@ -4,20 +4,23 @@
 
 namespace Lux
 {
-	class Transform : public Component
+	namespace Core
 	{
-	public:
-		Transform();
-		Transform(const mat4x4& a_TMat);
-		~Transform();
+		class Transform : public Component
+		{
+		public:
+			Transform();
+			Transform(const mat4x4& a_TMat);
+			~Transform();
 
-	private:
-		mat4x4 m_TransformMatrix;
-		
-	protected:
-		void Reset();
-		friend class ComponentFactory;
-	};
+		private:
+			mat4x4 m_TransformMatrix;
+
+		protected:
+			void Reset();
+			friend class ComponentFactory;
+		};
+	}
 }
 
 #endif

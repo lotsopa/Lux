@@ -2,27 +2,27 @@
 #include "LuxMesh.h"
 #include "LuxMeshRenderer.h"
 
-Lux::MeshRenderer::MeshRenderer() : Component(), m_Mesh(nullptr)
+Lux::Graphics::MeshRenderer::MeshRenderer() : Component(), m_Mesh(nullptr)
 {
 
 }
 
-Lux::MeshRenderer::MeshRenderer(Mesh* a_Mesh) : Component(), m_Mesh(a_Mesh)
+Lux::Graphics::MeshRenderer::MeshRenderer(Core::Mesh* a_Mesh) : Component(), m_Mesh(a_Mesh)
 {
 
 }
 
-Lux::MeshRenderer::~MeshRenderer()
+Lux::Graphics::MeshRenderer::~MeshRenderer()
 {
 
 }
 
-void Lux::MeshRenderer::Reset()
+void Lux::Graphics::MeshRenderer::Reset()
 {
 
 }
 
-void Lux::MeshRenderer::SetMesh(Mesh* a_Mesh)
+void Lux::Graphics::MeshRenderer::SetMesh(Core::Mesh* a_Mesh)
 {
 	m_Mesh = a_Mesh;
 }

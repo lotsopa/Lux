@@ -3,22 +3,22 @@
 #include "LuxEventListener.h"
 #include "LuxEventHandler.h"
 
-Lux::RenderWindow::RenderWindow() :
+Lux::Core::RenderWindow::RenderWindow() :
 m_WindowHandle(0), m_Input(0)
 {
 
 }
 
-Lux::RenderWindow::~RenderWindow()
+Lux::Core::RenderWindow::~RenderWindow()
 {
-	SafePtrDelete(m_Input);
+	Utility::SafePtrDelete(m_Input);
 }
 
-bool Lux::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_GLVerMajor, unsigned int a_GLVerMinor, unsigned int a_AA)
+bool Lux::Core::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_AA)
 {
 	glfwWindowHint(GLFW_SAMPLES, a_AA);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, a_GLVerMajor);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, a_GLVerMinor);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -26,7 +26,7 @@ bool Lux::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_Height, 
 	m_WindowHandle = glfwCreateWindow(a_Width, a_Height, a_Caption.c_str(), nullptr, nullptr);
 	if (m_WindowHandle == nullptr)
 	{
-		LUX_LOG(logERROR) << "Failed to initialize specified OpenGL " << a_GLVerMajor << "." << a_GLVerMinor << " Context.";
+		LUX_LOG(Utility::logERROR) << "Failed to initialize specified OpenGL " << 4 << "." << 0 << " Context.";
 		glfwTerminate();
 		return false;
 	}
@@ -37,7 +37,7 @@ bool Lux::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_Height, 
 	int initResult = glewInit();
 	if (initResult != GLEW_OK)
 	{
-		LUX_LOG(logERROR) << "Failed to initialize GLEW. " << "Error code: " << initResult;
+		LUX_LOG(Utility::logERROR) << "Failed to initialize GLEW. " << "Error code: " << initResult;
 		return false;
 	}
 
@@ -56,17 +56,17 @@ bool Lux::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_Height, 
 	return true;
 }
 
-void Lux::RenderWindow::SetInputListener(EventListener* a_Listener)
+void Lux::Core::RenderWindow::SetInputListener(EventListener* a_Listener)
 {
 	LuxAssert(a_Listener);
 
 	if (a_Listener == nullptr)
 	{
-		LUX_LOG(logWARNING) << "A Render Window Input listener cannot be null. Aborting...";
+		LUX_LOG(Utility::logWARNING) << "A Render Window Input listener cannot be null. Aborting...";
 		return;
 	}
 	EventHandler::GetInstance().UnregisterInputListenerWindow(this);
-	SafePtrDelete(m_Input);
+	Utility::SafePtrDelete(m_Input);
 	m_Input = a_Listener;
 	m_Input->SetWindowOwner(this);
 	EventHandler::GetInstance().RegisterInputListenerWindow(this);

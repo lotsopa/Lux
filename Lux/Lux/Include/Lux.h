@@ -20,7 +20,6 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxMaterial.h"
 #include "LuxComponentFactory.h"
 #include "LuxSystem.h"
-#include "LuxSystemMessage.h"
 #include "LuxRenderingSystem.h"
 #include "LuxSystemFactory.h"
 #include "LuxMeshAnimation.h"

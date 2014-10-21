@@ -4,20 +4,27 @@
 
 namespace Lux
 {
-	class Mesh;
-	class MeshRenderer : public Component
+	namespace Core
 	{
-	public:
-		MeshRenderer();
-		MeshRenderer(Mesh* a_Mesh);
-		~MeshRenderer();
+		class Mesh;
+	}
 
-		void SetMesh(Mesh* a_Mesh);
-	protected:
-		Mesh* m_Mesh;
-		void Reset();
-		friend class ComponentFactory;
-	};
+	namespace Graphics
+	{
+		class MeshRenderer : public Core::Component
+		{
+		public:
+			MeshRenderer();
+			MeshRenderer(Core::Mesh* a_Mesh);
+			~MeshRenderer();
+
+			void SetMesh(Core::Mesh* a_Mesh);
+		protected:
+			Core::Mesh* m_Mesh;
+			void Reset();
+			friend class Core::ComponentFactory;
+		};
+	}
 }
 
 #endif

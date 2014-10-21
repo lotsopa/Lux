@@ -1,25 +1,25 @@
 #include "LuxPCH.h"
 #include "LuxTransform.h"
 
-Lux::Transform::Transform() :
+Lux::Core::Transform::Transform() :
 Component(),
 m_TransformMatrix()
 {
 
 }
 
-Lux::Transform::Transform(const mat4x4& a_TMat) :
+Lux::Core::Transform::Transform(const mat4x4& a_TMat) :
 m_TransformMatrix(a_TMat)
 {
 
 }
 
-Lux::Transform::~Transform()
+Lux::Core::Transform::~Transform()
 {
 
 }
 
-void Lux::Transform::Reset()
+void Lux::Core::Transform::Reset()
 {
 	m_TransformMatrix = mat4x4();
 }

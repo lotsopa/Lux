@@ -2,7 +2,7 @@
 #include "LuxMaterial.h"
 #include "LuxSubMesh.h"
 
-Lux::SubMesh::SubMesh() :
+Lux::Core::SubMesh::SubMesh() :
 m_Bones(nullptr),
 m_Indices(nullptr),
 m_VertexNormals(nullptr),
@@ -26,7 +26,7 @@ m_VertexBitangents(nullptr)
 	}
 }
 
-Lux::SubMesh::SubMesh(aiMesh& a_Mesh) : 
+Lux::Core::SubMesh::SubMesh(aiMesh& a_Mesh) :
 SubMesh()
 {
 	// Fill vertices
@@ -123,7 +123,7 @@ SubMesh()
 	}
 }
 
-Lux::SubMesh::SubMesh(const SubMesh& a_SubMesh)
+Lux::Core::SubMesh::SubMesh(const SubMesh& a_SubMesh)
 {
 	// Fill vertices
 	m_NumVertices = a_SubMesh.m_NumVertices;
@@ -210,52 +210,52 @@ Lux::SubMesh::SubMesh(const SubMesh& a_SubMesh)
 	}
 }
 
-Lux::SubMesh::~SubMesh()
+Lux::Core::SubMesh::~SubMesh()
 {
 	SafeDeleteAttributes();
 }
 
-void Lux::SubMesh::SafeDeleteAttributes()
+void Lux::Core::SubMesh::SafeDeleteAttributes()
 {
-	SafeArrayDelete(m_Vertices);
-	SafeArrayDelete(m_Indices);
-	SafeArrayDelete(m_VertexNormals);
-	SafeArrayDelete(m_VertexTangents);
-	SafeArrayDelete(m_VertexBitangents);
+	Utility::SafeArrayDelete(m_Vertices);
+	Utility::SafeArrayDelete(m_Indices);
+	Utility::SafeArrayDelete(m_VertexNormals);
+	Utility::SafeArrayDelete(m_VertexTangents);
+	Utility::SafeArrayDelete(m_VertexBitangents);
 	// Materials are managed by the resource manager, so don't destroy them here
 
 	if (m_NumBones)
 	{
 		for (unsigned int i = 0; i < m_NumBones; i++)
 		{
-			SafePtrDelete(m_Bones[i]);
+			Utility::SafePtrDelete(m_Bones[i]);
 		}
-		SafeArrayDelete(m_Bones);
+		Utility::SafeArrayDelete(m_Bones);
 	}
 
 	for (int i = 0; i < AI_MAX_NUMBER_OF_COLOR_SETS; i++)
 	{
-		SafeArrayDelete(m_VertexColorSets[i]);
+		Utility::SafeArrayDelete(m_VertexColorSets[i]);
 	}
 
 	for (int i = 0; i < AI_MAX_NUMBER_OF_TEXTURECOORDS; i++)
 	{
-		SafeArrayDelete(m_TextureCoordSets[i]);
+		Utility::SafeArrayDelete(m_TextureCoordSets[i]);
 	}
 }
 
-Lux::Material* Lux::SubMesh::GetMaterial()
+Lux::Core::Material* Lux::Core::SubMesh::GetMaterial()
 {
 	return m_Material;
 }
 
-void Lux::SubMesh::SetMaterial(Material* a_Mat)
+void Lux::Core::SubMesh::SetMaterial(Material* a_Mat)
 {
 	LuxAssert(a_Mat);
 
 	if (a_Mat == nullptr)
 	{
-		LUX_LOG(logWARNING) << "NULL passed to SetMaterial() function. Nothing done.";
+		LUX_LOG(Utility::logWARNING) << "NULL passed to SetMaterial() function. Nothing done.";
 	}
 
 	m_Material = a_Mat;

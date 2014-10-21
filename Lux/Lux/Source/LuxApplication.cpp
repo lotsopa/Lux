@@ -15,9 +15,9 @@
 #include "LuxSceneManager.h"
 #include "LuxTimer.h"
 
-static void GLFWErrorCallbackFunc(int error, const char* description)
+static void ErrorCallbackFunc(int error, const char* description)
 {
-	LUX_LOG(Lux::logERROR) << "A GLFW Error occurred. " << "Error Code: " << error << ". " << "Error description: " << description;
+	LUX_LOG(Lux::Utility::logERROR) << "An Error occurred. " << "Error Code: " << error << ". " << "Error description: " << description;
 }
 
 Lux::Application::Application() :
@@ -28,33 +28,33 @@ m_Window(nullptr), m_SceneManager(nullptr)
 
 Lux::Application::~Application()
 {
-	SafePtrDelete(m_Window);
-	SafePtrDelete(m_SceneManager);
+	Utility::SafePtrDelete(m_Window);
+	Utility::SafePtrDelete(m_SceneManager);
 }
 
-bool Lux::Application::Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_GLVerMajor, unsigned int a_GLVerMinor, unsigned int a_AA, TLogLevel a_LogLevel)
+bool Lux::Application::Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_AA, Utility::TLogLevel a_LogLevel)
 {
 	// Configure logging system
-	FILELog::ReportingLevel() = a_LogLevel;
+	Utility::FILELog::ReportingLevel() = a_LogLevel;
 	FILE* logFile = 0;
 	fopen_s(&logFile, "Lux.log", "w");
-	Output2FILE::Stream() = logFile;
+	Utility::Output2FILE::Stream() = logFile;
 
-	LUX_LOG(logINFO) << "Logger started.";
+	LUX_LOG(Utility::logINFO) << "Logger started.";
 
-	glfwSetErrorCallback(GLFWErrorCallbackFunc);
+	glfwSetErrorCallback(ErrorCallbackFunc);
 
 	// Init GLFW
 	int initResult = glfwInit();
 	if (!initResult)
 	{
-		LUX_LOG(logERROR) << "Failed to initialize GLFW. " << "Error Code: " << initResult;
+		LUX_LOG(Utility::logERROR) << "Failed to initialize GLFW. " << "Error Code: " << initResult;
 		return false;
 	}
 
 	// Init the Render Window
-	m_Window = new RenderWindow();
-	bool windowInit = m_Window->Initialize(a_Width, a_Height, a_Caption, a_GLVerMajor, a_GLVerMinor, a_AA);
+	m_Window = new Core::RenderWindow();
+	bool windowInit = m_Window->Initialize(a_Width, a_Height, a_Caption, a_AA);
 
 	if (!windowInit)
 	{
@@ -62,7 +62,7 @@ bool Lux::Application::Initialize(unsigned int a_Width, unsigned int a_Height, S
 	}
 
 	// Init the Scene Manager
-	m_SceneManager = new SceneManager(m_Window);
+	m_SceneManager = new Core::SceneManager(m_Window);
 	LoadComponentTypes();
 	LoadSystemTypes();
 	return true;
@@ -92,7 +92,7 @@ void Lux::Application::PollEvents()
 void Lux::Application::Run()
 {
 	bool quit = false;
-	Timer timer;
+	Utility::Timer timer;
 	float dt = 0.0f;
 	bool result = true;
 	// Main loop
@@ -117,7 +117,7 @@ void Lux::Application::CheckResult(bool res)
 {
 	if (!res)
 	{
-		LUX_LOG(logERROR) << "Fatal error during program execution. Main loop function returned false. Throwing exception...";
+		LUX_LOG(Utility::logERROR) << "Fatal error during program execution. Main loop function returned false. Throwing exception...";
 		MessageBox(nullptr, "Fatal error during execution.Aborting program.", "Error", MB_ICONERROR | MB_SETFOREGROUND);
 		throw std::invalid_argument("Main loop function returned false.");
 	}
@@ -125,14 +125,14 @@ void Lux::Application::CheckResult(bool res)
 
 bool Lux::Application::LoadComponentTypes()
 {
-	m_SceneManager->RegisterNewComponentType<Transform>();
-	m_SceneManager->RegisterNewComponentType<MeshRenderer>();
+	m_SceneManager->RegisterNewComponentType<Core::Transform>();
+	m_SceneManager->RegisterNewComponentType<Graphics::MeshRenderer>();
 	return true;
 }
 
 bool Lux::Application::LoadSystemTypes()
 {
-	m_SceneManager->RegisterNewSystemType<RenderingSystem>();
-	m_SceneManager->RegisterComponentTypeWithSystem<Transform, RenderingSystem>();
+	m_SceneManager->RegisterNewSystemType<Graphics::RenderingSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Core::Transform, Graphics::RenderingSystem>();
 	return true;
 }

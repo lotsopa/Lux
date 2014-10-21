@@ -3,52 +3,55 @@
 
 namespace Lux
 {
-	class System; 
-	class SystemFactory
+	namespace Core
 	{
-	public:
-		SystemFactory();
-		~SystemFactory();
-
-		template<class T>
-		void AddSystemTypeToFactory()
+		class System;
+		class SystemFactory
 		{
-			Key key(typeid(T).name());
-			m_SystemTypeMap.insert(std::make_pair(key, &CreateClassInstance<T>));
-		}
+		public:
+			SystemFactory();
+			~SystemFactory();
 
-		template<class T>
-		System* InstantiateNewSystem()
-		{
-			Key key(typeid(T).name());
-			return m_SystemTypeMap.at(key)();
-		}
-
-		template<class T>
-		bool SystemTypeExists()
-		{
-			Key key(typeid(T).name());
-			int count = m_SystemTypeMap.count(key);
-
-			if (count > 0)
+			template<class T>
+			void AddSystemTypeToFactory()
 			{
-				return true;
+				Key key(typeid(T).name());
+				m_SystemTypeMap.insert(std::make_pair(key, &CreateClassInstance<T>));
 			}
 
-			return false;
-		}
+			template<class T>
+			System* InstantiateNewSystem()
+			{
+				Key key(typeid(T).name());
+				return m_SystemTypeMap.at(key)();
+			}
 
-	private:
+			template<class T>
+			bool SystemTypeExists()
+			{
+				Key key(typeid(T).name());
+				int count = m_SystemTypeMap.count(key);
 
-		template<typename T> 
-		static System* CreateClassInstance()
-		{
-			return new T;
-		}
+				if (count > 0)
+				{
+					return true;
+				}
 
-		typedef std::map<Key, System*(*)()> SystemConstructorMap;
-		SystemConstructorMap m_SystemTypeMap;
-	};
+				return false;
+			}
+
+		private:
+
+			template<typename T>
+			static System* CreateClassInstance()
+			{
+				return new T;
+			}
+
+			typedef std::map<Key, System*(*)()> SystemConstructorMap;
+			SystemConstructorMap m_SystemTypeMap;
+		};
+	}
 }
 
 #endif

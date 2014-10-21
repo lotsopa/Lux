@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxMeshAnimation.h"
 
-Lux::MeshAnimation::NodeChannel::NodeChannel(String& a_Name, unsigned int a_NumPosKeys, unsigned int a_NumScaleKeys, unsigned int a_NumRotKeys) :
+Lux::Core::MeshAnimation::NodeChannel::NodeChannel(String& a_Name, unsigned int a_NumPosKeys, unsigned int a_NumScaleKeys, unsigned int a_NumRotKeys) :
 m_Name(a_Name),
 m_NumPositionKeys(a_NumPosKeys),
 m_NumRotationKeys(a_NumRotKeys),
@@ -15,7 +15,7 @@ m_NumScalingKeys(a_NumScaleKeys)
 	m_ScalingKeys = new VectorKey[m_NumScalingKeys];
 }
 
-Lux::MeshAnimation::NodeChannel::NodeChannel(aiNodeAnim& a_NodeAnim)
+Lux::Core::MeshAnimation::NodeChannel::NodeChannel(aiNodeAnim& a_NodeAnim)
 {
 	m_NumPositionKeys = a_NodeAnim.mNumPositionKeys;
 	m_NumRotationKeys = a_NodeAnim.mNumRotationKeys;
@@ -55,7 +55,7 @@ Lux::MeshAnimation::NodeChannel::NodeChannel(aiNodeAnim& a_NodeAnim)
 	}
 }
 
-Lux::MeshAnimation::NodeChannel::NodeChannel(const NodeChannel& a_Channel)
+Lux::Core::MeshAnimation::NodeChannel::NodeChannel(const NodeChannel& a_Channel)
 {
 	m_NumPositionKeys = a_Channel.m_NumPositionKeys;
 	m_NumRotationKeys = a_Channel.m_NumRotationKeys;
@@ -95,14 +95,14 @@ Lux::MeshAnimation::NodeChannel::NodeChannel(const NodeChannel& a_Channel)
 	}
 }
 
-Lux::MeshAnimation::NodeChannel::~NodeChannel()
+Lux::Core::MeshAnimation::NodeChannel::~NodeChannel()
 {
-	SafeArrayDelete(m_PositionKeys);
-	SafeArrayDelete(m_RotationKeys);
-	SafeArrayDelete(m_ScalingKeys);
+	Utility::SafeArrayDelete(m_PositionKeys);
+	Utility::SafeArrayDelete(m_RotationKeys);
+	Utility::SafeArrayDelete(m_ScalingKeys);
 }
 
-Lux::MeshAnimation::AnimBehaviour Lux::MeshAnimation::NodeChannel::ConvertAssimpAnimBehaviour(aiAnimBehaviour b)
+Lux::Core::MeshAnimation::AnimBehaviour Lux::Core::MeshAnimation::NodeChannel::ConvertAssimpAnimBehaviour(aiAnimBehaviour b)
 {
 	AnimBehaviour ret;
 	switch (b)
@@ -124,18 +124,18 @@ Lux::MeshAnimation::AnimBehaviour Lux::MeshAnimation::NodeChannel::ConvertAssimp
 		break;
 
 	default:
-		LUX_LOG(logWARNING) << "Unrecognized Animation state when converting.";
+		LUX_LOG(Utility::logWARNING) << "Unrecognized Animation state when converting.";
 		break;
 	}
 	return ret;
 }
 
-Lux::MeshAnimation::MeshChannel::MeshChannel(unsigned int a_NumMeshKeys, String& a_Name) : m_Name(a_Name), m_NumKeys(a_NumMeshKeys)
+Lux::Core::MeshAnimation::MeshChannel::MeshChannel(unsigned int a_NumMeshKeys, String& a_Name) : m_Name(a_Name), m_NumKeys(a_NumMeshKeys)
 {
 	m_MeshKeys = new MeshKey[m_NumKeys];
 }
 
-Lux::MeshAnimation::MeshChannel::MeshChannel(aiMeshAnim& a_MeshAnim)
+Lux::Core::MeshAnimation::MeshChannel::MeshChannel(aiMeshAnim& a_MeshAnim)
 {
 	m_Name = a_MeshAnim.mName.C_Str();
 	m_NumKeys = a_MeshAnim.mNumKeys;
@@ -146,7 +146,7 @@ Lux::MeshAnimation::MeshChannel::MeshChannel(aiMeshAnim& a_MeshAnim)
 	}
 }
 
-Lux::MeshAnimation::MeshChannel::MeshChannel(const MeshChannel& a_Channel)
+Lux::Core::MeshAnimation::MeshChannel::MeshChannel(const MeshChannel& a_Channel)
 {
 	m_Name = a_Channel.m_Name;
 	m_NumKeys = a_Channel.m_NumKeys;
@@ -157,96 +157,96 @@ Lux::MeshAnimation::MeshChannel::MeshChannel(const MeshChannel& a_Channel)
 	}
 }
 
-Lux::MeshAnimation::MeshChannel::~MeshChannel()
+Lux::Core::MeshAnimation::MeshChannel::~MeshChannel()
 {
-	SafeArrayDelete(m_MeshKeys);
+	Utility::SafeArrayDelete(m_MeshKeys);
 }
 
-Lux::MeshAnimation::VectorKey::VectorKey(aiVectorKey& a_Key)
-{
-	m_Time = a_Key.mTime;
-	m_Value = ConvertVec3AssimpToGLM(a_Key.mValue);
-}
-
-Lux::MeshAnimation::VectorKey::VectorKey() : m_Time(0.0), m_Value()
-{
-
-}
-
-Lux::MeshAnimation::VectorKey::~VectorKey()
-{
-
-}
-
-void Lux::MeshAnimation::VectorKey::Set(aiVectorKey& a_Key)
+Lux::Core::MeshAnimation::VectorKey::VectorKey(aiVectorKey& a_Key)
 {
 	m_Time = a_Key.mTime;
-	m_Value = ConvertVec3AssimpToGLM(a_Key.mValue);
+	m_Value = Utility::ConvertVec3AssimpToGLM(a_Key.mValue);
 }
 
-void Lux::MeshAnimation::VectorKey::Set(const VectorKey& a_Key)
+Lux::Core::MeshAnimation::VectorKey::VectorKey() : m_Time(0.0), m_Value()
+{
+
+}
+
+Lux::Core::MeshAnimation::VectorKey::~VectorKey()
+{
+
+}
+
+void Lux::Core::MeshAnimation::VectorKey::Set(aiVectorKey& a_Key)
+{
+	m_Time = a_Key.mTime;
+	m_Value = Utility::ConvertVec3AssimpToGLM(a_Key.mValue);
+}
+
+void Lux::Core::MeshAnimation::VectorKey::Set(const VectorKey& a_Key)
 {
 	m_Time = a_Key.m_Time;
 	m_Value = a_Key.m_Value;
 }
 
-Lux::MeshAnimation::QuaternionKey::QuaternionKey(aiQuatKey& a_Key)
+Lux::Core::MeshAnimation::QuaternionKey::QuaternionKey(aiQuatKey& a_Key)
 {
 	m_Time = a_Key.mTime;
-	m_Value = ConvertQuatAssimpToGLM(a_Key.mValue);
+	m_Value = Utility::ConvertQuatAssimpToGLM(a_Key.mValue);
 }
 
-Lux::MeshAnimation::QuaternionKey::QuaternionKey() : m_Time(0.0), m_Value()
+Lux::Core::MeshAnimation::QuaternionKey::QuaternionKey() : m_Time(0.0), m_Value()
 {
 
 }
 
-Lux::MeshAnimation::QuaternionKey::~QuaternionKey()
+Lux::Core::MeshAnimation::QuaternionKey::~QuaternionKey()
 {
 
 }
 
-void Lux::MeshAnimation::QuaternionKey::Set(aiQuatKey& a_Key)
+void Lux::Core::MeshAnimation::QuaternionKey::Set(aiQuatKey& a_Key)
 {
 	m_Time = a_Key.mTime;
-	m_Value = ConvertQuatAssimpToGLM(a_Key.mValue);
+	m_Value = Utility::ConvertQuatAssimpToGLM(a_Key.mValue);
 }
 
-void Lux::MeshAnimation::QuaternionKey::Set(const QuaternionKey& a_Key)
+void Lux::Core::MeshAnimation::QuaternionKey::Set(const QuaternionKey& a_Key)
 {
 	m_Time = a_Key.m_Time;
 	m_Value = a_Key.m_Value;
 }
 
-Lux::MeshAnimation::MeshKey::MeshKey(aiMeshKey& a_Key)
+Lux::Core::MeshAnimation::MeshKey::MeshKey(aiMeshKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = a_Key.mValue;
 }
 
-Lux::MeshAnimation::MeshKey::MeshKey() : m_Time(0.0), m_Value(0)
+Lux::Core::MeshAnimation::MeshKey::MeshKey() : m_Time(0.0), m_Value(0)
 {
 
 }
 
-Lux::MeshAnimation::MeshKey::~MeshKey()
+Lux::Core::MeshAnimation::MeshKey::~MeshKey()
 {
 
 }
 
-void Lux::MeshAnimation::MeshKey::Set(aiMeshKey& a_Key)
+void Lux::Core::MeshAnimation::MeshKey::Set(aiMeshKey& a_Key)
 {
 	m_Time = a_Key.mTime;
 	m_Value = a_Key.mValue;
 }
 
-void Lux::MeshAnimation::MeshKey::Set(const MeshKey& a_Key)
+void Lux::Core::MeshAnimation::MeshKey::Set(const MeshKey& a_Key)
 {
 	m_Time = a_Key.m_Time;
 	m_Value = a_Key.m_Value;
 }
 
-Lux::MeshAnimation::MeshAnimation() :
+Lux::Core::MeshAnimation::MeshAnimation() :
 m_MeshChannels(nullptr),
 m_NodeChannels(nullptr),
 m_NumMeshChannels(0),
@@ -257,7 +257,7 @@ m_TicksPerSecond(0.0)
 
 }
 
-Lux::MeshAnimation::MeshAnimation(aiAnimation& a_Anim)
+Lux::Core::MeshAnimation::MeshAnimation(aiAnimation& a_Anim)
 {
 	m_Duration = a_Anim.mDuration;
 	m_NumMeshChannels = a_Anim.mNumMeshChannels;
@@ -287,7 +287,7 @@ Lux::MeshAnimation::MeshAnimation(aiAnimation& a_Anim)
 
 }
 
-Lux::MeshAnimation::MeshAnimation(const MeshAnimation& a_Anim)
+Lux::Core::MeshAnimation::MeshAnimation(const MeshAnimation& a_Anim)
 {
 	m_Duration = a_Anim.m_Duration;
 	m_NumMeshChannels = a_Anim.m_NumMeshChannels;
@@ -316,23 +316,23 @@ Lux::MeshAnimation::MeshAnimation(const MeshAnimation& a_Anim)
 	}
 }
 
-Lux::MeshAnimation::~MeshAnimation()
+Lux::Core::MeshAnimation::~MeshAnimation()
 {
 	if (m_NodeChannels && m_NumNodeChannels)
 	{
 		for (unsigned int i = 0; i < m_NumNodeChannels; i++)
 		{
-			SafePtrDelete(m_NodeChannels[i]);
+			Utility::SafePtrDelete(m_NodeChannels[i]);
 		}
-		SafeArrayDelete(m_NodeChannels);
+		Utility::SafeArrayDelete(m_NodeChannels);
 	}
 
 	if (m_MeshChannels && m_NumMeshChannels)
 	{
 		for (unsigned int i = 0; i < m_NumMeshChannels; i++)
 		{
-			SafePtrDelete(m_MeshChannels[i]);
+			Utility::SafePtrDelete(m_MeshChannels[i]);
 		}
-		SafeArrayDelete(m_MeshChannels);
+		Utility::SafeArrayDelete(m_MeshChannels);
 	}
 }

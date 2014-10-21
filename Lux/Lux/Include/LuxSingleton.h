@@ -3,22 +3,25 @@
 
 namespace Lux
 {
-	template <class T>
-	class Singleton
+	namespace Utility
 	{
-	public:
-		static T& GetInstance()
+		template <class T>
+		class Singleton
 		{
-			static T instance;
-			return instance;
-		}
-		virtual ~Singleton() {};
+		public:
+			static T& GetInstance()
+			{
+				static T instance;
+				return instance;
+			}
+			virtual ~Singleton() {};
 
-	protected:
-		inline explicit Singleton() {};
-		Singleton(Singleton const&);// Don't Implement
-		void operator=(Singleton const&);// Don't implement
-	};
+		protected:
+			inline explicit Singleton() {};
+			Singleton(Singleton const&);// Don't Implement
+			void operator=(Singleton const&);// Don't implement
+		};
+	}
 }
 
 #endif

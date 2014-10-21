@@ -1,17 +1,17 @@
 #include "LuxPCH.h"
 #include "LuxTimer.h"
 
-Lux::Timer::Timer()
+Lux::Utility::Timer::Timer()
 {
 	Reset();
 }
 
-Lux::Timer::~Timer()
+Lux::Utility::Timer::~Timer()
 {
 
 }
 
-void Lux::Timer::Reset()
+void Lux::Utility::Timer::Reset()
 {
 	LARGE_INTEGER li;
 	if (!QueryPerformanceFrequency(&li))
@@ -23,7 +23,7 @@ void Lux::Timer::Reset()
 	m_StartTime = li.QuadPart;
 }
 
-const bool Lux::Timer::ElapsedSeconds(double a_Seconds)
+const bool Lux::Utility::Timer::ElapsedSeconds(double a_Seconds)
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
@@ -38,7 +38,7 @@ const bool Lux::Timer::ElapsedSeconds(double a_Seconds)
 	return false;
 }
 
-const bool Lux::Timer::ElapsedMilliseconds(unsigned long a_Ms)
+const bool Lux::Utility::Timer::ElapsedMilliseconds(unsigned long a_Ms)
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
@@ -53,7 +53,7 @@ const bool Lux::Timer::ElapsedMilliseconds(unsigned long a_Ms)
 	return false;
 }
 
-const bool Lux::Timer::ElapsedMicroseconds(unsigned long long a_Ms)
+const bool Lux::Utility::Timer::ElapsedMicroseconds(unsigned long long a_Ms)
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
@@ -68,7 +68,7 @@ const bool Lux::Timer::ElapsedMicroseconds(unsigned long long a_Ms)
 	return false;
 }
 
-const double Lux::Timer::GetAsSeconds()
+const double Lux::Utility::Timer::GetAsSeconds()
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
@@ -77,7 +77,7 @@ const double Lux::Timer::GetAsSeconds()
 	return elapsed;
 }
 
-const double Lux::Timer::GetAsMilliseconds()
+const double Lux::Utility::Timer::GetAsMilliseconds()
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
@@ -86,7 +86,7 @@ const double Lux::Timer::GetAsMilliseconds()
 	return elapsed;
 }
 
-const double Lux::Timer::GetAsMicroseconds()
+const double Lux::Utility::Timer::GetAsMicroseconds()
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
