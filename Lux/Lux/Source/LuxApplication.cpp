@@ -6,11 +6,13 @@
 #include "LuxKey.h"
 #include "LuxMeshRenderer.h"
 #include "LuxTransform.h"
+#include "LuxEventListener.h"
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
 #include "LuxSystem.h"
 #include "LuxRenderingSystem.h"
+#include "LuxEventSystem.h"
 #include "LuxSystemFactory.h"
 #include "LuxSceneManager.h"
 #include "LuxTimer.h"
@@ -84,11 +86,6 @@ const bool Lux::Application::ShouldQuit()
 	return false;
 }
 
-void Lux::Application::PollEvents()
-{
-	glfwPollEvents();
-}
-
 void Lux::Application::Run()
 {
 	bool quit = false;
@@ -100,7 +97,6 @@ void Lux::Application::Run()
 	{
 		dt = (float)timer.GetAsSeconds();
 		timer.Reset();
-		PollEvents();
 		result = Update(dt);
 		CheckResult(result);
 		InternalUpdate(dt);
@@ -127,6 +123,7 @@ bool Lux::Application::LoadComponentTypes()
 {
 	m_SceneManager->RegisterNewComponentType<Core::Transform>();
 	m_SceneManager->RegisterNewComponentType<Graphics::MeshRenderer>();
+	m_SceneManager->RegisterNewComponentType<Core::EventListener>();
 	return true;
 }
 
@@ -134,5 +131,9 @@ bool Lux::Application::LoadSystemTypes()
 {
 	m_SceneManager->RegisterNewSystemType<Graphics::RenderingSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Core::Transform, Graphics::RenderingSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Graphics::MeshRenderer, Graphics::RenderingSystem>();
+
+	m_SceneManager->RegisterNewSystemType<Core::EventSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Core::EventListener, Core::EventSystem>();
 	return true;
 }
