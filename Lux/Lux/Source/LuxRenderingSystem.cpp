@@ -30,7 +30,7 @@ void Lux::Graphics::RenderingSystem::ProcessUpdate(const float a_DeltaTime)
 	InsertEntries();
 	RemoveEntries();
 
-	glfwSwapBuffers(m_RenderWindow->GetWindowHandle());
+	m_RenderWindow->SwapBuffers();
 }
 
 bool Lux::Graphics::RenderingSystem::Init(Core::SceneManager* a_SceneManager)

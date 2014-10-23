@@ -5,6 +5,43 @@ namespace Lux
 {
 	namespace Utility
 	{
+		enum PlatformType
+		{
+			OPEN_GL = 0,
+			DIRECTX_11
+		};
+
+		struct AppInitOptions
+		{
+			AppInitOptions::AppInitOptions() :
+				m_AntiAliasing(0),
+				m_LoggingLevel(TLogLevel::logDEBUG4),
+				m_PlatformType(OPEN_GL),
+				m_WindowCaption("Lux Application"),
+				m_WindowHeight(600),
+				m_WindowWidth(800)
+			{
+
+			}
+
+			AppInitOptions::~AppInitOptions()
+			{
+
+			}
+
+			unsigned int m_WindowWidth;
+			unsigned int m_WindowHeight;
+			String m_WindowCaption;
+			unsigned int m_AntiAliasing;
+			TLogLevel m_LoggingLevel;
+			PlatformType m_PlatformType;
+		};
+
+		static void ErrorCallbackFunc(int error, const char* description)
+		{
+			LUX_LOG(Lux::Utility::logERROR) << "An Error occurred. " << "Error Code: " << error << ". " << "Error description: " << description;
+		}
+
 		template<typename T>
 		static void SafePtrDelete(T* a_Ptr)
 		{

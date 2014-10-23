@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxRenderWindow.h"
+#include "LuxPlatform.h"
 #include "LuxApplication.h"
-#include "LuxEventHandler.h"
 #include "LuxEntity.h"
 #include "LuxKey.h"
 #include "LuxMeshRenderer.h"
@@ -15,55 +15,38 @@
 #include "LuxSystemFactory.h"
 #include "LuxSceneManager.h"
 #include "LuxTimer.h"
-
-static void ErrorCallbackFunc(int error, const char* description)
-{
-	LUX_LOG(Lux::Utility::logERROR) << "An Error occurred. " << "Error Code: " << error << ". " << "Error description: " << description;
-}
+#include "LuxHelpers.h"
 
 Lux::Application::Application() :
-m_Window(nullptr), m_SceneManager(nullptr)
+m_Platform(nullptr), m_SceneManager(nullptr)
 {
 
 }
 
 Lux::Application::~Application()
 {
-	Utility::SafePtrDelete(m_Window);
+	Utility::SafePtrDelete(m_Platform);
 	Utility::SafePtrDelete(m_SceneManager);
 }
 
-bool Lux::Application::Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_AA, Utility::TLogLevel a_LogLevel)
+bool Lux::Application::Initialize(Utility::AppInitOptions& a_AppInitOptions)
 {
 	// Configure logging system
-	Utility::FILELog::ReportingLevel() = a_LogLevel;
+	Utility::FILELog::ReportingLevel() = a_AppInitOptions.m_LoggingLevel;
 	FILE* logFile = 0;
 	fopen_s(&logFile, "Lux.log", "w");
 	Utility::Output2FILE::Stream() = logFile;
 
 	LUX_LOG(Utility::logINFO) << "Logger started.";
 
-	glfwSetErrorCallback(ErrorCallbackFunc);
+	m_Platform = Core::Platform::Create(Utility::OPEN_GL);
+	bool platformInit = m_Platform->Init(a_AppInitOptions);
 
-	// Init GLFW
-	int initResult = glfwInit();
-	if (!initResult)
-	{
-		LUX_LOG(Utility::logERROR) << "Failed to initialize GLFW. " << "Error Code: " << initResult;
+	if (!platformInit)
 		return false;
-	}
-
-	// Init the Render Window
-	m_Window = new Core::RenderWindow();
-	bool windowInit = m_Window->Initialize(a_Width, a_Height, a_Caption, a_AA);
-
-	if (!windowInit)
-	{
-		return false;
-	}
 
 	// Init the Scene Manager
-	m_SceneManager = new Core::SceneManager(m_Window);
+	m_SceneManager = new Core::SceneManager(m_Platform->GetRenderWindow());
 	LoadComponentTypes();
 	LoadSystemTypes();
 	return true;
@@ -77,7 +60,7 @@ void Lux::Application::Terminate()
 const bool Lux::Application::ShouldQuit()
 {
 	bool ret = false;
-	if (glfwWindowShouldClose(m_Window->GetWindowHandle()))
+	if (m_Platform->ShouldQuit())
 	{
 		return true;
 	}

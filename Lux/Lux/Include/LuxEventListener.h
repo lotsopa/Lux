@@ -9,22 +9,13 @@ namespace Lux
 		class EventListener
 		{
 		public:
-			EventListener();
+			EventListener(RenderWindow* a_Owner);
 			virtual ~EventListener();
 
-			virtual void OnKeyDown(int a_Key, int a_ScanCode);
-			virtual void OnKeyUp(int a_Key, int a_ScanCode);
-			virtual void OnMouseButtonDown(int a_Btn);
-			virtual void OnMouseButtonUp(int a_Btn);
-			virtual void OnMouseScroll(double a_OffsetX, double a_OffsetY);
-			virtual void OnMouseEnterWindow();
-			virtual void OnMouseLeaveWindow();
-			virtual void OnMousePositionChanged(double a_X, double a_Y);
+			// TODO: Event functions
 
 		protected:
 			RenderWindow* m_WindowOwner;
-			void SetWindowOwner(RenderWindow* a_Owner);
-			friend class RenderWindow;
 		};
 	}
 }

@@ -7,6 +7,7 @@ namespace Lux
 	{
 		class RenderWindow;
 		class SceneManager;
+		class Platform;
 	}
 
 	class Application
@@ -15,7 +16,7 @@ namespace Lux
 		Application();
 		virtual ~Application();
 
-		bool Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_AA = 0, Utility::TLogLevel a_LogLevel = Utility::logDEBUG4);
+		bool Initialize(Utility::AppInitOptions& a_AppInitOptions);
 		void Run();
 		void Terminate();
 
@@ -37,7 +38,7 @@ namespace Lux
 		void CheckResult(bool res);
 
 	protected:
-		Core::RenderWindow* m_Window;
+		Core::Platform* m_Platform;
 		Core::SceneManager* m_SceneManager;
 	};
 }

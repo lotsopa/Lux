@@ -11,6 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Internal\LuxEventListenerOGL.h" />
+    <ClInclude Include="Include\Internal\LuxPlatformOGL.h" />
+    <ClInclude Include="Include\Internal\LuxRenderWindowOGL.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
@@ -28,7 +31,6 @@
     <ClInclude Include="Include\LuxSingleton.h" />
     <ClInclude Include="Include\Lux.h" />
     <ClInclude Include="Include\LuxDefines.h" />
-    <ClInclude Include="Include\LuxEventHandler.h" />
     <ClInclude Include="Include\LuxApplication.h" />
     <ClInclude Include="Include\LuxEventListener.h" />
     <ClInclude Include="Include\LuxFileHandler.h" />
@@ -45,11 +47,13 @@
     <ClInclude Include="Include\LuxMeshRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Internal\LuxEventListenerOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxPlatformOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxRenderWindowOGL.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
     <ClCompile Include="Source\LuxComponent.cpp" />
     <ClCompile Include="Source\LuxEntity.cpp" />
-    <ClCompile Include="Source\LuxEventHandler.cpp" />
     <ClCompile Include="Source\LuxApplication.cpp" />
     <ClCompile Include="Source\LuxEventListener.cpp" />
     <ClCompile Include="Source\LuxEventSystem.cpp" />
@@ -117,7 +121,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include\Internal;Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -137,7 +141,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include\Internal;Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>

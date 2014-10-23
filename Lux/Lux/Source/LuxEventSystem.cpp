@@ -9,7 +9,6 @@
 #include "LuxSceneManager.h"
 #include "LuxSystem.h"
 #include "LuxEventSystem.h"
-#include "LuxEventHandler.h"
 #include "LuxEventListener.h"
 
 Lux::Core::EventSystem::EventSystem() : 

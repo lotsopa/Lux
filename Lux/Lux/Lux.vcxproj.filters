@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{dfd933c5-9b0a-438c-8cd9-bbb6c5957ab6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Internal">
+      <UniqueIdentifier>{ae5d6217-a1a2-40ef-aa27-8d1095ebb029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Internal">
+      <UniqueIdentifier>{410be00e-050d-49da-81b6-40ebc3a9f2eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\LuxPCH.h">
@@ -70,9 +76,6 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Include\LuxEventListener.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\LuxEventHandler.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Include\LuxComponentFactory.h">
@@ -129,6 +132,15 @@
     <ClInclude Include="Include\LuxEventSystem.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Internal\LuxPlatformOGL.h">
+      <Filter>Header Files\Core\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\LuxRenderWindowOGL.h">
+      <Filter>Header Files\Core\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\LuxEventListenerOGL.h">
+      <Filter>Header Files\Core\Internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -156,9 +168,6 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxEntityFactory.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LuxEventHandler.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxEventListener.cpp">
@@ -214,6 +223,15 @@
     </ClCompile>
     <ClCompile Include="Source\LuxEventSystem.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\LuxPlatformOGL.cpp">
+      <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\LuxRenderWindowOGL.cpp">
+      <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\LuxEventListenerOGL.cpp">
+      <Filter>Source Files\Core\Internal</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
