@@ -34,7 +34,6 @@ namespace Lux
 
 	private:
 		void InternalUpdate(const float a_DeltaTime);
-		void PollEvents();
 		void CheckResult(bool res);
 
 	protected:

@@ -15,6 +15,7 @@
     <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
     <ClInclude Include="Include\LuxEntity.h" />
+    <ClInclude Include="Include\LuxEventSystem.h" />
     <ClInclude Include="Include\LuxHelpers.h" />
     <ClInclude Include="Include\LuxKey.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
@@ -51,6 +52,7 @@
     <ClCompile Include="Source\LuxEventHandler.cpp" />
     <ClCompile Include="Source\LuxApplication.cpp" />
     <ClCompile Include="Source\LuxEventListener.cpp" />
+    <ClCompile Include="Source\LuxEventSystem.cpp" />
     <ClCompile Include="Source\LuxFileHandler.cpp" />
     <ClCompile Include="Source\LuxHelpers.cpp" />
     <ClCompile Include="Source\LuxKey.cpp" />
