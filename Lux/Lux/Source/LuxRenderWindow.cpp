@@ -4,14 +4,14 @@
 #include "LuxEventHandler.h"
 
 Lux::Core::RenderWindow::RenderWindow() :
-m_WindowHandle(0)
+m_WindowHandle(0), m_Input(0)
 {
 
 }
 
 Lux::Core::RenderWindow::~RenderWindow()
 {
-	
+	Utility::SafePtrDelete(m_Input);
 }
 
 bool Lux::Core::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_AA)
@@ -41,6 +41,11 @@ bool Lux::Core::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_He
 		return false;
 	}
 
+	// Create a default listener and register it
+	m_Input = new EventListener();
+	m_Input->SetWindowOwner(this);
+	EventHandler::GetInstance().RegisterInputListenerWindow(this);
+
 	// Set up the input callbacks
 	glfwSetKeyCallback(m_WindowHandle, EventHandler::KeyCallback);
 	glfwSetMouseButtonCallback(m_WindowHandle, EventHandler::MouseButtonCallback);
@@ -49,4 +54,20 @@ bool Lux::Core::RenderWindow::Initialize(unsigned int a_Width, unsigned int a_He
 	glfwSetInputMode(m_WindowHandle, GLFW_STICKY_KEYS, GL_TRUE);
 
 	return true;
+}
+
+void Lux::Core::RenderWindow::SetInputListener(EventListener* a_Listener)
+{
+	LuxAssert(a_Listener);
+
+	if (a_Listener == nullptr)
+	{
+		LUX_LOG(Utility::logWARNING) << "A Render Window Input listener cannot be null. Aborting...";
+		return;
+	}
+	EventHandler::GetInstance().UnregisterInputListenerWindow(this);
+	Utility::SafePtrDelete(m_Input);
+	m_Input = a_Listener;
+	m_Input->SetWindowOwner(this);
+	EventHandler::GetInstance().RegisterInputListenerWindow(this);
 }

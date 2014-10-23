@@ -1,5 +1,4 @@
 #include "LuxPCH.h"
-#include "LuxEventSystem.h"
 #include "LuxEventHandler.h"
 #include "LuxEventListener.h"
 #include "LuxRenderWindow.h"
@@ -20,35 +19,35 @@ Lux::Core::EventHandler::~EventHandler()
 	m_InputWindows.clear();
 }
 
-void Lux::Core::EventHandler::RegisterEventSystem(EventSystem* a_System)
+void Lux::Core::EventHandler::RegisterInputListenerWindow(RenderWindow* a_Window)
 {
-	LuxAssert(a_System);
+	LuxAssert(a_Window);
 
-	if (IsEventSystemRegistered(a_System) || !a_System)
+	if (IsWindowRegistered(a_Window) || !a_Window)
 	{
 		LUX_LOG(Utility::logWARNING) << "Input Handler: Trying to register an already registered or non-existent Render Window. Aborting...";
 		return;
 	}
 
-	m_InputWindows.insert(std::make_pair(a_System->GetRenderWindow()->GetWindowHandle(), a_System));
+	m_InputWindows.insert(std::make_pair(a_Window->GetWindowHandle(), a_Window->GetInputListener()));
 }
 
-void Lux::Core::EventHandler::UnregisterEventSystem(EventSystem* a_System)
+void Lux::Core::EventHandler::UnregisterInputListenerWindow(RenderWindow* a_Window)
 {
-	LuxAssert(a_System);
+	LuxAssert(a_Window);
 
-	if (!IsEventSystemRegistered(a_System) || !a_System)
+	if (!IsWindowRegistered(a_Window) || !a_Window)
 	{
 		LUX_LOG(Utility::logWARNING) << "Input Handler: Trying to unregister an already unregistered or non-existent Render Window. Aborting...";
 		return;
 	}
 
-	m_InputWindows.erase(a_System->GetRenderWindow()->GetWindowHandle());
+	m_InputWindows.erase(a_Window->GetWindowHandle());
 }
 
-bool Lux::Core::EventHandler::IsEventSystemRegistered(EventSystem* a_System)
+bool Lux::Core::EventHandler::IsWindowRegistered(RenderWindow* a_Window)
 {
-	int count = m_InputWindows.count(a_System->GetRenderWindow()->GetWindowHandle());
+	int count = m_InputWindows.count(a_Window->GetWindowHandle());
 
 	if (!count)
 	{

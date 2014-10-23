@@ -126,9 +126,6 @@
     <ClInclude Include="Include\LuxSubMesh.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxEventSystem.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -210,9 +207,6 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxPlatform.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LuxEventSystem.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>

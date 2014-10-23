@@ -8,7 +8,6 @@ namespace Lux
 		class Platform
 		{
 		public:
-
 		protected:
 		};
 	}

@@ -134,6 +134,5 @@ bool Lux::Application::LoadSystemTypes()
 {
 	m_SceneManager->RegisterNewSystemType<Graphics::RenderingSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Core::Transform, Graphics::RenderingSystem>();
-	m_SceneManager->RegisterComponentTypeWithSystem<Graphics::MeshRenderer, Graphics::RenderingSystem>();
 	return true;
 }

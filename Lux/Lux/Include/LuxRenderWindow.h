@@ -16,9 +16,13 @@ namespace Lux
 			bool Initialize(unsigned int a_Width, unsigned int a_Height, String a_Caption, unsigned int a_AA);
 
 			inline GLFWwindow* GetWindowHandle() { return m_WindowHandle; }
+			inline EventListener* GetInputListener() { return m_Input; }
+
+			void SetInputListener(EventListener* a_Listener);
 
 		private:
 			GLFWwindow* m_WindowHandle;
+			EventListener* m_Input;
 
 		};
 	}

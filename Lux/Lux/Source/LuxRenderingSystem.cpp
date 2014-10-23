@@ -139,21 +139,11 @@ void Lux::Graphics::RenderingSystem::RemoveEntries()
 	{
 		Core::Entity* e = m_TransformRemoveQueue.Pop();
 		m_EntityMap[e].m_Transform = nullptr;
-
-		if (m_EntityMap[e].IsNull())
-		{
-			m_EntityMap.erase(e);
-		}
 	}
 
 	while (!m_MeshRendererInsertQueue.Empty())
 	{
 		Core::Entity* e = m_MeshRendererRemoveQueue.Pop();
 		m_EntityMap[e].m_MeshRenderer = nullptr;
-
-		if (m_EntityMap[e].IsNull())
-		{
-			m_EntityMap.erase(e);
-		}
 	}
 }
