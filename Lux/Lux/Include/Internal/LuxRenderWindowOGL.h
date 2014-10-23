@@ -7,6 +7,7 @@ namespace Lux
 	{
 		namespace Internal
 		{
+			class EventListenerOGL;
 			class RenderWindowOGL : public RenderWindow
 			{
 			public:
@@ -14,12 +15,13 @@ namespace Lux
 				virtual bool Initialize(Utility::AppInitOptions& a_AppInitOptions);
 				virtual EventListener* GetEventListener();
 				virtual void SwapBuffers();
+				virtual void PollEvents();
 				inline GLFWwindow* GetWindowHandle() { return m_WindowHandle; }
 
 			private:
 				RenderWindowOGL();
 				GLFWwindow* m_WindowHandle;
-				EventListener* m_Input;
+				EventListenerOGL* m_Input;
 				friend class PlatformOGL;
 			};
 		}

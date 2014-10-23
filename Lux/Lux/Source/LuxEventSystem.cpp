@@ -24,7 +24,7 @@ Lux::Core::EventSystem::~EventSystem()
 
 void Lux::Core::EventSystem::ProcessUpdate(const float a_DeltaTime)
 {
-	glfwPollEvents();
+	m_RenderWindow->PollEvents();
 }
 
 bool Lux::Core::EventSystem::Init(Core::SceneManager* a_SceneManager)

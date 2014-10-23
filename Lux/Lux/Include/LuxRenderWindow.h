@@ -13,10 +13,9 @@ namespace Lux
 			virtual ~RenderWindow();
 
 			virtual bool Initialize(Utility::AppInitOptions& a_AppInitOptions) = 0;
-
 			virtual EventListener* GetEventListener() = 0;
-
 			virtual void SwapBuffers() = 0;
+			virtual void PollEvents() = 0;
 
 		protected:
 			RenderWindow();

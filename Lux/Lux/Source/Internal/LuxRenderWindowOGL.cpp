@@ -35,6 +35,7 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 	m_Input = new EventListenerOGL(this);
 
 	glfwSetInputMode(m_WindowHandle, GLFW_STICKY_KEYS, GL_TRUE);
+	glfwSetInputMode(m_WindowHandle, GLFW_STICKY_MOUSE_BUTTONS, GL_TRUE);
 
 	return true;
 }
@@ -51,11 +52,17 @@ Lux::Core::Internal::RenderWindowOGL::RenderWindowOGL() : m_WindowHandle(0), m_I
 
 Lux::Core::Internal::RenderWindowOGL::~RenderWindowOGL()
 {
+	glfwDestroyWindow(m_WindowHandle);
 	Utility::SafePtrDelete(m_Input);
 }
 
 void Lux::Core::Internal::RenderWindowOGL::SwapBuffers()
 {
 	glfwSwapBuffers(m_WindowHandle);
+}
+
+void Lux::Core::Internal::RenderWindowOGL::PollEvents()
+{
+	glfwPollEvents();
 }
 
