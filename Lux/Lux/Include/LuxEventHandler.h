@@ -7,6 +7,7 @@ namespace Lux
 	{
 		class RenderWindow;
 		class EventListener;
+		class EventSystem;
 
 		class EventHandler
 		{
@@ -14,16 +15,16 @@ namespace Lux
 			static EventHandler& GetInstance();
 			~EventHandler();
 
-			void RegisterInputListenerWindow(RenderWindow* a_Window);
-			void UnregisterInputListenerWindow(RenderWindow* a_Window);
+			void RegisterEventSystem(EventSystem* a_System);
+			void UnregisterEventSystem(EventSystem* a_System);
 
-			bool IsWindowRegistered(RenderWindow* a_Window);
+			bool IsEventSystemRegistered(EventSystem* a_System);
 
 		private:
 			EventHandler();
 			EventHandler(EventHandler const&);// Don't Implement
 			void operator=(EventHandler const&);// Don't implement
-			typedef std::map<GLFWwindow*, EventListener*> InputWindowMap;
+			typedef std::map<GLFWwindow*, EventSystem*> InputWindowMap;
 			InputWindowMap m_InputWindows;
 
 			// GLFW callbacks

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\LuxEventSystem.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
@@ -44,6 +45,7 @@
     <ClInclude Include="Include\LuxMeshRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\LuxEventSystem.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
     <ClCompile Include="Source\LuxComponent.cpp" />

@@ -1,16 +1,16 @@
 #ifndef LUX_EVENT_LISTENER_H
 #define LUX_EVENT_LISTENER_H
+#include "LuxComponent.h"
 
 namespace Lux
 {
 	namespace Core
 	{
-		class RenderWindow;
-		class EventListener
+		class EventListener : public Component
 		{
 		public:
 			EventListener();
-			virtual ~EventListener();
+			~EventListener();
 
 			virtual void OnKeyDown(int a_Key, int a_ScanCode);
 			virtual void OnKeyUp(int a_Key, int a_ScanCode);
@@ -22,9 +22,8 @@ namespace Lux
 			virtual void OnMousePositionChanged(double a_X, double a_Y);
 
 		protected:
-			RenderWindow* m_WindowOwner;
-			void SetWindowOwner(RenderWindow* a_Owner);
-			friend class RenderWindow;
+			void Reset();
+			friend class ComponentFactory;
 		};
 	}
 }

@@ -44,6 +44,14 @@ namespace Lux
 					m_MeshRenderer = nullptr;
 				}
 
+				// Checks if the entry is null - returns true if it is null, false otherwise
+				// An entry is null only if all its components are null
+				const bool IsNull() const
+				{
+					bool retVal = (m_Transform == nullptr && m_MeshRenderer == nullptr);
+					return retVal;
+				}
+
 				Core::Transform* m_Transform;
 				MeshRenderer* m_MeshRenderer;
 			};
