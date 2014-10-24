@@ -141,6 +141,30 @@
     <ClInclude Include="Include\Internal\LuxEventListenerOGL.h">
       <Filter>Header Files\Core\Internal</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxTexture.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxTexture1D.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxTexture2D.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxTexture3D.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\LuxTexture1DOGL.h">
+      <Filter>Header Files\Core\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\LuxTexture2DOGL.h">
+      <Filter>Header Files\Core\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\LuxTexture3DOGL.h">
+      <Filter>Header Files\Core\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\LuxResourceHandlerOGL.h">
+      <Filter>Header Files\Core\Internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -231,6 +255,30 @@
       <Filter>Source Files\Core\Internal</Filter>
     </ClCompile>
     <ClCompile Include="Source\Internal\LuxEventListenerOGL.cpp">
+      <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxTexture.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxTexture1D.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxTexture2D.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxTexture3D.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\LuxTexture1DOGL.cpp">
+      <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\LuxTexture3DOGL.cpp">
+      <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\LuxTexture2DOGL.cpp">
+      <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\LuxResourceHandlerOGL.cpp">
       <Filter>Source Files\Core\Internal</Filter>
     </ClCompile>
   </ItemGroup>

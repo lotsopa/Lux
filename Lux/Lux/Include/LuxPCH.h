@@ -17,6 +17,7 @@
 #include <assert.h>
 #include <queue>
 #include <typeinfo>
+#include <memory>
 
 #ifndef TRUE
 #define TRUE 1

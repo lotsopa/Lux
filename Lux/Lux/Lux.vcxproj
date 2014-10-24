@@ -14,6 +14,10 @@
     <ClInclude Include="Include\Internal\LuxEventListenerOGL.h" />
     <ClInclude Include="Include\Internal\LuxPlatformOGL.h" />
     <ClInclude Include="Include\Internal\LuxRenderWindowOGL.h" />
+    <ClInclude Include="Include\Internal\LuxResourceHandlerOGL.h" />
+    <ClInclude Include="Include\Internal\LuxTexture1DOGL.h" />
+    <ClInclude Include="Include\Internal\LuxTexture2DOGL.h" />
+    <ClInclude Include="Include\Internal\LuxTexture3DOGL.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
@@ -40,16 +44,24 @@
     <ClInclude Include="Include\LuxSceneManager.h" />
     <ClInclude Include="Include\LuxSystem.h" />
     <ClInclude Include="Include\LuxSystemFactory.h" />
+    <ClInclude Include="Include\LuxTexture.h" />
+    <ClInclude Include="Include\LuxTexture2D.h" />
+    <ClInclude Include="Include\LuxTexture3D.h" />
     <ClInclude Include="Include\LuxThreadSafeQueue.h" />
     <ClInclude Include="Include\LuxTimer.h" />
     <ClInclude Include="Include\LuxResourceHandler.h" />
     <ClInclude Include="Include\LuxTransform.h" />
     <ClInclude Include="Include\LuxMeshRenderer.h" />
+    <ClInclude Include="Include\LuxTexture1D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Internal\LuxEventListenerOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxPlatformOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxRenderWindowOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxResourceHandlerOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxTexture1DOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxTexture2DOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxTexture3DOGL.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
     <ClCompile Include="Source\LuxComponent.cpp" />
@@ -77,9 +89,13 @@
     <ClCompile Include="Source\LuxSceneManager.cpp" />
     <ClCompile Include="Source\LuxSystem.cpp" />
     <ClCompile Include="Source\LuxSystemFactory.cpp" />
+    <ClCompile Include="Source\LuxTexture.cpp" />
+    <ClCompile Include="Source\LuxTexture2D.cpp" />
+    <ClCompile Include="Source\LuxTexture3D.cpp" />
     <ClCompile Include="Source\LuxThreadSafeQueue.cpp" />
     <ClCompile Include="Source\LuxTimer.cpp" />
     <ClCompile Include="Source\LuxTransform.cpp" />
+    <ClCompile Include="Source\LuxTexture1D.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2E2A77E1-3762-466F-9C23-5704EF8E16E1}</ProjectGuid>

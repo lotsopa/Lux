@@ -20,15 +20,14 @@ namespace Lux
 			Mesh(unsigned int a_NumMeshes, unsigned int a_NumAnims);
 			~Mesh();
 
+			void AddSubMesh(SubMesh* a_Mesh);
+			void AddAnimation(MeshAnimation* a_Anim);
+
 		private:
 			SubMesh** m_SubMeshes;
 			MeshAnimation** m_AnimationData;
 			unsigned int m_NumSubMeshes;
 			unsigned int m_NumAnimations;
-			void AddSubMesh(SubMesh* a_Mesh);
-			void AddAnimation(MeshAnimation* a_Anim);
-			friend class ResourceHandler;
-
 		};
 	}
 }

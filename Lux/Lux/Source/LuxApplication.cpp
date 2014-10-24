@@ -16,6 +16,7 @@
 #include "LuxSceneManager.h"
 #include "LuxTimer.h"
 #include "LuxHelpers.h"
+#include "LuxResourceHandler.h"
 
 Lux::Application::Application() :
 m_Platform(nullptr), m_SceneManager(nullptr)
@@ -27,6 +28,7 @@ Lux::Application::~Application()
 {
 	Utility::SafePtrDelete(m_Platform);
 	Utility::SafePtrDelete(m_SceneManager);
+	Utility::SafePtrDelete(m_ResourceHandler);
 }
 
 bool Lux::Application::Initialize(Utility::AppInitOptions& a_AppInitOptions)
@@ -47,6 +49,9 @@ bool Lux::Application::Initialize(Utility::AppInitOptions& a_AppInitOptions)
 
 	// Init the Scene Manager
 	m_SceneManager = new Core::SceneManager(m_Platform->GetRenderWindow());
+
+	// Init Resource Handler
+	m_ResourceHandler = Core::ResourceHandler::Create(a_AppInitOptions.m_PlatformType);
 	LoadComponentTypes();
 	LoadSystemTypes();
 	return true;

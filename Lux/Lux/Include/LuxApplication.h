@@ -8,6 +8,7 @@ namespace Lux
 		class RenderWindow;
 		class SceneManager;
 		class Platform;
+		class ResourceHandler;
 	}
 
 	class Application
@@ -40,6 +41,7 @@ namespace Lux
 	protected:
 		Core::Platform* m_Platform;
 		Core::SceneManager* m_SceneManager;
+		Core::ResourceHandler* m_ResourceHandler;
 	};
 }
 
