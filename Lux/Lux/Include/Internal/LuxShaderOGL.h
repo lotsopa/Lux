@@ -10,13 +10,14 @@ namespace Lux
 			class ShaderOGL : public Shader
 			{
 			public:
-				ShaderOGL();
+				ShaderOGL(std::vector<unsigned int>& a_LoadedShaders);
 				virtual ~ShaderOGL();
 
 				inline const unsigned int GetShaderProgram() { return m_ShaderProgram;  }
 
 			private:
 				unsigned int m_ShaderProgram;
+				unsigned int CreateShaderProgram(std::vector<unsigned int>& shaders);
 			};
 		}
 	}

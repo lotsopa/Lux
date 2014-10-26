@@ -36,7 +36,8 @@ namespace Lux
 		It only holds an opaque pointer, so no manipulations should be done to it.
 		It's use to the user is just to be passed around to the different API functions*/
 		typedef PHYSFS_File OpenedFile;
-
+		class ShaderFileParser;
+		class Key;
 		class FileHandler
 		{
 		public:
@@ -79,10 +80,19 @@ namespace Lux
 			// Deletes an already loaded file info and invalidates the pointer which is passed to it. Does nothing if passed pointer is null.
 			void DeleteLoadedFileInfo(FileInfo* a_FileInfo);
 
+			ShaderFileParser& GetShaderParser(Key& a_Key);
+			void CreateShaderParser(Key& a_Key);
+			void DestroyShaderParser(Key& a_Key);
+
 		private:
 			FileHandler();
 			FileHandler(FileHandler const&);// Don't Implement
 			void operator=(FileHandler const&);// Don't implement
+
+			typedef std::map<Key, ShaderFileParser> ShaderFileParserMap;
+			ShaderFileParserMap m_ShaderParserMap;
+
+			const bool ShaderParserExists(Key& a_Key);
 		};
 	}
 }

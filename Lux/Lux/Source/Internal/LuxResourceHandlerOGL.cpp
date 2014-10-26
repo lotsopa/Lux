@@ -9,7 +9,10 @@
 #include "LuxTexture.h"
 #include "LuxTexture2D.h"
 #include "LuxTexture2DOGL.h"
+#include "LuxShader.h"
+#include "LuxShaderOGL.h"
 #include "LuxFileHandler.h"
+#include "LuxShaderFileParser.h"
 
 #ifndef YY_NO_UNISTD_H
 #define YY_NO_UNISTD_H
@@ -44,6 +47,14 @@ Lux::Core::Internal::ResourceHandlerOGL::~ResourceHandlerOGL()
 		it3->second.reset();
 	}
 	m_TextureMap.clear();
+
+	ShaderMap::iterator it4;
+
+	for (it4 = m_ShaderMap.begin(); it4 != m_ShaderMap.end(); ++it4)
+	{
+		it4->second.reset();
+	}
+	m_ShaderMap.clear();
 }
 
 Lux::Core::Internal::ResourceHandlerOGL::ResourceHandlerOGL()
@@ -129,6 +140,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(con
 
 	AddMeshToMap(a_EntityName, retMesh);
 	AddFileNameToMap(a_File, retMesh);
+	Utility::SafePtrDelete(file);
 	return retMesh;
 }
 
@@ -356,17 +368,108 @@ Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerOGL::CreateTextureFromMe
 
 Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile(const String& a_File, const String& a_ShaderName)
 {
-	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
-	// TODO
+	FileHandler& fileHandler = FileHandler::GetInstance();
+	FileInfo* file = fileHandler.LoadFileInMemory(a_File);
 	String str(file->m_RawData, file->m_DataLength);
+	Utility::SafePtrDelete(file);
+
+	// Tokenize file
 	yyscan_t scanner;
 	LuxFileScannerlex_init(&scanner);
 	LuxFileScannerlex_init_extra(a_File.c_str(), &scanner);
 	LuxFileScanner_scan_string(str.c_str(), scanner);
+
+	// Create a new parser
+	fileHandler.CreateShaderParser(Key(a_File));
 	LuxFileScannerlex(scanner);
 	LuxFileScannerlex_destroy(scanner);
-	return nullptr;
+
+	ShaderFileParser& shaderParser = fileHandler.GetShaderParser(Key(a_File));
+	std::vector<unsigned int> loadedShaders;
+	
+	for (unsigned int i = 0; i < NUM_SHADER_PROGRAMS; i++)
+	{
+		String fileName = shaderParser.GetParsedProgramGLSL((ShaderProgram)i);
+
+		if (fileName.empty())
+		{
+			// mandatory
+			if (i == VERTEX_PROGRAM || i == FRAGMENT_PROGRAM)
+			{
+				Utility::ThrowError("Could not load shader file. Vertex or Fragment Program path is invalid");
+			}
+			else
+			{
+				continue;
+			}
+		}
+
+		FileInfo* shaderInfo = fileHandler.LoadFileInMemory(fileName);
+		
+		unsigned int loadedShaderHandle = 0;
+
+		switch (i)
+		{
+		case VERTEX_PROGRAM:
+			loadedShaderHandle = LoadOGLShader(GL_VERTEX_SHADER, shaderInfo);
+			break;
+
+		case FRAGMENT_PROGRAM:
+			loadedShaderHandle = LoadOGLShader(GL_FRAGMENT_SHADER, shaderInfo);
+			break;
+
+		case GEOMETRY_PROGRAM:
+			loadedShaderHandle = LoadOGLShader(GL_GEOMETRY_SHADER, shaderInfo);
+			break;
+		}
+		loadedShaders.push_back(loadedShaderHandle);
+	}
+
+	// Create a Shader Object
+	ShaderOGL* shader = new ShaderOGL(loadedShaders);
+	AddShaderToMap(a_ShaderName, shader);
+	fileHandler.DestroyShaderParser(Key(a_File));
+	return shader;
 }
+
+
+unsigned int Lux::Core::Internal::ResourceHandlerOGL::LoadOGLShader(GLenum a_ShaderType, FileInfo* a_FileInfo)
+{
+	// Create a shader object.
+	GLuint shader = glCreateShader(a_ShaderType);
+	String source(a_FileInfo->m_RawData, a_FileInfo->m_DataLength);
+	// Load the shader source for each shader object.
+	const GLchar* sources[] = { source.c_str() };
+	glShaderSource( shader, 1, sources, NULL );
+
+	// Compile the shader.
+	glCompileShader( shader );
+
+	// Check for errors
+	GLint compileStatus;
+	glGetShaderiv( shader, GL_COMPILE_STATUS, &compileStatus ); 
+	if ( compileStatus != GL_TRUE )
+	{
+		GLint logLength;
+		glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &logLength );
+		GLchar* infoLog = new GLchar[logLength];
+		glGetShaderInfoLog( shader, logLength, NULL, infoLog );
+
+#ifdef _WIN32
+		OutputDebugString(infoLog);
+#else
+		std::cerr << infoLog << std::endl;
+#endif
+		std::string errStr("Error Loading shader.");
+		errStr.append(infoLog);
+		delete infoLog;
+		Utility::ThrowError(errStr);
+		return 0;
+	}
+
+	return shader;
+}
+
 
 #if LUX_THREAD_SAFE == TRUE
 void Lux::Core::Internal::ResourceHandlerOGL::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
@@ -479,6 +582,32 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetLoadedMesh(const St
 	return nullptr;
 }
 
+void Lux::Core::Internal::ResourceHandlerOGL::AddShaderToMap(const String& a_Str, Shader* a_Shader)
+{
+	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
+	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Shader>(a_Shader)));
+}
+
+bool Lux::Core::Internal::ResourceHandlerOGL::ShaderExists(const String& a_Name)
+{
+	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
+	Key k(a_Name);
+	unsigned int count = m_ShaderMap.count(k);
+
+	if (count > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::GetShader(const String& a_Name)
+{
+	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
+	return m_ShaderMap.at(Key(a_Name)).get();
+}
+
 #else
 void Lux::Core::Internal::ResourceHandlerOGL::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
@@ -577,6 +706,29 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetLoadedMesh(const St
 	}
 
 	return nullptr;
+}
+
+void Lux::Core::Internal::ResourceHandlerOGL::AddShaderToMap(const String& a_Str, Shader* a_Shader)
+{
+	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Shader>(a_Shader)));
+}
+
+bool Lux::Core::Internal::ResourceHandlerOGL::ShaderExists(const String& a_Name)
+{
+	Key k(a_Name);
+	unsigned int count = m_ShaderMap.count(k);
+
+	if (count > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::GetShader(const String& a_Name)
+{
+	return m_ShaderMap.at(Key(a_Name)).get();
 }
 
 #endif // LUX_THREAD_SAFE

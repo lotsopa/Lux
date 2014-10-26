@@ -33,6 +33,7 @@
     <ClInclude Include="Include\LuxRenderingSystem.h" />
     <ClInclude Include="Include\LuxScannerToParser.h" />
     <ClInclude Include="Include\LuxShader.h" />
+    <ClInclude Include="Include\LuxShaderFileParser.h" />
     <ClInclude Include="Include\LuxSubMesh.h" />
     <ClInclude Include="Include\LuxMesh.h" />
     <ClInclude Include="Include\LuxMeshAnimation.h" />
@@ -91,6 +92,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\LuxShader.cpp" />
+    <ClCompile Include="Source\LuxShaderFileParser.cpp" />
     <ClCompile Include="Source\LuxSubMesh.cpp" />
     <ClCompile Include="Source\LuxMeshAnimation.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">

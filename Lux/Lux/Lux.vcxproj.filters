@@ -177,6 +177,9 @@
     <ClInclude Include="Include\LuxScannerToParser.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxShaderFileParser.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -303,6 +306,9 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxScannerToParser.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxShaderFileParser.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>

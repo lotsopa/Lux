@@ -27,10 +27,12 @@ namespace Lux
 			virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName) = 0;
 
 			virtual Mesh* GetMesh(const String& a_Name) = 0;
+			virtual Shader* GetShader(const String& a_Name) = 0;
 			virtual Material* GetMaterial(const String& a_Name) = 0;
 			virtual Texture* GetTexture(const String& a_Name) = 0;
 			virtual bool MaterialExists(const String& a_Name) = 0;
 			virtual bool MeshExists(const String& a_Name) = 0;
+			virtual bool ShaderExists(const String& a_Name) = 0;
 			virtual bool TextureExists(const String& a_Name) = 0;
 			virtual bool DeleteTexture(const String& a_Name) = 0;
 

@@ -1,4 +1,6 @@
 #include "LuxPCH.h"
+#include "LuxKey.h"
+#include "LuxShaderFileParser.h"
 #include "LuxFileHandler.h"
 
 Lux::Core::FileHandler& Lux::Core::FileHandler::GetInstance()
@@ -186,4 +188,29 @@ void Lux::Core::FileHandler::CloseOpenedFile(OpenedFile* a_File)
 	}
 
 	a_File = nullptr;
+}
+
+Lux::Core::ShaderFileParser& Lux::Core::FileHandler::GetShaderParser(Key& a_Key)
+{
+	return m_ShaderParserMap.at(a_Key);
+}
+
+const bool Lux::Core::FileHandler::ShaderParserExists(Key& a_Key)
+{
+	int count = m_ShaderParserMap.count(a_Key);
+
+	if (count > 0)
+		return true;
+
+	return false;
+}
+
+void Lux::Core::FileHandler::CreateShaderParser(Key& a_Key)
+{
+	m_ShaderParserMap.insert(std::make_pair(a_Key, ShaderFileParser()));
+}
+
+void Lux::Core::FileHandler::DestroyShaderParser(Key& a_Key)
+{
+	m_ShaderParserMap.erase(a_Key);
 }
