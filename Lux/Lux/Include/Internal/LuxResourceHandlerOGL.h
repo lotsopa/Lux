@@ -22,7 +22,8 @@ namespace Lux
 				Mesh* CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags);
 				Mesh* CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags);
 				Texture* CreateTextureFromFile(const String& a_File, const String& a_TexName);
-
+				Texture* CreateTextureFromMemory(FileInfo* a_Info, const String& a_TexName);
+				Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
 
 				Mesh* GetMesh(const String& a_Name);
 				Material* GetMaterial(const String& a_Name);

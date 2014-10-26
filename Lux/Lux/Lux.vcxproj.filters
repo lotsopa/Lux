@@ -165,6 +165,18 @@
     <ClInclude Include="Include\Internal\LuxResourceHandlerOGL.h">
       <Filter>Header Files\Core\Internal</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxShader.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\LuxShaderOGL.h">
+      <Filter>Header Files\Core\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxFileScanner.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxScannerToParser.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -280,6 +292,18 @@
     </ClCompile>
     <ClCompile Include="Source\Internal\LuxResourceHandlerOGL.cpp">
       <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxShader.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\LuxShaderOGL.cpp">
+      <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxFileScanner.c">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxScannerToParser.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

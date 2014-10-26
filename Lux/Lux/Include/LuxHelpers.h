@@ -110,7 +110,9 @@ namespace Lux
 		static void ThrowError(const String a_String)
 		{
 			LUX_LOG(logERROR) << a_String;
+#ifdef _WIN32
 			MessageBox(nullptr, a_String.c_str(), "Error", MB_ICONERROR | MB_SETFOREGROUND);
+#endif
 			throw std::logic_error(a_String);
 		}
 	}

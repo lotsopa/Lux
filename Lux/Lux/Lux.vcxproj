@@ -15,6 +15,7 @@
     <ClInclude Include="Include\Internal\LuxPlatformOGL.h" />
     <ClInclude Include="Include\Internal\LuxRenderWindowOGL.h" />
     <ClInclude Include="Include\Internal\LuxResourceHandlerOGL.h" />
+    <ClInclude Include="Include\Internal\LuxShaderOGL.h" />
     <ClInclude Include="Include\Internal\LuxTexture1DOGL.h" />
     <ClInclude Include="Include\Internal\LuxTexture2DOGL.h" />
     <ClInclude Include="Include\Internal\LuxTexture3DOGL.h" />
@@ -23,12 +24,15 @@
     <ClInclude Include="Include\LuxComponent.h" />
     <ClInclude Include="Include\LuxEntity.h" />
     <ClInclude Include="Include\LuxEventSystem.h" />
+    <ClInclude Include="Include\LuxFileScanner.h" />
     <ClInclude Include="Include\LuxHelpers.h" />
     <ClInclude Include="Include\LuxKey.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
     <ClInclude Include="Include\LuxPlatform.h" />
     <ClInclude Include="Include\LuxRenderingSystem.h" />
+    <ClInclude Include="Include\LuxScannerToParser.h" />
+    <ClInclude Include="Include\LuxShader.h" />
     <ClInclude Include="Include\LuxSubMesh.h" />
     <ClInclude Include="Include\LuxMesh.h" />
     <ClInclude Include="Include\LuxMeshAnimation.h" />
@@ -59,6 +63,7 @@
     <ClCompile Include="Source\Internal\LuxPlatformOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxRenderWindowOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxResourceHandlerOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxShaderOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxTexture1DOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxTexture2DOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxTexture3DOGL.cpp" />
@@ -70,6 +75,10 @@
     <ClCompile Include="Source\LuxEventListener.cpp" />
     <ClCompile Include="Source\LuxEventSystem.cpp" />
     <ClCompile Include="Source\LuxFileHandler.cpp" />
+    <ClCompile Include="Source\LuxFileScanner.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\LuxHelpers.cpp" />
     <ClCompile Include="Source\LuxKey.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
@@ -77,6 +86,11 @@
     <ClCompile Include="Source\LuxObjectPool.cpp" />
     <ClCompile Include="Source\LuxPlatform.cpp" />
     <ClCompile Include="Source\LuxRenderingSystem.cpp" />
+    <ClCompile Include="Source\LuxScannerToParser.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\LuxShader.cpp" />
     <ClCompile Include="Source\LuxSubMesh.cpp" />
     <ClCompile Include="Source\LuxMeshAnimation.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">

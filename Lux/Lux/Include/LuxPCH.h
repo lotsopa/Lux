@@ -1,4 +1,5 @@
 
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 
 #include <windows.h>
@@ -9,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <map>

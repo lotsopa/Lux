@@ -6,6 +6,7 @@ namespace Lux
 	namespace Core
 	{
 		class Material;
+		class Shader;
 		class SubMesh;
 		class Mesh;
 		class Key;
@@ -22,7 +23,8 @@ namespace Lux
 			virtual Mesh* CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
 			virtual Mesh* CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
 			virtual Texture* CreateTextureFromFile(const String& a_File, const String& a_TexName) = 0;
-
+			virtual Texture* CreateTextureFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
+			virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName) = 0;
 
 			virtual Mesh* GetMesh(const String& a_Name) = 0;
 			virtual Material* GetMaterial(const String& a_Name) = 0;

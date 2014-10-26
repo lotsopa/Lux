@@ -11,6 +11,14 @@
 #include "LuxTexture2DOGL.h"
 #include "LuxFileHandler.h"
 
+#ifndef YY_NO_UNISTD_H
+#define YY_NO_UNISTD_H
+#endif
+extern "C"
+{
+#include "LuxFileScanner.h"
+}
+
 Lux::Core::Internal::ResourceHandlerOGL::~ResourceHandlerOGL()
 {
 	MeshMap::iterator it;
@@ -288,6 +296,77 @@ Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerOGL::CreateTextureFromFi
 	return tex2d;
 }
 
+Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerOGL::CreateTextureFromMemory(FileInfo* a_Info, const String& a_TexName)
+{
+	FIMEMORY* freeImgMemoryPtr = nullptr;
+	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_Info->m_RawData, a_Info->m_DataLength);
+	FREE_IMAGE_FORMAT imgFormat = FreeImage_GetFileTypeFromMemory(freeImgMemoryPtr, a_Info->m_DataLength);
+
+	if (imgFormat == FIF_UNKNOWN)
+	{
+		String err("The file from memory could not be loaded. Unknown format.");
+		Utility::ThrowError(err);
+	}
+
+	//Does the extension support reading?
+	if (!FreeImage_FIFSupportsReading(imgFormat))
+	{
+		String err("The file could not be loaded. The file extension does not support reading.");
+		Utility::ThrowError(err);
+	}
+
+	// Load the file in a bitmap
+	FIBITMAP* bitmap = FreeImage_LoadFromMemory(imgFormat, freeImgMemoryPtr);
+	FIBITMAP* convertedBitmap = FreeImage_ConvertTo32Bits(bitmap);
+
+	if (convertedBitmap == nullptr)
+	{
+		String err("The file could not be loaded. Loading function returned NULL.");
+		Utility::ThrowError(err);
+	}
+
+	unsigned int imgWidth = FreeImage_GetWidth(convertedBitmap);
+	unsigned int imgHeight = FreeImage_GetHeight(convertedBitmap);
+	unsigned char* bits = FreeImage_GetBits(convertedBitmap);
+
+	// Normally this should never happen, but just to be safe
+	if (imgWidth == 0 || imgHeight == 0 || bits == nullptr)
+	{
+		String err("The file could not be created. Failed to retrieve proper data from the loaded file.");
+		Utility::ThrowError(err);
+	}
+
+	// Check if a texture with this name already exists
+	if (TextureExists(a_TexName))
+	{
+		// Delete the old one
+		DeleteTexture(a_TexName);
+	}
+
+	Internal::Texture2DOGL* tex2d = new Internal::Texture2DOGL(imgWidth, imgHeight, bits);
+
+	// Put it in the map
+	AddTextureToMap(a_TexName, tex2d);
+
+	//Free FreeImage's copy of the data
+	FreeImage_Unload(convertedBitmap);
+
+	return tex2d;
+}
+
+Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile(const String& a_File, const String& a_ShaderName)
+{
+	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
+	// TODO
+	String str(file->m_RawData, file->m_DataLength);
+	yyscan_t scanner;
+	LuxFileScannerlex_init(&scanner);
+	LuxFileScannerlex_init_extra(a_File.c_str(), &scanner);
+	LuxFileScanner_scan_string(str.c_str(), scanner);
+	LuxFileScannerlex(scanner);
+	LuxFileScannerlex_destroy(scanner);
+	return nullptr;
+}
 
 #if LUX_THREAD_SAFE == TRUE
 void Lux::Core::Internal::ResourceHandlerOGL::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
