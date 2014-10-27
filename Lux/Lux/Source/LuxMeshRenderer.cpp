@@ -19,7 +19,7 @@ Lux::Graphics::MeshRenderer::~MeshRenderer()
 
 void Lux::Graphics::MeshRenderer::Reset()
 {
-
+	m_Mesh = nullptr;
 }
 
 void Lux::Graphics::MeshRenderer::SetMesh(Core::Mesh* a_Mesh)

@@ -26,10 +26,6 @@ Lux::Graphics::RenderingSystem::~RenderingSystem()
 
 void Lux::Graphics::RenderingSystem::ProcessUpdate(const float a_DeltaTime)
 {
-	// remove and insert the queued entries
-	InsertEntries();
-	RemoveEntries();
-
 	m_RenderWindow->SwapBuffers();
 }
 
@@ -59,14 +55,12 @@ void Lux::Graphics::RenderingSystem::AddComponent(Core::Component* a_Comp, Core:
 		}
 
 		// We are sure this is a Mesh Renderer component
-		//m_EntityMap[a_Entity].m_MeshRenderer = meshPtr;
-		m_MeshRendererInsertQueue.Push(std::make_pair(a_Entity, meshPtr));
+		m_EntityMap[a_Entity].m_MeshRenderer = meshPtr;
 	}
 	else
 	{
 		// We are sure this is a Transform component
-		//m_EntityMap[a_Entity].m_Transform = transformPtr;
-		m_TransformInsertQueue.Push(std::make_pair(a_Entity, transformPtr));
+		m_EntityMap[a_Entity].m_Transform = transformPtr;
 	}
 }
 
@@ -95,14 +89,22 @@ void Lux::Graphics::RenderingSystem::RemoveComponent(Core::Component* a_Componen
 		}
 
 		// We are sure this is a Mesh Renderer component
-		//m_EntityMap[a_Entity].m_MeshRenderer = nullptr;
-		m_MeshRendererRemoveQueue.Push(a_Entity);
+		m_EntityMap[a_Entity].m_MeshRenderer = nullptr;
+
+		if (m_EntityMap[a_Entity].IsNull())
+		{
+			m_EntityMap.erase(a_Entity);
+		}
 	}
 	else
 	{
 		// We are sure this is a Transform component
-		//m_EntityMap[a_Entity].m_Transform = nullptr;
-		m_TransformRemoveQueue.Push(a_Entity);
+		m_EntityMap[a_Entity].m_Transform = nullptr;
+
+		if (m_EntityMap[a_Entity].IsNull())
+		{
+			m_EntityMap.erase(a_Entity);
+		}
 	}
 }
 
@@ -116,34 +118,4 @@ bool Lux::Graphics::RenderingSystem::EntityEntryExists(Core::Entity* a_Entity)
 	}
 
 	return false;
-}
-
-void Lux::Graphics::RenderingSystem::InsertEntries()
-{
-	while (!m_TransformInsertQueue.Empty())
-	{
-		std::pair<Core::Entity*, Core::Transform*> p = m_TransformInsertQueue.Pop();
-		m_EntityMap[p.first].m_Transform = p.second;
-	}
-
-	while (!m_MeshRendererInsertQueue.Empty())
-	{
-		std::pair<Core::Entity*, MeshRenderer*> p = m_MeshRendererInsertQueue.Pop();
-		m_EntityMap[p.first].m_MeshRenderer = p.second;
-	}
-}
-
-void Lux::Graphics::RenderingSystem::RemoveEntries()
-{
-	while (!m_TransformInsertQueue.Empty())
-	{
-		Core::Entity* e = m_TransformRemoveQueue.Pop();
-		m_EntityMap[e].m_Transform = nullptr;
-	}
-
-	while (!m_MeshRendererInsertQueue.Empty())
-	{
-		Core::Entity* e = m_MeshRendererRemoveQueue.Pop();
-		m_EntityMap[e].m_MeshRenderer = nullptr;
-	}
 }

@@ -10,7 +10,6 @@ namespace Lux
 		class Transform;
 		/*
 		The Entity class is just an abstract concept. It represents an object in the scene.
-		It stores opaque pointers to its components.
 		*/
 		class Entity
 		{

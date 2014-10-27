@@ -44,24 +44,21 @@ namespace Lux
 					m_MeshRenderer = nullptr;
 				}
 
+				inline bool IsNull()
+				{
+					if (m_Transform == nullptr && m_MeshRenderer == nullptr)
+					{
+						return true;
+					}
+
+					return false;
+				}
+
 				Core::Transform* m_Transform;
 				MeshRenderer* m_MeshRenderer;
 			};
 			typedef std::map<Core::Entity*, EntityEntry> EntityMap;
 			EntityMap m_EntityMap;
-
-			typedef Utility::ThreadSafeObjectQueue<std::pair<Core::Entity*, Core::Transform*>> TransformEntryQueue;
-			typedef Utility::ThreadSafeObjectQueue<std::pair<Core::Entity*, MeshRenderer*>> MeshRendererEntryQueue;
-			typedef Utility::ThreadSafePtrQueue<Core::Entity> EntityQueue;
-
-			TransformEntryQueue m_TransformInsertQueue; // Entries waiting to be inserted 
-			EntityQueue m_TransformRemoveQueue; // Entries waiting to be removed
-
-			MeshRendererEntryQueue m_MeshRendererInsertQueue;
-			EntityQueue m_MeshRendererRemoveQueue;
-
-			void InsertEntries(); // Inserts entries which are waiting in the queues
-			void RemoveEntries(); // Removes entries which are waiting in the queues
 		};
 	}
 }

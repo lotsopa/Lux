@@ -180,6 +180,9 @@
     <ClInclude Include="Include\LuxShaderFileParser.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxShaderComponent.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -310,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="Source\LuxShaderFileParser.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxShaderComponent.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
