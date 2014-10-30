@@ -43,10 +43,11 @@ namespace Lux
 
 				typedef std::map<Key, std::shared_ptr<Texture>> TextureMap;
 				typedef std::map<Key, std::shared_ptr<Mesh>> MeshMap;
+				typedef std::map<Key, Mesh*> MeshMapSimple;
 				typedef std::map<Key, std::shared_ptr<Material>> MaterialMap;
 				typedef std::map<Key, std::shared_ptr<Shader>> ShaderMap;
 				MeshMap m_MeshMap;
-				MeshMap m_LoadedFilenameMeshes;
+				MeshMapSimple m_LoadedFilenameMeshes;
 				MaterialMap m_MaterialMap;
 				TextureMap m_TextureMap;
 				ShaderMap m_ShaderMap;

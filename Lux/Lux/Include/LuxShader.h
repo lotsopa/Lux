@@ -10,6 +10,7 @@ namespace Lux
 		public:
 			Shader();
 			virtual ~Shader();
+
 		};
 	}
 }

@@ -6,13 +6,14 @@ namespace Lux
 	namespace Core
 	{
 		class Material;
+		class Vertex;
 		class SubMesh
 		{
 		public:
 			SubMesh();
 			SubMesh(const SubMesh& a_SubMesh);
 			SubMesh(aiMesh& a_Mesh);
-			~SubMesh();
+			virtual ~SubMesh();
 
 			struct VertexBoneWeight
 			{
@@ -88,19 +89,19 @@ namespace Lux
 			Material* GetMaterial();
 			void SetMaterial(Material* a_Mat);
 
-		private:
+			virtual void PreRender() = 0;
+			virtual void PostRender() = 0;
+
+		protected:
 			unsigned int m_NumVertices;
 			unsigned int m_NumIndices;
 			unsigned int m_NumBones;
 			Material* m_Material;
 			unsigned int m_NumComponentsPerTexCoordSet[AI_MAX_NUMBER_OF_TEXTURECOORDS];
 
-			vec3* m_Vertices;
+			Vertex* m_Vertices;
 			unsigned int* m_Indices;
 			vec3* m_TextureCoordSets[AI_MAX_NUMBER_OF_TEXTURECOORDS];
-			vec3* m_VertexTangents;
-			vec3* m_VertexNormals;
-			vec3* m_VertexBitangents;
 			vec4* m_VertexColorSets[AI_MAX_NUMBER_OF_COLOR_SETS];
 			Bone** m_Bones;
 

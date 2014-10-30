@@ -11,7 +11,7 @@ Lux::Core::Internal::EventListenerOGL::EventListenerOGL(RenderWindow* a_Owner) :
 
 Lux::Core::Internal::EventListenerOGL::~EventListenerOGL()
 {
-
+	m_GLWindow = nullptr;
 }
 
 const bool Lux::Core::Internal::EventListenerOGL::GetKeyDown(int a_Key)

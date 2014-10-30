@@ -30,8 +30,6 @@ namespace Lux
 		//virtual bool OnFrameStarted(const float a_DeltaTime) = 0;
 		//virtual bool OnFrameEnded(const float a_DeltaTime) = 0;
 
-		inline double GetTimeSinceStart() { return glfwGetTime();  }
-
 		const virtual bool ShouldQuit();
 
 	private:

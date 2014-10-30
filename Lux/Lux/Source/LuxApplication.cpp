@@ -6,6 +6,7 @@
 #include "LuxKey.h"
 #include "LuxMeshRenderer.h"
 #include "LuxTransform.h"
+#include "LuxShaderComponent.h"
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
@@ -19,16 +20,16 @@
 #include "LuxResourceHandler.h"
 
 Lux::Application::Application() :
-m_Platform(nullptr), m_SceneManager(nullptr)
+m_Platform(nullptr), m_SceneManager(nullptr), m_ResourceHandler(nullptr)
 {
 
 }
 
 Lux::Application::~Application()
 {
-	Utility::SafePtrDelete(m_Platform);
 	Utility::SafePtrDelete(m_SceneManager);
 	Utility::SafePtrDelete(m_ResourceHandler);
+	Utility::SafePtrDelete(m_Platform);
 }
 
 bool Lux::Application::Initialize(Utility::AppInitOptions& a_AppInitOptions)
@@ -55,11 +56,6 @@ bool Lux::Application::Initialize(Utility::AppInitOptions& a_AppInitOptions)
 	LoadComponentTypes();
 	LoadSystemTypes();
 	return true;
-}
-
-void Lux::Application::Terminate()
-{
-	glfwTerminate();
 }
 
 const bool Lux::Application::ShouldQuit()
@@ -110,6 +106,7 @@ bool Lux::Application::LoadComponentTypes()
 {
 	m_SceneManager->RegisterNewComponentType<Core::Transform>();
 	m_SceneManager->RegisterNewComponentType<Graphics::MeshRenderer>();
+	m_SceneManager->RegisterNewComponentType<Graphics::ShaderComponent>();
 	return true;
 }
 
@@ -118,6 +115,7 @@ bool Lux::Application::LoadSystemTypes()
 	m_SceneManager->RegisterNewSystemType<Graphics::RenderingSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Core::Transform, Graphics::RenderingSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Graphics::MeshRenderer, Graphics::RenderingSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Graphics::ShaderComponent, Graphics::RenderingSystem>();
 
 	m_SceneManager->RegisterNewSystemType<Core::EventSystem>();
 	return true;

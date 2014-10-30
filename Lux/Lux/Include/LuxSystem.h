@@ -8,6 +8,7 @@ namespace Lux
 		class SceneManager;
 		class Component;
 		class Entity;
+		class Key;
 		class System
 		{
 		public:
@@ -15,8 +16,8 @@ namespace Lux
 			virtual ~System();
 
 			virtual void ProcessUpdate(const float a_DeltaTime) = 0;
-			virtual void AddComponent(Component* a_Component, Entity* a_Entity) = 0;
-			virtual void RemoveComponent(Component* a_Component, Entity* a_Entity) = 0;
+			virtual void AddComponent(Component* a_Component, const Key& a_CompType, Entity* a_Entity) = 0;
+			virtual void RemoveComponent(const Key& a_CompType, Entity* a_Entity) = 0;
 			virtual bool Init(SceneManager* a_SceneManager);
 
 		protected:

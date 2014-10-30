@@ -15,6 +15,7 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxComponent.h"
 #include "LuxTransform.h"
 #include "LuxMeshRenderer.h"
+#include "LuxShaderComponent.h"
 #include "LuxEntity.h"
 #include "LuxEntityFactory.h"
 #include "LuxMaterial.h"

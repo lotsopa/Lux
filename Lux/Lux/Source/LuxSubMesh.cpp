@@ -1,18 +1,16 @@
 #include "LuxPCH.h"
 #include "LuxMaterial.h"
+#include "LuxVertex.h"
 #include "LuxSubMesh.h"
 
 Lux::Core::SubMesh::SubMesh() :
 m_Bones(nullptr),
 m_Indices(nullptr),
-m_VertexNormals(nullptr),
 m_Material(nullptr),
 m_NumBones(0),
 m_NumIndices(0),
 m_NumVertices(0),
-m_VertexTangents(nullptr),
-m_Vertices(nullptr),
-m_VertexBitangents(nullptr)
+m_Vertices(nullptr)
 {
 	for (unsigned int i = 0; i < AI_MAX_NUMBER_OF_COLOR_SETS; i++)
 	{
@@ -31,35 +29,32 @@ SubMesh()
 {
 	// Fill vertices
 	m_NumVertices = a_Mesh.mNumVertices;
-	m_Vertices = new vec3[m_NumVertices];
+	m_Vertices = new Vertex[m_NumVertices];
 	for (unsigned int i = 0; i < m_NumVertices; i++)
 	{
-		m_Vertices[i] = vec3(a_Mesh.mVertices[i].x, a_Mesh.mVertices[i].y, a_Mesh.mVertices[i].z);
+		m_Vertices[i].m_Position = vec3(a_Mesh.mVertices[i].x, a_Mesh.mVertices[i].y, a_Mesh.mVertices[i].z);
 	}
 
 	// Fill tangents and bi tangents
 	if (a_Mesh.HasTangentsAndBitangents())
 	{
-		m_VertexTangents = new vec3[m_NumVertices];
 		for (unsigned int i = 0; i < m_NumVertices; i++)
 		{
-			m_VertexTangents[i] = vec3(a_Mesh.mTangents[i].x, a_Mesh.mTangents[i].y, a_Mesh.mTangents[i].z);
+			m_Vertices[i].m_Tangent = vec3(a_Mesh.mTangents[i].x, a_Mesh.mTangents[i].y, a_Mesh.mTangents[i].z);
 		}
 
-		m_VertexBitangents = new vec3[m_NumVertices];
 		for (unsigned int i = 0; i < m_NumVertices; i++)
 		{
-			m_VertexBitangents[i] = vec3(a_Mesh.mBitangents[i].x, a_Mesh.mBitangents[i].y, a_Mesh.mBitangents[i].z);
+			m_Vertices[i].m_Bitangent = vec3(a_Mesh.mBitangents[i].x, a_Mesh.mBitangents[i].y, a_Mesh.mBitangents[i].z);
 		}
 	}
 
 	// Fill normals
 	if (a_Mesh.HasNormals())
 	{
-		m_VertexNormals = new vec3[m_NumVertices];
 		for (unsigned int i = 0; i < m_NumVertices; i++)
 		{
-			m_VertexNormals[i] = vec3(a_Mesh.mNormals[i].x, a_Mesh.mNormals[i].y, a_Mesh.mNormals[i].z);
+			m_Vertices[i].m_Normal = vec3(a_Mesh.mNormals[i].x, a_Mesh.mNormals[i].y, a_Mesh.mNormals[i].z);
 		}
 	}
 
@@ -72,10 +67,16 @@ SubMesh()
 			for (unsigned int j = 0; j < m_NumVertices; j++) // RGBA
 			{
 				m_VertexColorSets[i][j] = vec4(a_Mesh.mColors[i][j].r, a_Mesh.mColors[i][j].g, a_Mesh.mColors[i][j].b, a_Mesh.mColors[i][j].a);
+
+				// Only 1 set supported in the vertices for now
+				if (i == 0)
+				{
+					m_Vertices[i].m_Color = m_VertexColorSets[i][j];
+				}
 			}
 		}
-
 	}
+
 	// Fill texture coordinate data
 	for (unsigned int i = 0; i < AI_MAX_NUMBER_OF_TEXTURECOORDS; i++)
 	{
@@ -85,6 +86,11 @@ SubMesh()
 			for (unsigned int j = 0; j < m_NumVertices; j++)
 			{
 				m_TextureCoordSets[i][j] = vec3(a_Mesh.mTextureCoords[i][j].x, a_Mesh.mTextureCoords[i][j].y, a_Mesh.mTextureCoords[i][j].z);
+				// Only 1 set supported in the vertices for now
+				if (i == 0)
+				{
+					m_Vertices[i].m_TexCoords = vec2(a_Mesh.mTextureCoords[i][j].x, a_Mesh.mTextureCoords[i][j].y);
+				}
 			}
 		}
 		m_NumComponentsPerTexCoordSet[i] = a_Mesh.mNumUVComponents[i];
@@ -127,36 +133,10 @@ Lux::Core::SubMesh::SubMesh(const SubMesh& a_SubMesh)
 {
 	// Fill vertices
 	m_NumVertices = a_SubMesh.m_NumVertices;
-	m_Vertices = new vec3[m_NumVertices];
+	m_Vertices = new Vertex[m_NumVertices];
 	for (unsigned int i = 0; i < m_NumVertices; i++)
 	{
 		m_Vertices[i] = a_SubMesh.m_Vertices[i];
-	}
-
-	// Fill tangents and bi tangents
-	if (a_SubMesh.m_VertexTangents != nullptr && a_SubMesh.m_VertexBitangents != nullptr)
-	{
-		m_VertexTangents = new vec3[m_NumVertices];
-		for (unsigned int i = 0; i < m_NumVertices; i++)
-		{
-			m_VertexTangents[i] = a_SubMesh.m_VertexTangents[i];
-		}
-
-		m_VertexBitangents = new vec3[m_NumVertices];
-		for (unsigned int i = 0; i < m_NumVertices; i++)
-		{
-			m_VertexBitangents[i] = a_SubMesh.m_VertexBitangents[i];
-		}
-	}
-
-	// Fill normals
-	if (a_SubMesh.m_VertexNormals != nullptr)
-	{
-		m_VertexNormals = new vec3[m_NumVertices];
-		for (unsigned int i = 0; i < m_NumVertices; i++)
-		{
-			m_VertexNormals[i] = a_SubMesh.m_VertexNormals[i];
-		}
 	}
 
 	// Fill color data
@@ -212,16 +192,13 @@ Lux::Core::SubMesh::SubMesh(const SubMesh& a_SubMesh)
 
 Lux::Core::SubMesh::~SubMesh()
 {
-	SafeDeleteAttributes();
+	//SafeDeleteAttributes();
 }
 
 void Lux::Core::SubMesh::SafeDeleteAttributes()
 {
 	Utility::SafeArrayDelete(m_Vertices);
 	Utility::SafeArrayDelete(m_Indices);
-	Utility::SafeArrayDelete(m_VertexNormals);
-	Utility::SafeArrayDelete(m_VertexTangents);
-	Utility::SafeArrayDelete(m_VertexBitangents);
 	// Materials are managed by the resource manager, so don't destroy them here
 
 	if (m_NumBones)

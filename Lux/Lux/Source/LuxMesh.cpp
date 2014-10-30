@@ -3,99 +3,12 @@
 #include "LuxMeshAnimation.h"
 #include "LuxMesh.h"
 
-Lux::Core::Mesh::Mesh(unsigned int a_NumMeshes, unsigned int a_NumAnims) :
-m_NumSubMeshes(a_NumMeshes), 
-m_AnimationData(nullptr), 
-m_NumAnimations(a_NumAnims)
-{
-	if (m_NumSubMeshes)
-	{
-		m_SubMeshes = new SubMesh*[m_NumSubMeshes];
-	}
-
-	if (m_NumAnimations)
-	{
-		m_AnimationData = new MeshAnimation*[m_NumAnimations];
-	}
-}
-
-Lux::Core::Mesh::Mesh() :
-m_NumSubMeshes(0),
-m_AnimationData(nullptr),
-m_SubMeshes(nullptr),
-m_NumAnimations(0)
+Lux::Core::Mesh::Mesh()
 {
 
-}
-
-Lux::Core::Mesh::Mesh(const Mesh& a_Mesh)
-{
-	m_NumAnimations = a_Mesh.m_NumAnimations;
-	m_NumSubMeshes = a_Mesh.m_NumSubMeshes;
-
-	if (m_NumSubMeshes)
-	{
-		m_SubMeshes = new SubMesh*[m_NumSubMeshes];
-
-		for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-		{
-			m_SubMeshes[i] = new SubMesh(*a_Mesh.m_SubMeshes[i]);
-		}
-	}
-
-	if (m_NumAnimations)
-	{
-		m_AnimationData = new MeshAnimation*[m_NumAnimations];
-
-		for (unsigned int i = 0; i < m_NumAnimations; i++)
-		{
-			m_AnimationData[i] = new MeshAnimation(*a_Mesh.m_AnimationData[i]);
-		}
-	}
 }
 
 Lux::Core::Mesh::~Mesh()
 {
-	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-	{
-		Utility::SafePtrDelete(m_SubMeshes[i]);
-	}
-	Utility::SafeArrayDelete(m_SubMeshes);
 
-	for (unsigned int i = 0; i < m_NumAnimations; i++)
-	{
-		Utility::SafePtrDelete(m_AnimationData[i]);
-	}
-	Utility::SafeArrayDelete(m_AnimationData);
-
-	m_NumSubMeshes = 0;
-	m_NumAnimations = 0;
-}
-
-void Lux::Core::Mesh::AddSubMesh(SubMesh* a_Mesh)
-{
-	LuxAssert(a_Mesh);
-	static unsigned int ctr = 0;
-
-	if (ctr >= m_NumSubMeshes)
-	{
-		Utility::ThrowError("Could not insert mesh in entity. Mesh index too high.");
-	}
-
-	m_SubMeshes[ctr] = a_Mesh;
-	ctr++;
-}
-
-void Lux::Core::Mesh::AddAnimation(MeshAnimation* a_Anim)
-{
-	LuxAssert(a_Anim);
-	static unsigned int ctr = 0;
-
-	if (ctr >= m_NumSubMeshes)
-	{
-		Utility::ThrowError("Could not insert animation in entity. Animation index too high.");
-	}
-
-	m_AnimationData[ctr] = a_Anim;
-	ctr++;
 }

@@ -10,6 +10,10 @@
 #define LUX_COMPONENT_MEMORY_POOL_INITIAL_SIZE 100
 #define LUX_COMPONENT_MEMORY_POOL_GROW_AMOUNT 20
 
+#define BUFFER_OFFSET(offset) ((void*)(offset))
+#define MEMBER_OFFSET(s,m) ((char*)NULL + (offsetof(s,m)))
+#define ID_TO_STRING(a) #a
+
 namespace Lux
 {
 	using namespace glm;

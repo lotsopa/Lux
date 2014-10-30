@@ -11,14 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Internal\LuxErrorCheckOGL.h" />
     <ClInclude Include="Include\Internal\LuxEventListenerOGL.h" />
+    <ClInclude Include="Include\Internal\LuxMeshOGL.h" />
     <ClInclude Include="Include\Internal\LuxPlatformOGL.h" />
     <ClInclude Include="Include\Internal\LuxRenderWindowOGL.h" />
     <ClInclude Include="Include\Internal\LuxResourceHandlerOGL.h" />
     <ClInclude Include="Include\Internal\LuxShaderOGL.h" />
+    <ClInclude Include="Include\Internal\LuxSubMeshOGL.h" />
     <ClInclude Include="Include\Internal\LuxTexture1DOGL.h" />
     <ClInclude Include="Include\Internal\LuxTexture2DOGL.h" />
     <ClInclude Include="Include\Internal\LuxTexture3DOGL.h" />
+    <ClInclude Include="Include\Internal\LuxBufferOGL.h" />
+    <ClInclude Include="Include\Internal\LuxVertexArrayOGL.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
@@ -59,16 +64,21 @@
     <ClInclude Include="Include\LuxMeshRenderer.h" />
     <ClInclude Include="Include\LuxTexture1D.h" />
     <ClInclude Include="Include\LuxShaderComponent.h" />
+    <ClInclude Include="Include\LuxVertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Internal\LuxEventListenerOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxMeshOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxPlatformOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxRenderWindowOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxResourceHandlerOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxShaderOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxSubMeshOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxTexture1DOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxTexture2DOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxTexture3DOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxBufferOGL.cpp" />
+    <ClCompile Include="Source\Internal\LuxVertexArrayOGL.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
     <ClCompile Include="Source\LuxComponent.cpp" />
@@ -85,7 +95,6 @@
     <ClCompile Include="Source\LuxKey.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
     <ClCompile Include="Source\LuxMeshRenderer.cpp" />
-    <ClCompile Include="Source\LuxObjectPool.cpp" />
     <ClCompile Include="Source\LuxPlatform.cpp" />
     <ClCompile Include="Source\LuxRenderingSystem.cpp" />
     <ClCompile Include="Source\LuxScannerToParser.cpp">
@@ -114,6 +123,7 @@
     <ClCompile Include="Source\LuxTimer.cpp" />
     <ClCompile Include="Source\LuxTransform.cpp" />
     <ClCompile Include="Source\LuxTexture1D.cpp" />
+    <ClCompile Include="Source\LuxVertex.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2E2A77E1-3762-466F-9C23-5704EF8E16E1}</ProjectGuid>

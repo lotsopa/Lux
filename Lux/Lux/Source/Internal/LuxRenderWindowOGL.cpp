@@ -3,6 +3,7 @@
 #include "LuxEventListener.h"
 #include "LuxEventListenerOGL.h"
 #include "LuxRenderWindowOGL.h"
+#include "LuxErrorCheckOGL.h"
 
 bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a_AppInitOptions) 
 {
@@ -22,6 +23,8 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 	}
 
 	glfwMakeContextCurrent(m_WindowHandle);
+	Utility::Internal::CheckOGLError();
+
 	// Initialize GLEW 
 	glewExperimental = GL_TRUE;
 	int initResult = glewInit();
@@ -30,13 +33,14 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 		LUX_LOG(Utility::logERROR) << "Failed to initialize GLEW. " << "Error code: " << initResult;
 		return false;
 	}
+	Utility::Internal::ClearAllOGLErrors();
 
 	// Create a default listener
 	m_Input = new EventListenerOGL(this);
 
 	glfwSetInputMode(m_WindowHandle, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetInputMode(m_WindowHandle, GLFW_STICKY_MOUSE_BUTTONS, GL_TRUE);
-
+	Utility::Internal::CheckOGLError();
 	return true;
 }
 

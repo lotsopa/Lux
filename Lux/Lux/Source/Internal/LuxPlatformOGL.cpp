@@ -4,6 +4,7 @@
 #include "LuxRenderWindow.h"
 #include "LuxPlatformOGL.h"
 #include "LuxRenderWindowOGL.h"
+#include "LuxErrorCheckOGL.h"
 
 Lux::Core::Internal::PlatformOGL::PlatformOGL()
 {
@@ -13,6 +14,8 @@ Lux::Core::Internal::PlatformOGL::PlatformOGL()
 Lux::Core::Internal::PlatformOGL::~PlatformOGL()
 {
 	Utility::SafePtrDelete(m_Window);
+	//Utility::Internal::CheckOGLError();
+	glfwTerminate();
 }
 
 bool Lux::Core::Internal::PlatformOGL::Init(Utility::AppInitOptions& a_AppInitOptions)

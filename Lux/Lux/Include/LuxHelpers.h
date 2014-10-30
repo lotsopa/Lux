@@ -37,11 +37,6 @@ namespace Lux
 			PlatformType m_PlatformType;
 		};
 
-		static void ErrorCallbackFunc(int error, const char* description)
-		{
-			LUX_LOG(Lux::Utility::logERROR) << "An Error occurred. " << "Error Code: " << error << ". " << "Error description: " << description;
-		}
-
 		template<typename T>
 		static void SafePtrDelete(T* a_Ptr)
 		{
@@ -115,7 +110,13 @@ namespace Lux
 #endif
 			throw std::logic_error(a_String);
 		}
+
+		static void ErrorCallbackFunc(int error, const char* description)
+		{
+			LUX_LOG(Lux::Utility::logERROR) << "An Error occurred. " << "Error Code: " << error << ". " << "Error description: " << description;
+			Lux::Utility::ThrowError(description);
+		}
 	}
-	}
+}
 
 #endif

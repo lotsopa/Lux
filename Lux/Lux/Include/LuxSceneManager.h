@@ -89,7 +89,7 @@ namespace Lux
 				ComponentSystemMultiMap::iterator iter;
 				for (iter = ret.first; iter != ret.second; ++iter)
 				{
-					iter->second->AddComponent(genericComp, a_Ent);
+					iter->second->AddComponent(genericComp, k, a_Ent);
 				}
 
 				return comp;
@@ -186,7 +186,7 @@ namespace Lux
 				ComponentSystemMultiMap::iterator iter;
 				for (iter = ret.first; iter != ret.second; ++iter)
 				{
-					iter->second->RemoveComponent(a_Comp, a_Entity);
+					iter->second->RemoveComponent(k, a_Entity);
 				}
 
 				// Cast down to appropriate type

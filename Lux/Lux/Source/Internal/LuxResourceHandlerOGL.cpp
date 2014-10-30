@@ -1,8 +1,12 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
 #include "LuxMaterial.h"
+#include "LuxBufferOGL.h"
+#include "LuxVertexArrayOGL.h"
 #include "LuxSubMesh.h"
+#include "LuxSubMeshOGL.h"
 #include "LuxMesh.h"
+#include "LuxMeshOGL.h"
 #include "LuxMeshAnimation.h"
 #include "LuxResourceHandler.h"
 #include "LuxResourceHandlerOGL.h"
@@ -13,6 +17,7 @@
 #include "LuxShaderOGL.h"
 #include "LuxFileHandler.h"
 #include "LuxShaderFileParser.h"
+#include "LuxErrorCheckOGL.h"
 
 #ifndef YY_NO_UNISTD_H
 #define YY_NO_UNISTD_H
@@ -31,7 +36,8 @@ Lux::Core::Internal::ResourceHandlerOGL::~ResourceHandlerOGL()
 		it->second.reset();
 	}
 	m_MeshMap.clear();
-
+	m_LoadedFilenameMeshes.clear();
+	
 	MaterialMap::iterator it2;
 
 	for (it2 = m_MaterialMap.begin(); it2 != m_MaterialMap.end(); ++it2)
@@ -115,7 +121,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(con
 	}
 
 	// Creating a mesh and adding sub meshes
-	Mesh* retMesh = new Mesh(scene->mNumMeshes, scene->mNumAnimations);
+	MeshOGL* retMesh = new MeshOGL(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
@@ -123,7 +129,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(con
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
 		Material* meshMat = GetMaterial(matName);
-		SubMesh* mesh = new SubMesh(*scene->mMeshes[i]);
+		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
 		mesh->SetMaterial(meshMat);
 		retMesh->AddSubMesh(mesh);
 	}
@@ -193,7 +199,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(F
 	}
 
 	// Creating an entity and adding meshes
-	Mesh* retEntity = new Mesh(scene->mNumMeshes, scene->mNumAnimations);
+	MeshOGL* retEntity = new MeshOGL(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
@@ -201,7 +207,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(F
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
 		Material* meshMat = GetMaterial(matName);
-		SubMesh* mesh = new SubMesh(*scene->mMeshes[i]);
+		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
 		mesh->SetMaterial(meshMat);
 		retEntity->AddSubMesh(mesh);
 	}
@@ -304,7 +310,7 @@ Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerOGL::CreateTextureFromFi
 
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
-
+	Utility::SafePtrDelete(file);
 	return tex2d;
 }
 
@@ -362,7 +368,7 @@ Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerOGL::CreateTextureFromMe
 
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
-
+	Utility::SafePtrDelete(a_Info);
 	return tex2d;
 }
 
@@ -423,6 +429,7 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile
 			break;
 		}
 		loadedShaders.push_back(loadedShaderHandle);
+		Utility::SafePtrDelete(shaderInfo);
 	}
 
 	// Create a Shader Object
@@ -566,17 +573,17 @@ bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture(const String& a_Name
 void Lux::Core::Internal::ResourceHandlerOGL::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
 {
 	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
-	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), std::shared_ptr<Mesh>(a_Ent)));
+	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), a_Ent));
 }
 
 Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetLoadedMesh(const String& a_FileStr)
 {
 	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
-	MeshMap::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
+	MeshMapSimple::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
 
 	if (it != m_LoadedFilenameMeshes.end())
 	{
-		return it->second.get();
+		return it->second;
 	}
 
 	return nullptr;
@@ -693,16 +700,16 @@ bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture(const String& a_Name
 
 void Lux::Core::Internal::ResourceHandlerOGL::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
 {
-	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), std::shared_ptr<Mesh>(a_Ent)));
+	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str),a_Ent));
 }
 
 Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetLoadedMesh(const String& a_FileStr)
 {
-	MeshMap::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
+	MeshMapSimple::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
 
 	if (it != m_LoadedFilenameMeshes.end())
 	{
-		return it->second.get();
+		return it->second;
 	}
 
 	return nullptr;
