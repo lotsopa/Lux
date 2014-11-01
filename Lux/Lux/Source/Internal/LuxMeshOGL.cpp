@@ -4,6 +4,9 @@
 #include "LuxSubMesh.h"
 #include "LuxMeshAnimation.h"
 #include "LuxMesh.h"
+#include "LuxKey.h"
+#include "LuxShader.h"
+#include "LuxShaderOGL.h"
 #include "LuxSubMeshOGL.h"
 #include "LuxMeshOGL.h"
 
@@ -77,4 +80,22 @@ void Lux::Core::Internal::MeshOGL::AddAnimation(MeshAnimation* a_Anim)
 
 	m_AnimationData[ctr] = a_Anim;
 	ctr++;
+}
+
+void Lux::Core::Internal::MeshOGL::ConnectWithShader(Shader* a_Shader)
+{
+	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
+	{
+		m_SubMeshes[i]->ConnectWithShader((ShaderOGL*)a_Shader);
+	}
+}
+
+const unsigned int Lux::Core::Internal::MeshOGL::GetNumSubMeshes()
+{
+	return m_NumSubMeshes;
+}
+
+Lux::Core::SubMesh* Lux::Core::Internal::MeshOGL::GetSubMesh(const unsigned int a_Index)
+{
+	return m_SubMeshes[a_Index];
 }

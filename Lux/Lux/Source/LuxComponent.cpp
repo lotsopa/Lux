@@ -10,3 +10,4 @@ Lux::Core::Component::~Component()
 {
 
 }
+

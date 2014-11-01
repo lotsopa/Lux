@@ -16,7 +16,9 @@ namespace Lux
 				
 				void AddSubMesh(SubMesh* a_Mesh);
 				void AddAnimation(MeshAnimation* a_Anim) ;
-
+				virtual void ConnectWithShader(Shader* a_Shader);
+				virtual const unsigned int GetNumSubMeshes();
+				virtual SubMesh* GetSubMesh(const unsigned int a_Index);
 			private:
 				SubMeshOGL** m_SubMeshes;
 				MeshAnimation** m_AnimationData;

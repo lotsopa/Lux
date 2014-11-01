@@ -213,6 +213,9 @@
     <ClInclude Include="Include\Internal\LuxVertexArrayOGL.h">
       <Filter>Header Files\Core\Internal</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxCamera.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -358,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="Source\Internal\LuxVertexArrayOGL.cpp">
       <Filter>Source Files\Core\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxCamera.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

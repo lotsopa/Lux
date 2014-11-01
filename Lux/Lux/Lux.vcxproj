@@ -24,6 +24,7 @@
     <ClInclude Include="Include\Internal\LuxTexture3DOGL.h" />
     <ClInclude Include="Include\Internal\LuxBufferOGL.h" />
     <ClInclude Include="Include\Internal\LuxVertexArrayOGL.h" />
+    <ClInclude Include="Include\LuxCamera.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Source\Internal\LuxTexture3DOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxBufferOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxVertexArrayOGL.cpp" />
+    <ClCompile Include="Source\LuxCamera.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
     <ClCompile Include="Source\LuxComponent.cpp" />

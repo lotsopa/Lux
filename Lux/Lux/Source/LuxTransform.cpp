@@ -23,3 +23,8 @@ void Lux::Core::Transform::Reset()
 {
 	m_TransformMatrix = mat4x4();
 }
+
+void Lux::Core::Transform::Translate(const vec3& a_Amount)
+{
+	m_TransformMatrix = translate(m_TransformMatrix, a_Amount);
+}

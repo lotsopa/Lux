@@ -19,6 +19,7 @@ namespace Lux
 			~MeshRenderer();
 
 			void SetMesh(Core::Mesh* a_Mesh);
+			inline Core::Mesh* GetMesh() { return m_Mesh; }
 		protected:
 			Core::Mesh* m_Mesh;
 			void Reset();

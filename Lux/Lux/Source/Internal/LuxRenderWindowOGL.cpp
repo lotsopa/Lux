@@ -4,6 +4,13 @@
 #include "LuxEventListenerOGL.h"
 #include "LuxRenderWindowOGL.h"
 #include "LuxErrorCheckOGL.h"
+#include "LuxKey.h"
+#include "LuxBufferOGL.h"
+#include "LuxVertexArrayOGL.h"
+#include "LuxShader.h"
+#include "LuxShaderOGL.h"
+#include "LuxSubMesh.h"
+#include "LuxSubMeshOGL.h"
 
 bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a_AppInitOptions) 
 {
@@ -68,5 +75,22 @@ void Lux::Core::Internal::RenderWindowOGL::SwapBuffers()
 void Lux::Core::Internal::RenderWindowOGL::PollEvents()
 {
 	glfwPollEvents();
+}
+
+void Lux::Core::Internal::RenderWindowOGL::Render(SubMesh* a_SubMesh)
+{
+	SubMeshOGL* subMesh = (SubMeshOGL*)a_SubMesh;
+	unsigned int numIndices = subMesh->GetNumIndices();
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+}
+
+void Lux::Core::Internal::RenderWindowOGL::Clear()
+{
+	float ratio;
+	int width, height;
+	glfwGetFramebufferSize(m_WindowHandle, &width, &height);
+	ratio = width / (float)height;
+	glViewport(0, 0, width, height);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

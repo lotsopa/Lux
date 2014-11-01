@@ -16,6 +16,7 @@ namespace Lux
 			ShaderComponent();
 			ShaderComponent(Core::Shader* a_Shader);
 			void SetShader(Core::Shader* a_Shader);
+			inline Core::Shader* GetShader() { return m_Shader; }
 			virtual ~ShaderComponent();
 
 		protected:

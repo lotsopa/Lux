@@ -91,7 +91,10 @@ namespace Lux
 
 			virtual void PreRender() = 0;
 			virtual void PostRender() = 0;
-
+			inline Vertex* GetVertices() { return m_Vertices; }
+			inline unsigned int* GetIndices() { return m_Indices; }
+			inline unsigned int GetNumVertices() { return m_NumVertices; }
+			inline unsigned int GetNumIndices() { return m_NumIndices; }
 		protected:
 			unsigned int m_NumVertices;
 			unsigned int m_NumIndices;

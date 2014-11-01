@@ -18,6 +18,7 @@ namespace Lux
 	{
 		class MeshRenderer;
 		class ShaderComponent;
+		class Camera;
 		class RenderingSystem : public Core::System
 		{
 		public:
@@ -37,7 +38,8 @@ namespace Lux
 
 			struct EntityEntry
 			{
-				EntityEntry() : m_Transform(nullptr), m_MeshRenderer(nullptr), m_Shader(nullptr)
+				EntityEntry() : m_Transform(nullptr), m_MeshRenderer(nullptr), m_Shader(nullptr), m_Camera(nullptr),
+					m_Init(false)
 				{
 
 				}
@@ -47,11 +49,12 @@ namespace Lux
 					m_Transform = nullptr;
 					m_MeshRenderer = nullptr;
 					m_Shader = nullptr;
+					m_Camera = nullptr;
 				}
 
 				inline bool IsNull()
 				{
-					if (!m_Transform && !m_MeshRenderer && !m_Shader)
+					if (!m_Transform && !m_MeshRenderer && !m_Shader && !m_Camera)
 					{
 						return true;
 					}
@@ -62,12 +65,16 @@ namespace Lux
 				Core::Transform* m_Transform;
 				MeshRenderer* m_MeshRenderer;
 				ShaderComponent* m_Shader;
+				Camera* m_Camera;
+				bool m_Init;
 			};
 			typedef std::map<Core::Entity*, EntityEntry> EntityMap;
 			EntityMap m_EntityMap;
 			Core::Key m_TransformKey;
 			Core::Key m_MeshRendererKey;
 			Core::Key m_ShaderKey;
+			Core::Key m_CameraKey;
+			Camera* m_MainCamera;
 		};
 	}
 }

@@ -1,4 +1,5 @@
 #include "LuxPCH.h"
+#include "LuxKey.h"
 #include "LuxShader.h"
 #include "LuxShaderComponent.h"
 

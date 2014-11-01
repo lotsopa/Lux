@@ -7,6 +7,8 @@ namespace Lux
 	{
 		namespace Internal
 		{
+			class ShaderOGL;
+
 			class SubMeshOGL : public SubMesh
 			{
 			public:
@@ -18,6 +20,7 @@ namespace Lux
 				virtual void PreRender();
 				virtual void PostRender();
 
+				void ConnectWithShader(ShaderOGL* a_Shader);
 			protected:
 				BufferOGL m_VertexBuffer;
 				BufferOGL m_IndexBuffer;

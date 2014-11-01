@@ -12,6 +12,7 @@ namespace Lux
 			*/
 			static void CheckOGLError()
 			{
+#ifdef _DEBUG
 				int err = glGetError();
 
 				if (err != GL_NO_ERROR)
@@ -47,6 +48,7 @@ namespace Lux
 						break;
 					}
 				}
+#endif
 			}
 
 			static void ClearAllOGLErrors()

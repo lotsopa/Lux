@@ -5,6 +5,7 @@ namespace Lux
 {
 	namespace Core
 	{
+		class SubMesh;
 		namespace Internal
 		{
 			class EventListenerOGL;
@@ -15,7 +16,9 @@ namespace Lux
 				virtual bool Initialize(Utility::AppInitOptions& a_AppInitOptions);
 				virtual EventListener* GetEventListener();
 				virtual void SwapBuffers();
+				virtual void Clear();
 				virtual void PollEvents();
+				virtual void Render(SubMesh* a_SubMesh);
 				inline GLFWwindow* GetWindowHandle() { return m_WindowHandle; }
 
 			private:
