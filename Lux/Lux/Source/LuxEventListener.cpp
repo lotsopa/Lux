@@ -1,4 +1,5 @@
 #include "LuxPCH.h"
+#include "LuxKeyCodes.h"
 #include "LuxEventListener.h"
 #include "LuxRenderWindow.h"
 

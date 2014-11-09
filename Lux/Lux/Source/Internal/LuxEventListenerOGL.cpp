@@ -1,4 +1,5 @@
 #include "LuxPCH.h"
+#include "LuxKeyCodes.h"
 #include "LuxEventListener.h"
 #include "LuxRenderWindow.h"
 #include "LuxRenderWindowOGL.h"
@@ -14,7 +15,7 @@ Lux::Core::Internal::EventListenerOGL::~EventListenerOGL()
 	m_GLWindow = nullptr;
 }
 
-const bool Lux::Core::Internal::EventListenerOGL::GetKeyDown(int a_Key)
+const bool Lux::Core::Internal::EventListenerOGL::GetKeyDown(KeyCode a_Key)
 {
 	int state = glfwGetKey(m_GLWindow->GetWindowHandle(), a_Key);
 
@@ -24,7 +25,7 @@ const bool Lux::Core::Internal::EventListenerOGL::GetKeyDown(int a_Key)
 	return false;
 }
 
-const bool Lux::Core::Internal::EventListenerOGL::GetKeyUp(int a_Key)
+const bool Lux::Core::Internal::EventListenerOGL::GetKeyUp(KeyCode a_Key)
 {
 	int state = glfwGetKey(m_GLWindow->GetWindowHandle(), a_Key);
 
@@ -34,14 +35,14 @@ const bool Lux::Core::Internal::EventListenerOGL::GetKeyUp(int a_Key)
 	return false;
 }
 
-const Lux::vec2 Lux::Core::Internal::EventListenerOGL::GetCursorPos(int a_Key)
+const Lux::vec2 Lux::Core::Internal::EventListenerOGL::GetCursorPos()
 {
 	double x = 0, y = 0;
 	glfwGetCursorPos(m_GLWindow->GetWindowHandle(), &x, &y);
 	return vec2(x, y);
 }
 
-const bool Lux::Core::Internal::EventListenerOGL::GetKey(int a_Key)
+const bool Lux::Core::Internal::EventListenerOGL::GetKey(KeyCode a_Key)
 {
 	int state = glfwGetKey(m_GLWindow->GetWindowHandle(), a_Key);
 
@@ -51,7 +52,7 @@ const bool Lux::Core::Internal::EventListenerOGL::GetKey(int a_Key)
 	return false;
 }
 
-const bool Lux::Core::Internal::EventListenerOGL::GetMouseButtonDown(int a_Button)
+const bool Lux::Core::Internal::EventListenerOGL::GetMouseButtonDown(MouseButton a_Button)
 {
 	int state = glfwGetMouseButton(m_GLWindow->GetWindowHandle(), a_Button);
 
@@ -61,7 +62,7 @@ const bool Lux::Core::Internal::EventListenerOGL::GetMouseButtonDown(int a_Butto
 	return false;
 }
 
-const bool Lux::Core::Internal::EventListenerOGL::GetMouseButtonUp(int a_Button)
+const bool Lux::Core::Internal::EventListenerOGL::GetMouseButtonUp(MouseButton a_Button)
 {
 	int state = glfwGetMouseButton(m_GLWindow->GetWindowHandle(), a_Button);
 
@@ -71,7 +72,7 @@ const bool Lux::Core::Internal::EventListenerOGL::GetMouseButtonUp(int a_Button)
 	return false;
 }
 
-const bool Lux::Core::Internal::EventListenerOGL::GetMouseButton(int a_Button)
+const bool Lux::Core::Internal::EventListenerOGL::GetMouseButton(MouseButton a_Button)
 {
 	int state = glfwGetMouseButton(m_GLWindow->GetWindowHandle(), a_Button);
 

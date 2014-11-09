@@ -17,15 +17,12 @@ m_VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW)
 	m_VertexArray.Bind();
 
 	m_VertexBuffer.Bind();
-	m_VertexBuffer.SetData(&m_Vertices[0], sizeof(Vertex) * m_NumVertices);
+	m_VertexBuffer.SetData(m_Vertices, sizeof(Vertex) * m_NumVertices);
 
 	m_IndexBuffer.Bind();
-	m_IndexBuffer.SetData(&m_Indices[0], sizeof(unsigned int) * m_NumIndices);
+	m_IndexBuffer.SetData(m_Indices, sizeof(unsigned int) * m_NumIndices);
 
 	m_VertexArray.Unbind();
-	m_VertexBuffer.Unbind();
-	m_IndexBuffer.Unbind();
-
 	SafeDeleteAttributes();
 }
 
@@ -37,14 +34,12 @@ m_VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW)
 	m_VertexArray.Bind();
 
 	m_VertexBuffer.Bind();
-	m_VertexBuffer.SetData(&m_Vertices[0], sizeof(Vertex) * m_NumVertices);
+	m_VertexBuffer.SetData(m_Vertices, sizeof(Vertex) * m_NumVertices);
 
 	m_IndexBuffer.Bind();
-	m_IndexBuffer.SetData(&m_Indices[0], sizeof(unsigned int) * m_NumIndices);
+	m_IndexBuffer.SetData(m_Indices, sizeof(unsigned int) * m_NumIndices);
 
 	m_VertexArray.Unbind();
-	m_VertexBuffer.Unbind();
-	m_IndexBuffer.Unbind();
 	SafeDeleteAttributes();
 }
 
@@ -56,14 +51,12 @@ m_IndexBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW)
 	m_VertexArray.Bind();
 
 	m_VertexBuffer.Bind();
-	m_VertexBuffer.SetData(&m_Vertices[0], sizeof(Vertex) * m_NumVertices);
+	m_VertexBuffer.SetData(m_Vertices, sizeof(Vertex) * m_NumVertices);
 
 	m_IndexBuffer.Bind();
-	m_IndexBuffer.SetData(&m_Indices[0], sizeof(unsigned int) * m_NumIndices);
+	m_IndexBuffer.SetData(m_Indices, sizeof(unsigned int) * m_NumIndices);
 
 	m_VertexArray.Unbind();
-	m_VertexBuffer.Unbind();
-	m_IndexBuffer.Unbind();
 	SafeDeleteAttributes();
 }
 
@@ -84,12 +77,16 @@ void Lux::Core::Internal::SubMeshOGL::PostRender()
 
 void Lux::Core::Internal::SubMeshOGL::ConnectWithShader(ShaderOGL* a_Shader)
 {
-	m_VertexBuffer.Bind();
 	m_VertexArray.Bind();
-	unsigned int posLoc = a_Shader->GetAttribLocation("in_position");
-	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Position));
+	unsigned int posLoc = a_Shader->GetAttribLocation("in_Position");
 	glEnableVertexAttribArray(posLoc);
+	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Position));
 	Utility::Internal::CheckOGLError();
+
+	unsigned int normalLoc = a_Shader->GetAttribLocation("in_Normal");
+	glEnableVertexAttribArray(normalLoc);
+	glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Normal));
+	Utility::Internal::CheckOGLError();
+
 	m_VertexArray.Unbind();
-	m_VertexBuffer.Unbind();
 }

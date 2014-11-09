@@ -76,7 +76,7 @@ namespace Lux
 
 				~Bone()
 				{
-					delete[] m_BoneWeights;
+					Utility::SafeArrayDelete(m_BoneWeights);
 				};
 
 				String m_Name;

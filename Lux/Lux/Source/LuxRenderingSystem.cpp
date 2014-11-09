@@ -4,6 +4,7 @@
 #include "LuxEntity.h"
 #include "LuxTransform.h"
 #include "LuxKey.h"
+#include "LuxLight.h"
 #include "LuxSubMesh.h"
 #include "LuxMesh.h"
 #include "LuxMeshRenderer.h"
@@ -20,11 +21,12 @@
 #define CONVERT_ID_TO_CLASS_STRING(a) "class " ID_TO_STRING(a)
 
 Lux::Graphics::RenderingSystem::RenderingSystem() :
-System(), m_RenderWindow(nullptr), m_MainCamera(nullptr),
+System(), m_RenderWindow(nullptr), m_MainCamera(nullptr), m_MainCameraTransform(nullptr), m_LightEntry(nullptr),
 m_MeshRendererKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MeshRenderer)),
 m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
 m_ShaderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::ShaderComponent)),
-m_CameraKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Camera))
+m_CameraKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Camera)),
+m_LightKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Light))
 {
 	
 }
@@ -81,6 +83,11 @@ void Lux::Graphics::RenderingSystem::AddComponent(Core::Component* a_Comp, const
 			m_MainCamera = m_EntityMap[a_Entity].m_Camera;
 		}
 	}
+	else if (a_CompType == m_LightKey)
+	{
+		m_EntityMap[a_Entity].m_Light = static_cast<Lux::Graphics::Light*>(a_Comp);
+		m_LightEntry = &m_EntityMap[a_Entity];
+	}
 }
 
 void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType, Core::Entity* a_Entity)
@@ -111,6 +118,10 @@ void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType
 
 		m_EntityMap[a_Entity].m_Camera = nullptr;
 	}
+	else if (a_CompType == m_LightKey)
+	{
+		m_EntityMap[a_Entity].m_Light = nullptr;
+	}
 
 	if (m_EntityMap[a_Entity].IsNull())
 	{
@@ -132,6 +143,9 @@ bool Lux::Graphics::RenderingSystem::EntityEntryExists(Core::Entity* a_Entity)
 
 void Lux::Graphics::RenderingSystem::RenderPass()
 {
+	if (!m_LightEntry)
+		return;
+
 	EntityMap::iterator it;
 	if (!m_MainCamera)
 	{
@@ -142,7 +156,12 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 			{
 				if (it->second.m_Camera->IsMainCamera())
 				{
-					m_MainCamera = it->second.m_Camera;
+					if (it->second.m_Transform)
+					{
+						m_MainCamera = it->second.m_Camera;
+						m_MainCameraTransform = it->second.m_Transform;
+						end = false;
+					}
 				}
 			}
 		}
@@ -151,12 +170,17 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 			return;
 	}
 
-	m_MainCamera->ApplyViewTransform();
-	const mat4x4 ViewProjMatrix = m_MainCamera->GetProjectionMatrix() * m_MainCamera->GetViewMatrix();
+	m_MainCameraTransform->ApplyTransform();
+	const mat4x4 ViewProjMatrix = m_MainCamera->GetProjectionMatrix() * m_MainCameraTransform->GetMatrix();
 
 	for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
 	{
-		if (!it->second.m_MeshRenderer || !it->second.m_Shader || !it->second.m_Transform)
+		if (!it->second.m_Transform)
+			continue;
+
+		it->second.m_Transform->ApplyTransform();
+
+		if (!it->second.m_MeshRenderer || !it->second.m_Shader)
 			continue;
 
 		Core::Shader* shader = it->second.m_Shader->GetShader();
@@ -182,6 +206,8 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		}
 
 		shader->SetUniformMat4x4("MVP", modelViewProjMat);
+		shader->SetUniformVec3("LightPos", m_LightEntry->m_Transform->GetPosition());
+		shader->SetUniformVec4("LightColor", m_LightEntry->m_Light->GetColor());
 		for (unsigned int i = 0; i < numSubMeshes; ++i)
 		{
 			Core::SubMesh* subMesh = mesh->GetSubMesh(i);

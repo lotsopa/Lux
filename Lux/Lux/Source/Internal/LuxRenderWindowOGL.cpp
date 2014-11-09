@@ -1,4 +1,5 @@
 #include "LuxPCH.h"
+#include "LuxKeyCodes.h"
 #include "LuxRenderWindow.h"
 #include "LuxEventListener.h"
 #include "LuxEventListenerOGL.h"
@@ -47,6 +48,15 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 
 	glfwSetInputMode(m_WindowHandle, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetInputMode(m_WindowHandle, GLFW_STICKY_MOUSE_BUTTONS, GL_TRUE);
+
+	glDepthRange(0.0f, 1.0f);
+	glClearDepth(1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_TRUE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 	Utility::Internal::CheckOGLError();
 	return true;
 }
@@ -91,6 +101,6 @@ void Lux::Core::Internal::RenderWindowOGL::Clear()
 	glfwGetFramebufferSize(m_WindowHandle, &width, &height);
 	ratio = width / (float)height;
 	glViewport(0, 0, width, height);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 

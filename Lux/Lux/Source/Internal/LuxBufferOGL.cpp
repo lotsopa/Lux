@@ -3,7 +3,7 @@
 #include "LuxErrorCheckOGL.h"
 
 Lux::Core::Internal::BufferOGL::BufferOGL(GLenum a_BuffType, GLenum a_DrawMode) :
-m_BufferType(a_BuffType), m_DrawMode(a_DrawMode), m_Buffer(0)
+m_BufferType(a_BuffType), m_DrawMode(a_DrawMode), m_Buffer(-1)
 {
 	glGenBuffers(1, &m_Buffer);
 	Utility::Internal::CheckOGLError();

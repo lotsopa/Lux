@@ -24,6 +24,8 @@
     <ClInclude Include="Include\Internal\LuxTexture3DOGL.h" />
     <ClInclude Include="Include\Internal\LuxBufferOGL.h" />
     <ClInclude Include="Include\Internal\LuxVertexArrayOGL.h" />
+    <ClInclude Include="Include\LuxBehaviourComponent.h" />
+    <ClInclude Include="Include\LuxBehaviourSystem.h" />
     <ClInclude Include="Include\LuxCamera.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
@@ -31,9 +33,13 @@
     <ClInclude Include="Include\LuxEntity.h" />
     <ClInclude Include="Include\LuxEventSystem.h" />
     <ClInclude Include="Include\LuxFileScanner.h" />
+    <ClInclude Include="Include\LuxFreeLookCamera.h" />
     <ClInclude Include="Include\LuxHelpers.h" />
     <ClInclude Include="Include\LuxKey.h" />
+    <ClInclude Include="Include\LuxKeyCodes.h" />
+    <ClInclude Include="Include\LuxLight.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
+    <ClInclude Include="Include\LuxMeshPostProcess.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
     <ClInclude Include="Include\LuxPlatform.h" />
     <ClInclude Include="Include\LuxRenderingSystem.h" />
@@ -80,6 +86,8 @@
     <ClCompile Include="Source\Internal\LuxTexture3DOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxBufferOGL.cpp" />
     <ClCompile Include="Source\Internal\LuxVertexArrayOGL.cpp" />
+    <ClCompile Include="Source\LuxBehaviourComponent.cpp" />
+    <ClCompile Include="Source\LuxBehaviourSystem.cpp" />
     <ClCompile Include="Source\LuxCamera.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
@@ -93,8 +101,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\LuxFreeLookCamera.cpp" />
     <ClCompile Include="Source\LuxHelpers.cpp" />
     <ClCompile Include="Source\LuxKey.cpp" />
+    <ClCompile Include="Source\LuxLight.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
     <ClCompile Include="Source\LuxMeshRenderer.cpp" />
     <ClCompile Include="Source\LuxPlatform.cpp" />
