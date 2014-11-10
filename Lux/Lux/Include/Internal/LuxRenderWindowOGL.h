@@ -20,11 +20,17 @@ namespace Lux
 				virtual void PollEvents();
 				virtual void Render(SubMesh* a_SubMesh);
 				inline GLFWwindow* GetWindowHandle() { return m_WindowHandle; }
+				virtual const bool IsWindowResized();
+				virtual const int GetHeight();
+				virtual const int GetWidth();
 
 			private:
 				RenderWindowOGL();
 				GLFWwindow* m_WindowHandle;
 				EventListenerOGL* m_Input;
+				int m_WindowWidth;
+				int m_WindowHeight;
+				bool m_WindowResized;
 				friend class PlatformOGL;
 			};
 		}

@@ -58,6 +58,11 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	Utility::Internal::CheckOGLError();
+
+	m_WindowWidth = a_AppInitOptions.m_WindowWidth;
+	m_WindowHeight = a_AppInitOptions.m_WindowHeight;
+	m_WindowResized = false;
+
 	return true;
 }
 
@@ -101,6 +106,32 @@ void Lux::Core::Internal::RenderWindowOGL::Clear()
 	glfwGetFramebufferSize(m_WindowHandle, &width, &height);
 	ratio = width / (float)height;
 	glViewport(0, 0, width, height);
+	
+	if (m_WindowWidth != width || m_WindowHeight != height)
+	{
+		m_WindowWidth = width;
+		m_WindowHeight = height;
+		m_WindowResized = true;
+	}
+	else
+	{
+		m_WindowResized = false;
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
+const bool Lux::Core::Internal::RenderWindowOGL::IsWindowResized()
+{
+	return m_WindowResized;
+}
+
+const int Lux::Core::Internal::RenderWindowOGL::GetHeight()
+{
+	return m_WindowHeight;
+}
+
+const int Lux::Core::Internal::RenderWindowOGL::GetWidth()
+{
+	return m_WindowWidth;
+}

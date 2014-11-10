@@ -19,6 +19,9 @@ namespace Lux
 			virtual void Clear() = 0;
 			virtual void PollEvents() = 0;
 			virtual void Render(SubMesh* a_SubMesh) = 0;
+			virtual const bool IsWindowResized() = 0;
+			virtual const int GetHeight() = 0;
+			virtual const int GetWidth() = 0;
 
 		protected:
 			RenderWindow();

@@ -170,6 +170,13 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 			return;
 	}
 
+	// Resize Window if needed
+	if (m_RenderWindow->IsWindowResized())
+	{
+		float aspect = m_RenderWindow->GetWidth() / (float)m_RenderWindow->GetHeight();
+		m_MainCamera->ChangeAspect(aspect);
+	}
+
 	m_MainCameraTransform->ApplyTransform();
 	const mat4x4 ViewProjMatrix = m_MainCamera->GetProjectionMatrix() * m_MainCameraTransform->GetMatrix();
 
