@@ -465,6 +465,13 @@ unsigned int Lux::Core::Internal::ResourceHandlerOGL::LoadOGLShader(GLenum a_Sha
 	return shader;
 }
 
+Lux::Core::Material* Lux::Core::Internal::ResourceHandlerOGL::CreateMaterial(const String& a_Name)
+{
+	Material* mat = new Material();
+	mat->SetName(a_Name);
+	AddMaterialToMap(a_Name, mat);
+	return mat;
+}
 
 #if LUX_THREAD_SAFE == TRUE
 void Lux::Core::Internal::ResourceHandlerOGL::AddMeshToMap(const String& a_Str, Mesh* a_Ent)

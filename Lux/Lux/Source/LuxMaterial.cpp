@@ -7,7 +7,12 @@ m_Opacity(1.0f),
 m_Reflectivity(0.0f),
 m_Shininess(0.0f),
 m_ShininessStrength(0.0f),
-m_RefractionIndex(0.0f)
+m_RefractionIndex(0.0f),
+m_DiffuseColor(1.0f, 1.0f, 1.0f, 1.0f),
+m_AmbientColor(0.1f, 0.1f, 0.1f, 1.0f),
+m_EmissiveColor(0.0f, 0.0f, 0.0f, 1.0f),
+m_SpecularColor(1.0f, 1.0f, 1.0f, 1.0f),
+m_TransparentColor(0.0f, 0.0f, 0.0f, 0.0f)
 {
 
 }

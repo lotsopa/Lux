@@ -25,6 +25,7 @@ namespace Lux
 				Texture* CreateTextureFromMemory(FileInfo* a_Info, const String& a_TexName);
 				Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
 
+				virtual Material* CreateMaterial(const String& a_Name);
 				Mesh* GetMesh(const String& a_Name);
 				Material* GetMaterial(const String& a_Name);
 				Texture* GetTexture(const String& a_Name);
