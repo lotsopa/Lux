@@ -1,6 +1,8 @@
 #include "LuxPCH.h"
 #include "LuxRenderWindow.h"
 #include "LuxComponent.h"
+#include "LuxMaterial.h"
+#include "LuxMaterialComponent.h"
 #include "LuxEntity.h"
 #include "LuxTransform.h"
 #include "LuxKey.h"
@@ -26,7 +28,8 @@ m_MeshRendererKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MeshRenderer)),
 m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
 m_ShaderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::ShaderComponent)),
 m_CameraKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Camera)),
-m_LightKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Light))
+m_LightKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Light)),
+m_MaterialKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MaterialComponent))
 {
 	
 }
@@ -88,6 +91,10 @@ void Lux::Graphics::RenderingSystem::AddComponent(Core::Component* a_Comp, const
 		m_EntityMap[a_Entity].m_Light = static_cast<Lux::Graphics::Light*>(a_Comp);
 		m_LightEntry = &m_EntityMap[a_Entity];
 	}
+	else if (a_CompType == m_MaterialKey)
+	{
+		m_EntityMap[a_Entity].m_Material = static_cast<Lux::Graphics::MaterialComponent*>(a_Comp);
+	}
 }
 
 void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType, Core::Entity* a_Entity)
@@ -121,6 +128,10 @@ void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType
 	else if (a_CompType == m_LightKey)
 	{
 		m_EntityMap[a_Entity].m_Light = nullptr;
+	}
+	else if (a_CompType == m_MaterialKey)
+	{
+		m_EntityMap[a_Entity].m_Material = nullptr;
 	}
 
 	if (m_EntityMap[a_Entity].IsNull())

@@ -5,7 +5,6 @@ namespace Lux
 {
 	namespace Core
 	{
-		class Material;
 		class Vertex;
 		class SubMesh
 		{
@@ -86,9 +85,6 @@ namespace Lux
 				mat4x4 m_OffsetMatrix;
 			};
 
-			Material* GetMaterial();
-			void SetMaterial(Material* a_Mat);
-
 			virtual void PreRender() = 0;
 			virtual void PostRender() = 0;
 			inline Vertex* GetVertices() { return m_Vertices; }
@@ -99,7 +95,6 @@ namespace Lux
 			unsigned int m_NumVertices;
 			unsigned int m_NumIndices;
 			unsigned int m_NumBones;
-			Material* m_Material;
 			unsigned int m_NumComponentsPerTexCoordSet[AI_MAX_NUMBER_OF_TEXTURECOORDS];
 
 			Vertex* m_Vertices;

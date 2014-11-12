@@ -7,6 +7,9 @@
 #include "LuxKey.h"
 #include "LuxMeshRenderer.h"
 #include "LuxTransform.h"
+#include "LuxComponent.h"
+#include "LuxMaterial.h"
+#include "LuxMaterialComponent.h"
 #include "LuxCamera.h"
 #include "LuxBehaviourComponent.h"
 #include "LuxLight.h"
@@ -116,6 +119,7 @@ bool Lux::Application::LoadComponentTypes()
 	m_SceneManager->RegisterNewComponentType<Graphics::Camera>();
 	m_SceneManager->RegisterNewComponentType<Core::FreeLookCamera>();
 	m_SceneManager->RegisterNewComponentType<Graphics::Light>();
+	m_SceneManager->RegisterNewComponentType<Graphics::MaterialComponent>();
 	return true;
 }
 
@@ -127,6 +131,7 @@ bool Lux::Application::LoadSystemTypes()
 	m_SceneManager->RegisterComponentTypeWithSystem<Graphics::ShaderComponent, Graphics::RenderingSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Graphics::Camera, Graphics::RenderingSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Graphics::Light, Graphics::RenderingSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Graphics::MaterialComponent, Graphics::RenderingSystem>();
 
 	m_SceneManager->RegisterNewSystemType<Core::EventSystem>();
 

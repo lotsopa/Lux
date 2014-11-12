@@ -124,13 +124,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(con
 	MeshOGL* retMesh = new MeshOGL(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
-		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
-		aiString str;
-		impMat->Get(AI_MATKEY_NAME, str);
-		String matName = str.C_Str();
-		Material* meshMat = GetMaterial(matName);
 		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
-		mesh->SetMaterial(meshMat);
 		retMesh->AddSubMesh(mesh);
 	}
 
@@ -202,13 +196,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(F
 	MeshOGL* retEntity = new MeshOGL(scene->mNumMeshes, scene->mNumAnimations);
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
-		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
-		aiString str;
-		impMat->Get(AI_MATKEY_NAME, str);
-		String matName = str.C_Str();
-		Material* meshMat = GetMaterial(matName);
 		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
-		mesh->SetMaterial(meshMat);
 		retEntity->AddSubMesh(mesh);
 	}
 

@@ -20,6 +20,7 @@ namespace Lux
 		class ShaderComponent;
 		class Camera;
 		class Light;
+		class MaterialComponent;
 
 		class RenderingSystem : public Core::System
 		{
@@ -41,7 +42,7 @@ namespace Lux
 			struct EntityEntry
 			{
 				EntityEntry() : m_Transform(nullptr), m_MeshRenderer(nullptr), m_Shader(nullptr), m_Camera(nullptr),
-					m_Init(false), m_Light(nullptr)
+					m_Init(false), m_Light(nullptr), m_Material(nullptr)
 				{
 
 				}
@@ -53,11 +54,12 @@ namespace Lux
 					m_Shader = nullptr;
 					m_Camera = nullptr;
 					m_Light = nullptr;
+					m_Material = nullptr;
 				}
 
 				inline bool IsNull()
 				{
-					if (!m_Transform && !m_MeshRenderer && !m_Shader && !m_Camera && !m_Light)
+					if (!m_Transform && !m_MeshRenderer && !m_Shader && !m_Camera && !m_Light && !m_Material)
 					{
 						return true;
 					}
@@ -68,6 +70,7 @@ namespace Lux
 				Core::Transform* m_Transform;
 				MeshRenderer* m_MeshRenderer;
 				ShaderComponent* m_Shader;
+				MaterialComponent* m_Material;
 				Camera* m_Camera;
 				Light* m_Light;
 				bool m_Init;
@@ -79,6 +82,7 @@ namespace Lux
 			Core::Key m_ShaderKey;
 			Core::Key m_CameraKey;
 			Core::Key m_LightKey;
+			Core::Key m_MaterialKey;
 			Camera* m_MainCamera;
 			EntityEntry* m_LightEntry;
 			Core::Transform* m_MainCameraTransform;

@@ -6,7 +6,6 @@
 Lux::Core::SubMesh::SubMesh() :
 m_Bones(nullptr),
 m_Indices(nullptr),
-m_Material(nullptr),
 m_NumBones(0),
 m_NumIndices(0),
 m_NumVertices(0),
@@ -219,21 +218,4 @@ void Lux::Core::SubMesh::SafeDeleteAttributes()
 	{
 		Utility::SafeArrayDelete(m_TextureCoordSets[i]);
 	}
-}
-
-Lux::Core::Material* Lux::Core::SubMesh::GetMaterial()
-{
-	return m_Material;
-}
-
-void Lux::Core::SubMesh::SetMaterial(Material* a_Mat)
-{
-	LuxAssert(a_Mat);
-
-	if (a_Mat == nullptr)
-	{
-		LUX_LOG(Utility::logWARNING) << "NULL passed to SetMaterial() function. Nothing done.";
-	}
-
-	m_Material = a_Mat;
 }

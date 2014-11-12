@@ -39,6 +39,7 @@
     <ClInclude Include="Include\LuxKeyCodes.h" />
     <ClInclude Include="Include\LuxLight.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
+    <ClInclude Include="Include\LuxMaterialComponent.h" />
     <ClInclude Include="Include\LuxMeshPostProcess.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
     <ClInclude Include="Include\LuxPlatform.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="Source\LuxKey.cpp" />
     <ClCompile Include="Source\LuxLight.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
+    <ClCompile Include="Source\LuxMaterialComponent.cpp" />
     <ClCompile Include="Source\LuxMeshRenderer.cpp" />
     <ClCompile Include="Source\LuxPlatform.cpp" />
     <ClCompile Include="Source\LuxRenderingSystem.cpp" />
