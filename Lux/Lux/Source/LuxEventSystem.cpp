@@ -35,12 +35,12 @@ bool Lux::Core::EventSystem::Init(Core::SceneManager* a_SceneManager)
 	return true;
 }
 
-void Lux::Core::EventSystem::AddComponent(Component* a_Component, const Key& a_CompType, Entity* a_Entity)
+void Lux::Core::EventSystem::AddComponent(void* a_Component, const Key& a_CompType, ObjectHandle<Entity>& a_Entity)
 {
 
 }
 
-void Lux::Core::EventSystem::RemoveComponent(const Key& a_CompType, Entity* a_Entity)
+void Lux::Core::EventSystem::RemoveComponent(const Key& a_CompType, ObjectHandle<Entity>& a_Entity)
 {
 
 }

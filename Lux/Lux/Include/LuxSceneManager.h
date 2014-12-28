@@ -22,14 +22,14 @@ namespace Lux
 			Creates an Entity.
 			Returns the created entity pointer on success, NULL otherwise.
 			*/
-			Entity* CreateEntity();
+			ObjectHandle<Entity>& CreateEntity();
 
 			/*
 			Destroys the given entity and sets the passed pointer to NULL.
 			Returns true on success, false otherwise.
 			Throws an exception if the passed Entity pointer is NULL.
 			*/
-			bool DestroyEntity(Entity* a_Ent);
+			bool DestroyEntity(ObjectHandle<Lux::Core::Entity>& a_Ent);
 
 			/*
 			Registers a new component type with the system. Note that this function does not create any actual components.
@@ -38,10 +38,10 @@ namespace Lux
 			Registering new component types after even one entity has been created may lead to undefined behaviour.
 			*/
 			template<class ComponentType>
-			void RegisterNewComponentType()
+			void RegisterNewComponentType(unsigned int a_InitialSize = LUX_COMPONENT_MEMORY_POOL_INITIAL_SIZE, unsigned int a_GrowAmount = LUX_COMPONENT_MEMORY_POOL_GROW_AMOUNT)
 			{
 				Key k(typeid(ComponentType).name());
-				m_ComponentFactory->CreateComponentType<ComponentType>(LUX_COMPONENT_MEMORY_POOL_INITIAL_SIZE, LUX_COMPONENT_MEMORY_POOL_GROW_AMOUNT);
+				m_ComponentFactory->CreateComponentType<ComponentType>(a_InitialSize, a_GrowAmount);
 				m_ComponentIndexMap.insert(std::make_pair(k, m_NumComponentTypes));
 				m_DelFuncMap.insert(std::make_pair(m_NumComponentTypes, std::bind(&SceneManager::DestroyComponent<ComponentType>, this, std::placeholders::_1, std::placeholders::_2)));
 				m_NumComponentTypes++;
@@ -52,12 +52,12 @@ namespace Lux
 			Throws an exception if the passed Entity pointer is NULL or the component type is not registered.
 			*/
 			template<class ComponentType>
-			ComponentType* GetComponent(Entity* a_Ent)
+			ObjectHandle<ComponentType>&  GetComponent(ObjectHandle<Entity>& a_Ent)
 			{
-				ComponentLayout& layout = m_EntityComponentMap.at(a_Ent);
+				ComponentLayout& layout = m_EntityComponentMap.at(&a_Ent);
 				unsigned int idx = m_ComponentIndexMap.at(Key(typeid(ComponentType).name()));
 
-				ComponentType* retVal = (ComponentType*)layout.m_Components[idx];
+				ObjectHandle<ComponentType>& retVal = *(ObjectHandle<ComponentType>*)layout.m_Components[idx].m_Data;
 				return retVal;
 			}
 
@@ -67,21 +67,20 @@ namespace Lux
 			Throws an exception if the passed Entity pointer is NULL or the component type is unregistered.
 			*/
 			template <class ComponentType>
-			ComponentType* AttachNewComponent(Entity* a_Ent)
+			ObjectHandle<ComponentType>& AttachNewComponent(ObjectHandle<Entity>& a_Ent)
 			{
 				bool hasComponent = HasComponent<ComponentType>(a_Ent);
 
 				if (hasComponent)
 				{
-					return nullptr;
+					Utility::ThrowError("A component of that type is already attached to the entity.");
 				}
 
-				ComponentType* comp = m_ComponentFactory->CreateComponent<ComponentType>();
-				ComponentLayout& layout = m_EntityComponentMap.at(a_Ent);
+				ObjectHandle<ComponentType>& comp = m_ComponentFactory->CreateComponent<ComponentType>();
+				ComponentLayout& layout = m_EntityComponentMap.at(&a_Ent);
 				Key k(typeid(ComponentType).name());
 				unsigned int idx = m_ComponentIndexMap.at(k);
-				Component* genericComp = (Component*)comp;
-				layout.m_Components[idx] = genericComp;
+				layout.m_Components[idx].m_Data = &comp;
 
 				// Notify all Systems that are registered for this component type
 				std::pair<ComponentSystemMultiMap::iterator, ComponentSystemMultiMap::iterator> ret;
@@ -89,7 +88,7 @@ namespace Lux
 				ComponentSystemMultiMap::iterator iter;
 				for (iter = ret.first; iter != ret.second; ++iter)
 				{
-					iter->second->AddComponent(genericComp, k, a_Ent);
+					iter->second->AddComponent(&comp, k, a_Ent);
 				}
 
 				return comp;
@@ -101,14 +100,20 @@ namespace Lux
 			Throws an exception if the passed Entity pointer is NULL.
 			*/
 			template<class ComponentType>
-			bool HasComponent(Entity* a_Ent)
+			bool HasComponent(ObjectHandle<Entity>& a_Ent)
 			{
-				ComponentLayout& layout = m_EntityComponentMap.at(a_Ent);
+				ComponentLayout& layout = m_EntityComponentMap.at(&a_Ent);
 				Key k(typeid(ComponentType).name());
 				unsigned int idx = m_ComponentIndexMap.at(k);
-				if (layout.m_Components[idx] == nullptr)
+				if (!layout.m_Components[idx].m_Data)
 				{
 					return false;
+				}
+				else
+				{
+					ObjectHandle<ComponentType>* comp = (ObjectHandle<ComponentType>*)layout.m_Components[idx].m_Data;
+					if (!comp->IsValid())
+						return false;
 				}
 
 				return true;
@@ -119,18 +124,24 @@ namespace Lux
 			Throws an exception if the passed Entity pointer is NULL or the component type is unregistered.
 			*/
 			template<class ComponentType>
-			bool DetachComponent(Entity* a_Ent)
+			bool DetachComponent(ObjectHandle<Entity>& a_Ent)
 			{
-				ComponentLayout& layout = m_EntityComponentMap.at(a_Ent);
+				ComponentLayout& layout = m_EntityComponentMap.at(&a_Ent);
 				Key k(typeid(ComponentType).name());
 				unsigned int idx = m_ComponentIndexMap.at(k);
 
-				if (layout.m_Components[idx] == nullptr)
+				if (!layout.m_Components[idx].m_Data)
 				{
 					return false;
 				}
+				else
+				{
+					ObjectHandle<ComponentType>* comp = (ObjectHandle<ComponentType>*)layout.m_Components[idx].m_Data;
+					if (!comp->IsValid())
+						return false;
+				}
 
-				DestroyComponent<ComponentType>(layout.m_Components[idx], a_Ent);
+				DestroyComponent<ComponentType>(layout.m_Components[idx].m_Data, a_Ent);
 				return true;
 			}
 
@@ -177,9 +188,10 @@ namespace Lux
 		private:
 
 			template<class ComponentType>
-			void DestroyComponent(Component* a_Comp, Entity* a_Entity)
+			void DestroyComponent(void* a_Comp, ObjectHandle<Entity>& a_Entity)
 			{
 				Key k(typeid(ComponentType).name());
+				ObjectHandle<ComponentType>* comp = (ObjectHandle<ComponentType>*)a_Comp;
 				// Notify all Systems that are registered for this component type
 				std::pair<ComponentSystemMultiMap::iterator, ComponentSystemMultiMap::iterator> ret;
 				ret = m_ComponentSystemMap.equal_range(k);
@@ -189,10 +201,9 @@ namespace Lux
 					iter->second->RemoveComponent(k, a_Entity);
 				}
 
-				// Cast down to appropriate type
-				ComponentType* realComp = (ComponentType*)a_Comp;
-				if (m_ComponentFactory->DestroyComponent(realComp))
+				if (m_ComponentFactory->DestroyComponent(*comp))
 				{
+					comp->m_RawPtr = nullptr;
 					a_Comp = nullptr;
 				}
 				else
@@ -204,25 +215,20 @@ namespace Lux
 
 			struct ComponentLayout
 			{
-				ComponentLayout(const unsigned int a_NumComponents, Entity* a_Owner, SceneManager* a_Manager) :
+				ComponentLayout(const unsigned int a_NumComponents, ObjectHandle<Entity>& a_Owner, SceneManager* a_Manager) :
 					m_NumComponents(a_NumComponents), m_Owner(a_Owner), m_SceneManager(a_Manager)
 				{
-					m_Components = new Component*[m_NumComponents];
-					for (unsigned int i = 0; i < m_NumComponents; i++)
-					{
-						m_Components[i] = nullptr;
-					}
+					m_Components = new ComponentEntry[m_NumComponents];
 				}
 
-				ComponentLayout(const ComponentLayout& a_Other)
+				ComponentLayout(const ComponentLayout& a_Layout) : m_Owner(a_Layout.m_Owner)
 				{
-					m_SceneManager = a_Other.m_SceneManager;
-					m_Owner = a_Other.m_Owner;
-					m_NumComponents = a_Other.m_NumComponents;
-					m_Components = new Component*[m_NumComponents];
+					m_NumComponents = a_Layout.m_NumComponents;
+					m_SceneManager = a_Layout.m_SceneManager;
+					m_Components = new ComponentEntry[m_NumComponents];
 					for (unsigned int i = 0; i < m_NumComponents; i++)
 					{
-						m_Components[i] = a_Other.m_Components[i];
+						m_Components[i].m_Data = a_Layout.m_Components->m_Data;
 					}
 				}
 
@@ -233,19 +239,32 @@ namespace Lux
 					unsigned int ctr = 0;
 					for (it = m_SceneManager->m_DelFuncMap.begin(); it != m_SceneManager->m_DelFuncMap.end(); ++it)
 					{
-						if (m_Components[it->first] != nullptr)
+						if (m_Components[it->first].m_Data != nullptr)
 						{
-							it->second(m_Components[it->first], m_Owner);
+							it->second(m_Components[it->first].m_Data, m_Owner);
 						}
 					}
 
 					Utility::SafeArrayDelete(m_Components);
 				}
+				struct ComponentEntry
+				{
+					ComponentEntry() : m_Data(nullptr)
+					{
+						
+					}
 
-				Component** m_Components;
+					~ComponentEntry()
+					{
+						m_Data = nullptr;
+					}
+
+					void* m_Data;
+				};
+				ComponentEntry* m_Components;
 				unsigned int m_NumComponents;
 				SceneManager* m_SceneManager;
-				Entity* m_Owner;
+				ObjectHandle<Entity>& m_Owner;
 			};
 
 			void ProcessSystems(const float a_DeltaTime);
@@ -253,9 +272,9 @@ namespace Lux
 			ComponentFactory* m_ComponentFactory;
 			EntityFactory* m_EntityFactory;
 			SystemFactory* m_SystemFactory;
-			typedef std::unordered_map<Entity*, ComponentLayout> EntityComponentMap;
+			typedef std::map<ObjectHandle<Entity>*, ComponentLayout> EntityComponentMap;
 			typedef std::map<Key, unsigned int> ComponentIndexMap;
-			typedef std::map<unsigned int, std::function<void(Component*, Entity*)>> ComponentDelFuncMap;
+			typedef std::map<unsigned int, std::function<void(void*, ObjectHandle<Entity>&)>> ComponentDelFuncMap;
 			typedef std::map<Key, System*> SystemsMap;
 			typedef std::multimap<Key, System*> ComponentSystemMultiMap;
 			EntityComponentMap m_EntityComponentMap;

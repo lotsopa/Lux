@@ -1,4 +1,5 @@
 #include "LuxPCH.h"
+#include "LuxObjectPool.h"
 #include "LuxComponent.h"
 #include "LuxEntity.h"
 #include "LuxTransform.h"

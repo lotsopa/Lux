@@ -23,11 +23,11 @@ namespace Lux
 			This function creates a new component instance from the provided component type.
 			*/
 			template<class T>
-			T* CreateComponent()
+			ObjectHandle<T>& CreateComponent()
 			{
 				ObjectPool<T>* thisPool = (ObjectPool<T>*)m_ComponentPoolMap.at(Key(typeid(T).name()));
-				T* objPtr = thisPool->CreateObject();
-				objPtr->Reset();
+				ObjectHandle<T>& objPtr = thisPool->CreateObject();
+				objPtr.GetRawPtr()->Reset();
 				return objPtr;
 			}
 
@@ -36,7 +36,7 @@ namespace Lux
 			Returns true if the component was destroyed successfully, false otherwise.
 			*/
 			template<class T>
-			bool DestroyComponent(T* a_Component)
+			bool DestroyComponent(ObjectHandle<T>& a_Component)
 			{
 				ObjectPool<T>* thisPool = (ObjectPool<T>*)m_ComponentPoolMap.at(Key(typeid(T).name()));
 				return thisPool->DeleteObject(a_Component);

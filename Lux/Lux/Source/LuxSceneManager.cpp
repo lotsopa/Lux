@@ -1,5 +1,6 @@
 #include "LuxPCH.h"
 #include "LuxKeyCodes.h"
+#include "LuxObjectPool.h"
 #include "LuxEntity.h"
 #include "LuxComponent.h"
 #include "LuxTransform.h"
@@ -47,16 +48,16 @@ Lux::Core::SceneManager::~SceneManager()
 	m_SystemsMap.clear();
 }
 
-Lux::Core::Entity* Lux::Core::SceneManager::CreateEntity()
+ Lux::Core::ObjectHandle<Lux::Core::Entity>& Lux::Core::SceneManager::CreateEntity()
 {
-	Entity* ent = m_EntityFactory->CreateEntity();
-	m_EntityComponentMap.insert(std::make_pair(ent, SceneManager::ComponentLayout(m_NumComponentTypes, ent, this)));
+	 ObjectHandle<Entity>& ent = m_EntityFactory->CreateEntity();
+	m_EntityComponentMap.insert(std::make_pair(&ent, SceneManager::ComponentLayout(m_NumComponentTypes, ent, this)));
 	return ent;
 }
 
-bool Lux::Core::SceneManager::DestroyEntity(Entity* a_Ent)
+ bool Lux::Core::SceneManager::DestroyEntity(ObjectHandle<Lux::Core::Entity>& a_Ent)
 {
-	m_EntityComponentMap.erase(a_Ent);
+	m_EntityComponentMap.erase(&a_Ent);
 	bool ret = m_EntityFactory->DestroyEntity(a_Ent);
 	return ret;
 }

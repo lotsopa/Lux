@@ -1,4 +1,5 @@
 #include "LuxPCH.h"
+#include "LuxObjectPool.h"
 #include "LuxKeyCodes.h"
 #include "LuxComponent.h"
 #include "LuxEventListener.h"

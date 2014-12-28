@@ -26,7 +26,7 @@ namespace Lux
 			struct InitOptions
 			{
 				EventListener* m_EventListener;
-				Transform* m_Transform;
+				ObjectHandle<Transform>* m_Transform;
 			};
 
 			void Init(InitOptions& a_InitOpt);
@@ -35,7 +35,7 @@ namespace Lux
 		protected:
 			bool m_Enabled;
 			EventListener* m_EventListener;
-			Transform* m_Transform;
+			ObjectHandle<Transform>* m_Transform;
 			virtual void Reset() = 0;
 			friend class ComponentFactory;
 		};

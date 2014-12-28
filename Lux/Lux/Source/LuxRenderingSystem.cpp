@@ -53,51 +53,52 @@ bool Lux::Graphics::RenderingSystem::Init(Core::SceneManager* a_SceneManager)
 	return true;
 }
 
-void Lux::Graphics::RenderingSystem::AddComponent(Core::Component* a_Comp, const Core::Key& a_CompType, Core::Entity* a_Entity)
+void Lux::Graphics::RenderingSystem::AddComponent(void* a_Component, const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity)
 {
+	Core::ObjectHandle<Core::Component>* comp = (Core::ObjectHandle<Core::Component>*)a_Component;
 	if (a_CompType == m_TransformKey)
 	{
-		m_EntityMap[a_Entity].m_Transform = static_cast<Lux::Core::Transform*>(a_Comp);
+		m_EntityMap[&a_Entity].m_Transform = (Core::ObjectHandle<Lux::Core::Transform>*)(comp);
 	}
 	else if (a_CompType == m_MeshRendererKey)
 	{
-		m_EntityMap[a_Entity].m_MeshRenderer = static_cast<Lux::Graphics::MeshRenderer*>(a_Comp);
+		m_EntityMap[&a_Entity].m_MeshRenderer = (Core::ObjectHandle<MeshRenderer>*)(comp);
 
-		if (m_EntityMap[a_Entity].m_Shader)
+		if (m_EntityMap[&a_Entity].m_Shader)
 		{
-			m_EntityMap[a_Entity].m_Init = false;
+			m_EntityMap[&a_Entity].m_Init = false;
 		}
 	}
 	else if (a_CompType == m_ShaderKey)
 	{
-		m_EntityMap[a_Entity].m_Shader = static_cast<Lux::Graphics::ShaderComponent*>(a_Comp);
+		m_EntityMap[&a_Entity].m_Shader = (Core::ObjectHandle<ShaderComponent>*)(comp);
 
-		if (m_EntityMap[a_Entity].m_MeshRenderer)
+		if (m_EntityMap[&a_Entity].m_MeshRenderer)
 		{
-			m_EntityMap[a_Entity].m_Init = false;
+			m_EntityMap[&a_Entity].m_Init = false;
 		}
 	}
 	else if (a_CompType == m_CameraKey)
 	{
-		m_EntityMap[a_Entity].m_Camera = static_cast<Lux::Graphics::Camera*>(a_Comp);
+		m_EntityMap[&a_Entity].m_Camera = (Core::ObjectHandle<Lux::Graphics::Camera>*)(comp);
 
-		if (m_EntityMap[a_Entity].m_Camera->IsMainCamera())
+		if (m_EntityMap[&a_Entity].m_Camera->GetRawPtr()->IsMainCamera())
 		{
-			m_MainCamera = m_EntityMap[a_Entity].m_Camera;
+			m_MainCamera = m_EntityMap[&a_Entity].m_Camera;
 		}
 	}
 	else if (a_CompType == m_LightKey)
 	{
-		m_EntityMap[a_Entity].m_Light = static_cast<Lux::Graphics::Light*>(a_Comp);
-		m_LightEntry = &m_EntityMap[a_Entity];
+		m_EntityMap[&a_Entity].m_Light = (Core::ObjectHandle<Lux::Graphics::Light>*)(comp);
+		m_LightEntry = &m_EntityMap[&a_Entity];
 	}
 	else if (a_CompType == m_MaterialKey)
 	{
-		m_EntityMap[a_Entity].m_Material = static_cast<Lux::Graphics::MaterialComponent*>(a_Comp);
+		m_EntityMap[&a_Entity].m_Material = (Core::ObjectHandle<Lux::Graphics::MaterialComponent>*)(comp);
 	}
 }
 
-void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType, Core::Entity* a_Entity)
+void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity)
 {
 	bool entryExists = EntityEntryExists(a_Entity);
 
@@ -108,41 +109,41 @@ void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType
 
 	if (a_CompType == m_TransformKey)
 	{
-		m_EntityMap[a_Entity].m_Transform = nullptr;
+		m_EntityMap[&a_Entity].m_Transform = nullptr;
 	}
 	else if (a_CompType == m_MeshRendererKey)
 	{
-		m_EntityMap[a_Entity].m_MeshRenderer = nullptr;
+		m_EntityMap[&a_Entity].m_MeshRenderer = nullptr;
 	}
 	else if (a_CompType == m_ShaderKey)
 	{
-		m_EntityMap[a_Entity].m_Shader = nullptr;
+		m_EntityMap[&a_Entity].m_Shader = nullptr;
 	}
 	else if (a_CompType == m_CameraKey)
 	{
-		if (m_EntityMap[a_Entity].m_Camera->IsMainCamera())
+		if (m_EntityMap[&a_Entity].m_Camera->GetRawPtr()->IsMainCamera())
 			m_MainCamera = nullptr;
 
-		m_EntityMap[a_Entity].m_Camera = nullptr;
+		m_EntityMap[&a_Entity].m_Camera = nullptr;
 	}
 	else if (a_CompType == m_LightKey)
 	{
-		m_EntityMap[a_Entity].m_Light = nullptr;
+		m_EntityMap[&a_Entity].m_Light = nullptr;
 	}
 	else if (a_CompType == m_MaterialKey)
 	{
-		m_EntityMap[a_Entity].m_Material = nullptr;
+		m_EntityMap[&a_Entity].m_Material = nullptr;
 	}
 
-	if (m_EntityMap[a_Entity].IsNull())
+	if (m_EntityMap[&a_Entity].IsNull())
 	{
-		m_EntityMap.erase(a_Entity);
+		m_EntityMap.erase(&a_Entity);
 	}
 }
 
-bool Lux::Graphics::RenderingSystem::EntityEntryExists(Core::Entity* a_Entity)
+bool Lux::Graphics::RenderingSystem::EntityEntryExists(Core::ObjectHandle<Core::Entity>& a_Entity)
 {
-	int count = m_EntityMap.count(a_Entity);
+	int count = m_EntityMap.count(&a_Entity);
 
 	if (count > 0)
 	{
@@ -165,7 +166,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		{
 			if (it->second.m_Camera)
 			{
-				if (it->second.m_Camera->IsMainCamera())
+				if (it->second.m_Camera->GetRawPtr()->IsMainCamera())
 				{
 					if (it->second.m_Transform)
 					{
@@ -185,33 +186,33 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 	if (m_RenderWindow->IsWindowResized())
 	{
 		float aspect = m_RenderWindow->GetWidth() / (float)m_RenderWindow->GetHeight();
-		m_MainCamera->ChangeAspect(aspect);
+		m_MainCamera->GetRawPtr()->ChangeAspect(aspect);
 	}
 
-	m_MainCameraTransform->ApplyTransform();
-	const mat4x4 ViewProjMatrix = m_MainCamera->GetProjectionMatrix() * m_MainCameraTransform->GetMatrix();
+	m_MainCameraTransform->GetRawPtr()->ApplyTransform();
+	const mat4x4 ViewProjMatrix = m_MainCamera->GetRawPtr()->GetProjectionMatrix() * m_MainCameraTransform->GetRawPtr()->GetMatrix();
 
 	for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
 	{
 		if (!it->second.m_Transform)
 			continue;
 
-		it->second.m_Transform->ApplyTransform();
+		it->second.m_Transform->GetRawPtr()->ApplyTransform();
 
 		if (!it->second.m_MeshRenderer || !it->second.m_Shader)
 			continue;
 
-		Core::Shader* shader = it->second.m_Shader->GetShader();
+		Core::Shader* shader = it->second.m_Shader->GetRawPtr()->GetShader();
 		
 		if (!shader)
 			continue;
 
-		Core::Mesh* mesh = it->second.m_MeshRenderer->GetMesh();
+		Core::Mesh* mesh = it->second.m_MeshRenderer->GetRawPtr()->GetMesh();
 		
 		if (!mesh)
 			continue;
 
-		const mat4x4& transform = it->second.m_Transform->GetMatrix();
+		const mat4x4& transform = it->second.m_Transform->GetRawPtr()->GetMatrix();
 		mat4x4 modelViewProjMat = ViewProjMatrix * transform;
 		unsigned int numSubMeshes = mesh->GetNumSubMeshes();
 
@@ -224,8 +225,8 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		}
 
 		shader->SetUniformMat4x4("MVP", modelViewProjMat);
-		shader->SetUniformVec3("LightPos", m_LightEntry->m_Transform->GetPosition());
-		shader->SetUniformVec4("LightColor", m_LightEntry->m_Light->GetColor());
+		shader->SetUniformVec3("LightPos", m_LightEntry->m_Transform->GetRawPtr()->GetPosition());
+		shader->SetUniformVec4("LightColor", m_LightEntry->m_Light->GetRawPtr()->GetColor());
 		for (unsigned int i = 0; i < numSubMeshes; ++i)
 		{
 			Core::SubMesh* subMesh = mesh->GetSubMesh(i);

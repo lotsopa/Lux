@@ -1,4 +1,5 @@
 #include "LuxPCH.h"
+#include "LuxObjectPool.h"
 #include "LuxRenderWindow.h"
 #include "LuxPlatform.h"
 #include "LuxKeyCodes.h"
@@ -15,7 +16,6 @@
 #include "LuxLight.h"
 #include "LuxFreeLookCamera.h"
 #include "LuxShaderComponent.h"
-#include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
 #include "LuxSystem.h"

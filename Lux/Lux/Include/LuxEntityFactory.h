@@ -15,9 +15,8 @@ namespace Lux
 			EntityFactory(const unsigned int a_InitialPoolSize, const unsigned int a_GrowSize);
 			~EntityFactory();
 
-			Entity* CreateEntity();
-			bool DestroyEntity(Entity* a_Entity);
-			// TODO - Figure out how to handle components
+			ObjectHandle<Entity>& CreateEntity();
+			bool DestroyEntity(ObjectHandle<Entity>& a_Entity);
 
 		private:
 			ObjectPool<Entity> m_EntityMemoryPool;

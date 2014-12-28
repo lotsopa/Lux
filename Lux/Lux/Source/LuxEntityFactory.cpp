@@ -15,19 +15,19 @@ Lux::Core::EntityFactory::~EntityFactory()
 
 }
 
-Lux::Core::Entity* Lux::Core::EntityFactory::CreateEntity()
+Lux::Core::ObjectHandle<Lux::Core::Entity>& Lux::Core::EntityFactory::CreateEntity()
 {
-	Entity* ent = m_EntityMemoryPool.CreateObject();
+	Lux::Core::ObjectHandle<Lux::Core::Entity>& ent = m_EntityMemoryPool.CreateObject();
 
-	if (ent == nullptr)
+	if (!ent.IsValid())
 	{
 		Utility::ThrowError("Fatal error. Could not create Entity.");
 	}
-	ent->Reset();
+	ent.GetRawPtr()->Reset();
 	return ent;
 }
 
-bool Lux::Core::EntityFactory::DestroyEntity(Entity* a_Entity)
+bool Lux::Core::EntityFactory::DestroyEntity(Lux::Core::ObjectHandle<Lux::Core::Entity>& a_Entity)
 {
 	return m_EntityMemoryPool.DeleteObject(a_Entity);
 }
