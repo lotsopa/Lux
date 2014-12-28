@@ -36,12 +36,12 @@ namespace Lux
 
 			}
 
-			inline ObjectType* GetRawPtr() const
+			__forceinline ObjectType* GetRawPtr() const
 			{
 				return m_RawPtr;
 			}
 
-			inline const bool IsValid() const
+			__forceinline const bool IsValid() const
 			{
 				return m_RawPtr != nullptr;
 			}
