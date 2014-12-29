@@ -21,7 +21,8 @@
 #include "LuxCamera.h"
 
 #define CONVERT_ID_TO_CLASS_STRING(a) "class " ID_TO_STRING(a)
-
+#define ADD_COMPONENT_MAP_INSERT(a, b) m_AddComponentFuncMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1, std::placeholders::_2)))
+#define REMOVE_COMPONENT_MAP_INSERT(a, b) m_RemoveComponentProcessMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1)))
 Lux::Graphics::RenderingSystem::RenderingSystem() :
 System(), m_RenderWindow(nullptr), m_MainCamera(nullptr), m_MainCameraTransform(nullptr), m_LightEntry(nullptr),
 m_MeshRendererKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MeshRenderer)),
@@ -31,7 +32,19 @@ m_CameraKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Camera)),
 m_LightKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Light)),
 m_MaterialKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MaterialComponent))
 {
-	
+	ADD_COMPONENT_MAP_INSERT(m_MeshRendererKey, RenderingSystem::AddComponentInternal<MeshRenderer>);
+	ADD_COMPONENT_MAP_INSERT(m_TransformKey, RenderingSystem::AddComponentInternal<Core::Transform>);
+	ADD_COMPONENT_MAP_INSERT(m_ShaderKey, RenderingSystem::AddComponentInternal<ShaderComponent>);
+	ADD_COMPONENT_MAP_INSERT(m_CameraKey, RenderingSystem::AddComponentInternal<Camera>);
+	ADD_COMPONENT_MAP_INSERT(m_LightKey, RenderingSystem::AddComponentInternal<Light>);
+	ADD_COMPONENT_MAP_INSERT(m_MaterialKey, RenderingSystem::AddComponentInternal<MaterialComponent>);
+
+	REMOVE_COMPONENT_MAP_INSERT(m_MeshRendererKey, RenderingSystem::RemoveComponentInternal<MeshRenderer>);
+	REMOVE_COMPONENT_MAP_INSERT(m_TransformKey, RenderingSystem::RemoveComponentInternal<Core::Transform>);
+	REMOVE_COMPONENT_MAP_INSERT(m_ShaderKey, RenderingSystem::RemoveComponentInternal<ShaderComponent>);
+	REMOVE_COMPONENT_MAP_INSERT(m_CameraKey, RenderingSystem::RemoveComponentInternal<Camera>);
+	REMOVE_COMPONENT_MAP_INSERT(m_LightKey, RenderingSystem::RemoveComponentInternal<Light>);
+	REMOVE_COMPONENT_MAP_INSERT(m_MaterialKey, RenderingSystem::RemoveComponentInternal<MaterialComponent>);
 }
 
 Lux::Graphics::RenderingSystem::~RenderingSystem()
@@ -55,47 +68,7 @@ bool Lux::Graphics::RenderingSystem::Init(Core::SceneManager* a_SceneManager)
 
 void Lux::Graphics::RenderingSystem::AddComponent(void* a_Component, const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity)
 {
-	Core::ObjectHandle<Core::Component>* comp = (Core::ObjectHandle<Core::Component>*)a_Component;
-	if (a_CompType == m_TransformKey)
-	{
-		m_EntityMap[&a_Entity].m_Transform = (Core::ObjectHandle<Lux::Core::Transform>*)(comp);
-	}
-	else if (a_CompType == m_MeshRendererKey)
-	{
-		m_EntityMap[&a_Entity].m_MeshRenderer = (Core::ObjectHandle<MeshRenderer>*)(comp);
-
-		if (m_EntityMap[&a_Entity].m_Shader)
-		{
-			m_EntityMap[&a_Entity].m_Init = false;
-		}
-	}
-	else if (a_CompType == m_ShaderKey)
-	{
-		m_EntityMap[&a_Entity].m_Shader = (Core::ObjectHandle<ShaderComponent>*)(comp);
-
-		if (m_EntityMap[&a_Entity].m_MeshRenderer)
-		{
-			m_EntityMap[&a_Entity].m_Init = false;
-		}
-	}
-	else if (a_CompType == m_CameraKey)
-	{
-		m_EntityMap[&a_Entity].m_Camera = (Core::ObjectHandle<Lux::Graphics::Camera>*)(comp);
-
-		if (m_EntityMap[&a_Entity].m_Camera->GetRawPtr()->IsMainCamera())
-		{
-			m_MainCamera = m_EntityMap[&a_Entity].m_Camera;
-		}
-	}
-	else if (a_CompType == m_LightKey)
-	{
-		m_EntityMap[&a_Entity].m_Light = (Core::ObjectHandle<Lux::Graphics::Light>*)(comp);
-		m_LightEntry = &m_EntityMap[&a_Entity];
-	}
-	else if (a_CompType == m_MaterialKey)
-	{
-		m_EntityMap[&a_Entity].m_Material = (Core::ObjectHandle<Lux::Graphics::MaterialComponent>*)(comp);
-	}
+	m_AddComponentFuncMap[a_CompType](a_Component, a_Entity);
 }
 
 void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity)
@@ -107,33 +80,7 @@ void Lux::Graphics::RenderingSystem::RemoveComponent(const Core::Key& a_CompType
 		return;
 	}
 
-	if (a_CompType == m_TransformKey)
-	{
-		m_EntityMap[&a_Entity].m_Transform = nullptr;
-	}
-	else if (a_CompType == m_MeshRendererKey)
-	{
-		m_EntityMap[&a_Entity].m_MeshRenderer = nullptr;
-	}
-	else if (a_CompType == m_ShaderKey)
-	{
-		m_EntityMap[&a_Entity].m_Shader = nullptr;
-	}
-	else if (a_CompType == m_CameraKey)
-	{
-		if (m_EntityMap[&a_Entity].m_Camera->GetRawPtr()->IsMainCamera())
-			m_MainCamera = nullptr;
-
-		m_EntityMap[&a_Entity].m_Camera = nullptr;
-	}
-	else if (a_CompType == m_LightKey)
-	{
-		m_EntityMap[&a_Entity].m_Light = nullptr;
-	}
-	else if (a_CompType == m_MaterialKey)
-	{
-		m_EntityMap[&a_Entity].m_Material = nullptr;
-	}
+	m_RemoveComponentProcessMap[a_CompType](a_Entity);
 
 	if (m_EntityMap[&a_Entity].IsNull())
 	{

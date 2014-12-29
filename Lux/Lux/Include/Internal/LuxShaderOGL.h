@@ -21,6 +21,14 @@ namespace Lux
 				unsigned int GetAttribLocation(const Key& a_Name);
 				virtual void Update();
 
+			private:
+				unsigned int GetUniformLocation(const Key& a_Name);
+				unsigned int m_ShaderProgram;
+				unsigned int CreateShaderProgram(std::vector<unsigned int>& shaders);
+				typedef std::map<Key, ShaderVariable> VariableMap;
+				
+				VariableMap m_Uniforms;
+
 				typedef std::unordered_map<ShaderVariableType, std::function<void(const Key&, void*)>> FunctionMap;
 				virtual void SetUniformFloat(const Key& a_Name, void* a_Val);
 				virtual void SetUniformInt(const Key& a_Name, void* a_Val);
@@ -30,13 +38,6 @@ namespace Lux
 				virtual void SetUniformMat3x3(const Key& a_Name, void* a_Val);
 				virtual void SetUniformMat4x4(const Key& a_Name, void* a_Val);
 
-			private:
-				unsigned int GetUniformLocation(const Key& a_Name);
-				unsigned int m_ShaderProgram;
-				unsigned int CreateShaderProgram(std::vector<unsigned int>& shaders);
-				typedef std::map<Key, ShaderVariable> VariableMap;
-				
-				VariableMap m_Uniforms;
 				FunctionMap m_FunctionMap;
 			};
 		}

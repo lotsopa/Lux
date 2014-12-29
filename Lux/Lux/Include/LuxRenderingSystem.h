@@ -2,6 +2,7 @@
 #define LUX_RENDERING_SYSTEM_H
 
 #include "LuxThreadSafeQueue.h"
+#include "LuxCamera.h"
 
 namespace Lux
 {
@@ -112,6 +113,9 @@ namespace Lux
 				bool m_Init;
 			};
 			typedef std::map<Core::ObjectHandle<Core::Entity>*, EntityEntry> EntityMap;
+			typedef std::map<Core::Key, std::function<void(void*, Core::ObjectHandle<Core::Entity>&)>> AddComponentProcessMap;
+			typedef std::map<Core::Key, std::function<void(Core::ObjectHandle<Core::Entity>&)>> RemoveComponentProcessMap;
+
 			EntityMap m_EntityMap;
 			Core::Key m_TransformKey;
 			Core::Key m_MeshRendererKey;
@@ -123,6 +127,103 @@ namespace Lux
 			EntityEntry* m_LightEntry;
 			Core::ObjectHandle<Core::Transform>* m_MainCameraTransform;
 			mat4x4 m_ModelViewProj;
+
+			AddComponentProcessMap m_AddComponentFuncMap;
+			RemoveComponentProcessMap m_RemoveComponentProcessMap;
+
+			template<class ComponentType>
+			void AddComponentInternal(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				Utility::ThrowError("Could not add Component to Rendering System. Not supported.");
+			}
+
+			// Specializations
+			template<> void AddComponentInternal<Core::Transform>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Transform = (Core::ObjectHandle<Lux::Core::Transform>*)(a_CompPtr);
+			}
+
+			template<> void AddComponentInternal<MeshRenderer>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_MeshRenderer = (Core::ObjectHandle<MeshRenderer>*)(a_CompPtr);
+
+				if (m_EntityMap[&a_Owner].m_Shader)
+				{
+					m_EntityMap[&a_Owner].m_Init = false;
+				}
+			}
+
+			template<> void AddComponentInternal<ShaderComponent>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Shader = (Core::ObjectHandle<ShaderComponent>*)(a_CompPtr);
+
+				if (m_EntityMap[&a_Owner].m_MeshRenderer)
+				{
+					m_EntityMap[&a_Owner].m_Init = false;
+				}
+			}
+
+			template<> void AddComponentInternal<Camera>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Camera = (Core::ObjectHandle<Camera>*)(a_CompPtr);
+
+				if (m_EntityMap[&a_Owner].m_Camera->GetRawPtr()->IsMainCamera())
+				{
+					m_MainCamera = m_EntityMap[&a_Owner].m_Camera;
+				}
+			}
+
+			template<> void AddComponentInternal<Light>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Light = (Core::ObjectHandle<Light>*)(a_CompPtr);
+				m_LightEntry = &m_EntityMap[&a_Owner];
+			}
+
+			template<> void AddComponentInternal<MaterialComponent>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Material = (Core::ObjectHandle<MaterialComponent>*)(a_CompPtr);
+			}
+
+			template<class ComponentType>
+			void RemoveComponentInternal(Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				Utility::ThrowError("Could not add Component to Rendering System. Not supported.");
+			}
+
+			// Specializations
+			template<> void RemoveComponentInternal<Core::Transform>(Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Transform = nullptr;
+			}
+
+			template<> void RemoveComponentInternal<MeshRenderer>(Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_MeshRenderer = nullptr;
+			}
+
+			template<> void RemoveComponentInternal<ShaderComponent>(Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Shader = nullptr;
+			}
+
+			template<> void RemoveComponentInternal<Camera>(Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				if (m_EntityMap[&a_Owner].m_Camera->GetRawPtr()->IsMainCamera())
+					m_MainCamera = nullptr;
+
+				m_EntityMap[&a_Owner].m_Camera = nullptr;
+			}
+
+			template<> void RemoveComponentInternal<Light>(Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Light = nullptr;
+			}
+
+			template<> void RemoveComponentInternal<MaterialComponent>(Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				m_EntityMap[&a_Owner].m_Material = nullptr;
+			}
+
 		};
 	}
 }
