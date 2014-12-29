@@ -122,6 +122,7 @@ namespace Lux
 			Core::ObjectHandle<Camera>* m_MainCamera;
 			EntityEntry* m_LightEntry;
 			Core::ObjectHandle<Core::Transform>* m_MainCameraTransform;
+			mat4x4 m_ModelViewProj;
 		};
 	}
 }

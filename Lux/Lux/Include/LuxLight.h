@@ -18,7 +18,7 @@ namespace Lux
 			};
 
 			inline void SetColor(const vec4& a_Col) { m_Color = a_Col; }
-			inline const vec4& GetColor() { return m_Color; }
+			inline vec4& GetColor() { return m_Color; }
 
 			inline void SetType(LightType a_Type) { m_Type = a_Type; }
 			inline const LightType GetType() { return m_Type; }

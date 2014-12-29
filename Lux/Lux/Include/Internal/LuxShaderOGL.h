@@ -15,21 +15,29 @@ namespace Lux
 				virtual void Activate();
 				virtual void Deactivate();
 
-				virtual void SetUniformFloat(const Key& a_Name, float a_Val);
-				virtual void SetUniformInt(const Key& a_Name, int a_Val);
-				virtual void SetUniformVec2(const Key& a_Name, const vec2& a_Vec);
-				virtual void SetUniformVec3(const Key& a_Name, const vec3& a_Vec);
-				virtual void SetUniformVec4(const Key& a_Name, const vec4 a_Vec);
-				virtual void SetUniformMat3x3(const Key& a_Name, const mat3x3& a_Mat);
-				virtual void SetUniformMat4x4(const Key& a_Name, const mat4x4& a_Mat);
+				virtual void SetUniformVariable(const Key& a_Name, ShaderVariable& a_Var);
 
 				inline const unsigned int GetShaderProgram() { return m_ShaderProgram;  }
 				unsigned int GetAttribLocation(const Key& a_Name);
+				virtual void Update();
+
+				typedef std::unordered_map<ShaderVariableType, std::function<void(const Key&, void*)>> FunctionMap;
+				virtual void SetUniformFloat(const Key& a_Name, void* a_Val);
+				virtual void SetUniformInt(const Key& a_Name, void* a_Val);
+				virtual void SetUniformVec2(const Key& a_Name, void* a_Val);
+				virtual void SetUniformVec3(const Key& a_Name, void* a_Val);
+				virtual void SetUniformVec4(const Key& a_Name, void* a_Val);
+				virtual void SetUniformMat3x3(const Key& a_Name, void* a_Val);
+				virtual void SetUniformMat4x4(const Key& a_Name, void* a_Val);
 
 			private:
 				unsigned int GetUniformLocation(const Key& a_Name);
 				unsigned int m_ShaderProgram;
 				unsigned int CreateShaderProgram(std::vector<unsigned int>& shaders);
+				typedef std::map<Key, ShaderVariable> VariableMap;
+				
+				VariableMap m_Uniforms;
+				FunctionMap m_FunctionMap;
 			};
 		}
 	}

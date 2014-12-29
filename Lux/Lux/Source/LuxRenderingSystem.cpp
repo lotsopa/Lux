@@ -213,7 +213,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 			continue;
 
 		const mat4x4& transform = it->second.m_Transform->GetRawPtr()->GetMatrix();
-		mat4x4 modelViewProjMat = ViewProjMatrix * transform;
+		m_ModelViewProj = ViewProjMatrix * transform;
 		unsigned int numSubMeshes = mesh->GetNumSubMeshes();
 
 		shader->Activate();
@@ -221,12 +221,14 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		if (!it->second.m_Init)
 		{
 			mesh->ConnectWithShader(shader);
+			shader->SetUniformVariable("MVP", Core::ShaderVariable(Core::VALUE_MAT4X4, glm::value_ptr(m_ModelViewProj)));
+			shader->SetUniformVariable("LightPos", Core::ShaderVariable(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition())));
+			shader->SetUniformVariable("LightColor", Core::ShaderVariable(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor())));
 			it->second.m_Init = true;
 		}
 
-		shader->SetUniformMat4x4("MVP", modelViewProjMat);
-		shader->SetUniformVec3("LightPos", m_LightEntry->m_Transform->GetRawPtr()->GetPosition());
-		shader->SetUniformVec4("LightColor", m_LightEntry->m_Light->GetRawPtr()->GetColor());
+		shader->Update();
+
 		for (unsigned int i = 0; i < numSubMeshes; ++i)
 		{
 			Core::SubMesh* subMesh = mesh->GetSubMesh(i);
