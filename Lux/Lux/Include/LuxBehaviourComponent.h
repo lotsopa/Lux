@@ -8,6 +8,8 @@ namespace Lux
 		class Behaviour;
 		class EventListener;
 		class Transform;
+		class Key;
+		struct ComponentLayout;
 
 		class BehaviourComponent : public Component
 		{
@@ -25,17 +27,36 @@ namespace Lux
 
 			struct InitOptions
 			{
+				InitOptions() : m_EventListener(nullptr)
+				{
+
+				}
+
+				~InitOptions()
+				{
+
+				}
+
 				EventListener* m_EventListener;
-				ObjectHandle<Transform>* m_Transform;
 			};
 
 			void Init(InitOptions& a_InitOpt);
 			friend class BehaviourSystem;
 
+			const unsigned int GetComponentIndex(const Key& a_Key);
 		protected:
 			bool m_Enabled;
 			EventListener* m_EventListener;
-			ObjectHandle<Transform>* m_Transform;
+			ComponentLayout* m_ComponentLayout;
+
+			template <class ComponentType>
+			__forceinline ObjectHandle<ComponentType>* GetComponent()
+			{
+				Key k(typeid(ComponentType).name());
+				const unsigned int idx = GetComponentIndex(k);
+				return (ObjectHandle<ComponentType>*)m_ComponentLayout->m_Components[idx].m_Data;
+			}
+
 			virtual void Reset() = 0;
 			friend class ComponentFactory;
 		};

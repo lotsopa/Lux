@@ -4,6 +4,8 @@
 #include "LuxComponent.h"
 #include "LuxTransform.h"
 #include "LuxEventListener.h"
+#include "LuxKey.h"
+#include "LuxSceneManager.h"
 #include "LuxBehaviourComponent.h"
 #include "LuxFreeLookCamera.h"
 
@@ -25,6 +27,7 @@ void Lux::Core::FreeLookCamera::Reset()
 void Lux::Core::FreeLookCamera::Start()
 {
 	m_LastMousePos = m_EventListener->GetCursorPos();
+	m_Transform = GetComponent<Transform>();
 }
 
 void Lux::Core::FreeLookCamera::Update(const float a_DeltaTime)

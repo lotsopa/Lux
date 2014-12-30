@@ -12,9 +12,7 @@
 #include "LuxMaterial.h"
 #include "LuxMaterialComponent.h"
 #include "LuxCamera.h"
-#include "LuxBehaviourComponent.h"
 #include "LuxLight.h"
-#include "LuxFreeLookCamera.h"
 #include "LuxShaderComponent.h"
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
@@ -27,6 +25,8 @@
 #include "LuxTimer.h"
 #include "LuxHelpers.h"
 #include "LuxResourceHandler.h"
+#include "LuxBehaviourComponent.h"
+#include "LuxFreeLookCamera.h"
 
 Lux::Application::Application() :
 m_Platform(nullptr), m_SceneManager(nullptr), m_ResourceHandler(nullptr)

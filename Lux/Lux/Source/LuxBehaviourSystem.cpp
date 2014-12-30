@@ -4,16 +4,15 @@
 #include "LuxKey.h"
 #include "LuxMesh.h"
 #include "LuxObjectPool.h"
+#include "LuxSceneManager.h"
 #include "LuxBehaviourComponent.h"
 #include "LuxFreeLookCamera.h"
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
 #include "LuxSystem.h"
 #include "LuxRenderingSystem.h"
-#include "LuxBehaviourSystem.h"
 #include "LuxEventSystem.h"
 #include "LuxSystemFactory.h"
-#include "LuxSceneManager.h"
 #include "LuxRenderWindow.h"
 #include "LuxBehaviourSystem.h"
 
@@ -48,7 +47,8 @@ void Lux::Core::BehaviourSystem::AddComponent(void* a_Component, const Key& a_Co
 	m_BehaviourMap[&a_Entity] = (Core::ObjectHandle<BehaviourComponent>*)(comp);
 	BehaviourComponent::InitOptions initOptions;
 	initOptions.m_EventListener = m_SceneManager->GetRenderWindow()->GetEventListener();
-	initOptions.m_Transform = &m_SceneManager->GetComponent<Transform>(a_Entity);
+
+	m_BehaviourMap[&a_Entity]->GetRawPtr()->m_ComponentLayout = &m_SceneManager->GetComponentLayout(a_Entity);
 
 	m_BehaviourMap[&a_Entity]->GetRawPtr()->Init(initOptions);
 	m_BehaviourMap[&a_Entity]->GetRawPtr()->Start();
@@ -56,6 +56,7 @@ void Lux::Core::BehaviourSystem::AddComponent(void* a_Component, const Key& a_Co
 
 void Lux::Core::BehaviourSystem::RemoveComponent(const Key& a_CompType, ObjectHandle<Entity>& a_Entity)
 {
+	m_BehaviourMap[&a_Entity]->GetRawPtr()->m_ComponentLayout = nullptr;
 	m_BehaviourMap[&a_Entity]->GetRawPtr()->OnDestroy();
 	m_BehaviourMap.erase(&a_Entity);
 }

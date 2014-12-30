@@ -8,8 +8,6 @@
 #include "LuxMaterialComponent.h"
 #include "LuxKey.h"
 #include "LuxMesh.h"
-#include "LuxBehaviourComponent.h"
-#include "LuxFreeLookCamera.h"
 #include "LuxLight.h"
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
@@ -20,6 +18,8 @@
 #include "LuxEventSystem.h"
 #include "LuxSystemFactory.h"
 #include "LuxSceneManager.h"
+#include "LuxBehaviourComponent.h"
+#include "LuxFreeLookCamera.h"
 
 Lux::Core::SceneManager::SceneManager(RenderWindow* a_RenderWindow) : 
 m_NumComponentTypes(0),
@@ -51,7 +51,7 @@ Lux::Core::SceneManager::~SceneManager()
  Lux::Core::ObjectHandle<Lux::Core::Entity>& Lux::Core::SceneManager::CreateEntity()
 {
 	 ObjectHandle<Entity>& ent = m_EntityFactory->CreateEntity();
-	m_EntityComponentMap.insert(std::make_pair(&ent, SceneManager::ComponentLayout(m_NumComponentTypes, ent, this)));
+	m_EntityComponentMap.insert(std::make_pair(&ent, ComponentLayout(m_NumComponentTypes, ent, this)));
 	return ent;
 }
 

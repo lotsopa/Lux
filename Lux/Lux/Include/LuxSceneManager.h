@@ -11,6 +11,7 @@ namespace Lux
 		class Entity;
 		class System;
 		class RenderWindow;
+		struct ComponentLayout;
 
 		class SceneManager
 		{
@@ -213,61 +214,12 @@ namespace Lux
 				}
 			}
 
-			struct ComponentLayout
-			{
-				ComponentLayout(const unsigned int a_NumComponents, ObjectHandle<Entity>& a_Owner, SceneManager* a_Manager) :
-					m_NumComponents(a_NumComponents), m_Owner(a_Owner), m_SceneManager(a_Manager)
-				{
-					m_Components = new ComponentEntry[m_NumComponents];
-				}
-
-				ComponentLayout(const ComponentLayout& a_Layout) : m_Owner(a_Layout.m_Owner)
-				{
-					m_NumComponents = a_Layout.m_NumComponents;
-					m_SceneManager = a_Layout.m_SceneManager;
-					m_Components = new ComponentEntry[m_NumComponents];
-					for (unsigned int i = 0; i < m_NumComponents; i++)
-					{
-						m_Components[i].m_Data = a_Layout.m_Components->m_Data;
-					}
-				}
-
-				~ComponentLayout()
-				{
-					SceneManager::ComponentDelFuncMap::iterator it;
-
-					unsigned int ctr = 0;
-					for (it = m_SceneManager->m_DelFuncMap.begin(); it != m_SceneManager->m_DelFuncMap.end(); ++it)
-					{
-						if (m_Components[it->first].m_Data != nullptr)
-						{
-							it->second(m_Components[it->first].m_Data, m_Owner);
-						}
-					}
-
-					Utility::SafeArrayDelete(m_Components);
-				}
-				struct ComponentEntry
-				{
-					ComponentEntry() : m_Data(nullptr)
-					{
-						
-					}
-
-					~ComponentEntry()
-					{
-						m_Data = nullptr;
-					}
-
-					void* m_Data;
-				};
-				ComponentEntry* m_Components;
-				unsigned int m_NumComponents;
-				SceneManager* m_SceneManager;
-				ObjectHandle<Entity>& m_Owner;
-			};
-
 			void ProcessSystems(const float a_DeltaTime);
+
+			ComponentLayout& GetComponentLayout(ObjectHandle<Entity>& a_Entity)
+			{
+				return m_EntityComponentMap.at(&a_Entity);
+			}
 
 			ComponentFactory* m_ComponentFactory;
 			EntityFactory* m_EntityFactory;
@@ -284,6 +236,64 @@ namespace Lux
 			SystemsMap m_SystemsMap;
 			ComponentSystemMultiMap m_ComponentSystemMap;
 			RenderWindow* m_RenderWindow;
+			friend class BehaviourComponent;
+			friend class BehaviourSystem;
+			friend struct ComponentLayout;
+		};
+
+		struct ComponentLayout
+		{
+			ComponentLayout(const unsigned int a_NumComponents, ObjectHandle<Entity>& a_Owner, SceneManager* a_Manager) :
+				m_NumComponents(a_NumComponents), m_Owner(a_Owner), m_SceneManager(a_Manager)
+			{
+				m_Components = new ComponentEntry[m_NumComponents];
+			}
+
+			ComponentLayout(const ComponentLayout& a_Layout) : m_Owner(a_Layout.m_Owner)
+			{
+				m_NumComponents = a_Layout.m_NumComponents;
+				m_SceneManager = a_Layout.m_SceneManager;
+				m_Components = new ComponentEntry[m_NumComponents];
+				for (unsigned int i = 0; i < m_NumComponents; i++)
+				{
+					m_Components[i].m_Data = a_Layout.m_Components->m_Data;
+				}
+			}
+
+			~ComponentLayout()
+			{
+				SceneManager::ComponentDelFuncMap::iterator it;
+
+				unsigned int ctr = 0;
+				for (it = m_SceneManager->m_DelFuncMap.begin(); it != m_SceneManager->m_DelFuncMap.end(); ++it)
+				{
+					if (m_Components[it->first].m_Data != nullptr)
+					{
+						it->second(m_Components[it->first].m_Data, m_Owner);
+					}
+				}
+
+				Utility::SafeArrayDelete(m_Components);
+			}
+
+			struct ComponentEntry
+			{
+				ComponentEntry() : m_Data(nullptr)
+				{
+
+				}
+
+				~ComponentEntry()
+				{
+					m_Data = nullptr;
+				}
+
+				void* m_Data;
+			};
+			ComponentEntry* m_Components;
+			unsigned int m_NumComponents;
+			SceneManager* m_SceneManager;
+			ObjectHandle<Entity>& m_Owner;
 		};
 	}
 }

@@ -20,6 +20,7 @@ namespace Lux
 			float m_RotationMultiplier;
 			float m_SpeedMultiplier;
 			vec3 m_EulerRotation;
+			ObjectHandle<Transform>* m_Transform;
 
 		protected:
 			virtual void Reset();
