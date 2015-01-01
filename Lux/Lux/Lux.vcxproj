@@ -11,19 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Internal\LuxErrorCheckOGL.h" />
-    <ClInclude Include="Include\Internal\LuxEventListenerOGL.h" />
-    <ClInclude Include="Include\Internal\LuxMeshOGL.h" />
-    <ClInclude Include="Include\Internal\LuxPlatformOGL.h" />
-    <ClInclude Include="Include\Internal\LuxRenderWindowOGL.h" />
-    <ClInclude Include="Include\Internal\LuxResourceHandlerOGL.h" />
-    <ClInclude Include="Include\Internal\LuxShaderOGL.h" />
-    <ClInclude Include="Include\Internal\LuxSubMeshOGL.h" />
-    <ClInclude Include="Include\Internal\LuxTexture1DOGL.h" />
-    <ClInclude Include="Include\Internal\LuxTexture2DOGL.h" />
-    <ClInclude Include="Include\Internal\LuxTexture3DOGL.h" />
-    <ClInclude Include="Include\Internal\LuxBufferOGL.h" />
-    <ClInclude Include="Include\Internal\LuxVertexArrayOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxBufferOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxErrorCheckOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxEventListenerOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxMeshOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxPlatformOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxRenderWindowOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxResourceHandlerOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxShaderOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxSubMeshOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxTexture1DOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxTexture2DOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxTexture3DOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxVertexArrayOGL.h" />
     <ClInclude Include="Include\LuxBehaviourComponent.h" />
     <ClInclude Include="Include\LuxBehaviourSystem.h" />
     <ClInclude Include="Include\LuxCamera.h" />
@@ -75,18 +75,18 @@
     <ClInclude Include="Include\LuxVertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Internal\LuxEventListenerOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxMeshOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxPlatformOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxRenderWindowOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxResourceHandlerOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxShaderOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxSubMeshOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxTexture1DOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxTexture2DOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxTexture3DOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxBufferOGL.cpp" />
-    <ClCompile Include="Source\Internal\LuxVertexArrayOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxBufferOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxEventListenerOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxMeshOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxPlatformOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxRenderWindowOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxResourceHandlerOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxShaderOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxSubMeshOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxTexture1DOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxTexture2DOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxTexture3DOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxVertexArrayOGL.cpp" />
     <ClCompile Include="Source\LuxBehaviourComponent.cpp" />
     <ClCompile Include="Source\LuxBehaviourSystem.cpp" />
     <ClCompile Include="Source\LuxCamera.cpp" />
@@ -179,7 +179,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Include\Internal;Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include\Internal\DirectX11;Include\Internal\OpenGL;Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -199,7 +199,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Include\Internal;Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include\Internal\DirectX11;Include\Internal\OpenGL;Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>

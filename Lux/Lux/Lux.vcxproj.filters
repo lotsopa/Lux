@@ -49,6 +49,24 @@
     <Filter Include="Source Files\Utility\Internal">
       <UniqueIdentifier>{2830ebfb-16c7-4dda-94d1-7b961037d8f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Internal\OpenGL">
+      <UniqueIdentifier>{9f501d15-e9c0-482f-8c55-27b210526c50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\Internal\DirectX11">
+      <UniqueIdentifier>{a65ef48e-9e49-49af-a478-4c071bb34fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility\Internal\OpenGL">
+      <UniqueIdentifier>{f00b8eea-eb1f-4010-9bdb-ddf906b92079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Internal\OpenGL">
+      <UniqueIdentifier>{8e9b1cf0-d50f-4afe-a991-80b286980a5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Internal\DirectX11">
+      <UniqueIdentifier>{6ff1df51-1e10-4bbd-b132-b72a1513a138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility\Internal\DirectX11">
+      <UniqueIdentifier>{deff472a-c70d-471c-ab09-7a87412a455a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\LuxPCH.h">
@@ -141,15 +159,6 @@
     <ClInclude Include="Include\LuxEventSystem.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Internal\LuxPlatformOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxRenderWindowOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxEventListenerOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxTexture.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -162,23 +171,8 @@
     <ClInclude Include="Include\LuxTexture3D.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Internal\LuxTexture1DOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxTexture2DOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxTexture3DOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxResourceHandlerOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxShader.h">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxShaderOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
     </ClInclude>
     <ClInclude Include="Include\LuxFileScanner.h">
       <Filter>Header Files\Core</Filter>
@@ -192,32 +186,14 @@
     <ClInclude Include="Include\LuxShaderComponent.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Internal\LuxSubMeshOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxRenderWindow.h">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxErrorCheckOGL.h">
-      <Filter>Header Files\Utility\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxMeshOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\LuxBufferOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
     </ClInclude>
     <ClInclude Include="Include\LuxVertex.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Internal\LuxVertexArrayOGL.h">
-      <Filter>Header Files\Core\Internal</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxCamera.h">
       <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\LuxBehaviourSystem.h">
-      <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Include\LuxBehaviourComponent.h">
       <Filter>Header Files\Core</Filter>
@@ -236,6 +212,48 @@
     </ClInclude>
     <ClInclude Include="Include\LuxMaterialComponent.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxBehaviourSystem.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxBufferOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxEventListenerOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxMeshOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxPlatformOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxRenderWindowOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxResourceHandlerOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxShaderOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxSubMeshOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxTexture1DOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxTexture2DOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxTexture3DOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxVertexArrayOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxErrorCheckOGL.h">
+      <Filter>Header Files\Utility\Internal\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -317,15 +335,6 @@
     <ClCompile Include="Source\LuxEventSystem.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Internal\LuxPlatformOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxRenderWindowOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxEventListenerOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LuxTexture.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -338,23 +347,8 @@
     <ClCompile Include="Source\LuxTexture3D.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Internal\LuxTexture1DOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxTexture3DOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxTexture2DOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxResourceHandlerOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LuxShader.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxShaderOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxFileScanner.c">
       <Filter>Source Files\Core</Filter>
@@ -368,20 +362,8 @@
     <ClCompile Include="Source\LuxShaderComponent.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Internal\LuxSubMeshOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxMeshOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxBufferOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LuxVertex.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\LuxVertexArrayOGL.cpp">
-      <Filter>Source Files\Core\Internal</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxCamera.cpp">
       <Filter>Source Files\Graphics</Filter>
@@ -400,6 +382,42 @@
     </ClCompile>
     <ClCompile Include="Source\LuxMaterialComponent.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxEventListenerOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxMeshOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxPlatformOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxRenderWindowOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxResourceHandlerOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxShaderOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxSubMeshOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxTexture1DOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxTexture2DOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxTexture3DOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxVertexArrayOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxBufferOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
