@@ -26,13 +26,13 @@ void Lux::Core::FreeLookCamera::Reset()
 
 void Lux::Core::FreeLookCamera::Start()
 {
-	m_LastMousePos = m_EventListener->GetCursorPos();
+	m_LastMousePos = m_EventListener->GetCursorPosition();
 	m_Transform = GetComponent<Transform>();
 }
 
 void Lux::Core::FreeLookCamera::Update(const float a_DeltaTime)
 {
-	vec2 currMousePos = m_EventListener->GetCursorPos();
+	vec2 currMousePos = m_EventListener->GetCursorPosition();
 
 	if (m_EventListener->GetMouseButtonDown(LUX_MOUSE_BUTTON_RIGHT))
 	{

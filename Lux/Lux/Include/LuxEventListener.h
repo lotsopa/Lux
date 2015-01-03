@@ -16,7 +16,7 @@ namespace Lux
 			virtual const bool GetKeyDown(KeyCode a_Key) = 0;
 			virtual const bool GetKeyUp(KeyCode a_Key) = 0;
 			virtual const bool GetKey(KeyCode a_Key) = 0;
-			virtual const vec2 GetCursorPos() = 0;
+			virtual const vec2 GetCursorPosition() = 0;
 			virtual const bool GetMouseButtonDown(MouseButton a_Button) = 0;
 			virtual const bool GetMouseButtonUp(MouseButton a_Button) = 0;
 			virtual const bool GetMouseButton(MouseButton a_Button) = 0;

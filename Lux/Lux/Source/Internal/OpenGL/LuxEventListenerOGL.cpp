@@ -35,7 +35,7 @@ const bool Lux::Core::Internal::EventListenerOGL::GetKeyUp(KeyCode a_Key)
 	return false;
 }
 
-const Lux::vec2 Lux::Core::Internal::EventListenerOGL::GetCursorPos()
+const Lux::vec2 Lux::Core::Internal::EventListenerOGL::GetCursorPosition()
 {
 	double x = 0, y = 0;
 	glfwGetCursorPos(m_GLWindow->GetWindowHandle(), &x, &y);

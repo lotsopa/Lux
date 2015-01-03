@@ -70,6 +70,17 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 
 	glfwSwapInterval(a_AppInitOptions.m_ScreenSwapInterval);
 
+	// Windows being a bitch, as always
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+	// Turn on vertical screen sync under Windows.
+	// (I.e. it uses the WGL_EXT_swap_control extension)
+	typedef BOOL(WINAPI *PFNWGLSWAPINTERVALEXTPROC)(int interval);
+	PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
+	wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+	if (wglSwapIntervalEXT)
+		wglSwapIntervalEXT(a_AppInitOptions.m_ScreenSwapInterval);
+#endif
+
 	m_WindowWidth = a_AppInitOptions.m_WindowWidth;
 	m_WindowHeight = a_AppInitOptions.m_WindowHeight;
 	m_WindowResized = false;
