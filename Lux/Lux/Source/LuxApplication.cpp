@@ -51,7 +51,7 @@ bool Lux::Application::Initialize(Utility::AppInitOptions& a_AppInitOptions)
 
 	LUX_LOG(Utility::logINFO) << "Logger started.";
 
-	m_Platform = Core::Platform::Create(Utility::OPEN_GL);
+	m_Platform = Core::Platform::Create(a_AppInitOptions.m_PlatformType);
 	bool platformInit = m_Platform->Init(a_AppInitOptions);
 
 	if (!platformInit)

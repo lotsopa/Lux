@@ -31,6 +31,10 @@ namespace Lux
 				int m_WindowWidth;
 				int m_WindowHeight;
 				bool m_WindowResized;
+				bool m_Fullscreen;
+				int m_SwapInterval;
+				String m_Caption;
+				unsigned int m_AntiAliasing;
 				friend class PlatformOGL;
 			};
 		}

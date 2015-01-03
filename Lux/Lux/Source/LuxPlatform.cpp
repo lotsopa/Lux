@@ -4,6 +4,10 @@
 #include "LuxPlatform.h"
 #include "LuxPlatformOGL.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+#include "LuxPlatformDX11.h"
+#endif
+
 Lux::Core::Platform::Platform()
 {
 
@@ -24,7 +28,12 @@ Lux::Core::Platform* Lux::Core::Platform::Create(Utility::PlatformType a_Platfor
 		break;
 
 	case Utility::DIRECTX_11:
-		Utility::ThrowError("Platform type not implemented.");
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+		retVal = new Internal::PlatformDX11();
+
+#else
+		Utility::ThrowError("DirectX is not supported on this machine!");
+#endif
 		break;
 	}
 

@@ -19,7 +19,9 @@ namespace Lux
 				m_PlatformType(OPEN_GL),
 				m_WindowCaption("Lux Application"),
 				m_WindowHeight(600),
-				m_WindowWidth(800)
+				m_WindowWidth(800),
+				m_FullScreen(false),
+				m_ScreenSwapInterval(0)
 			{
 
 			}
@@ -35,6 +37,8 @@ namespace Lux
 			unsigned int m_AntiAliasing;
 			TLogLevel m_LoggingLevel;
 			PlatformType m_PlatformType;
+			bool m_FullScreen;
+			int m_ScreenSwapInterval;
 		};
 
 		template<typename T>

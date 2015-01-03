@@ -22,6 +22,8 @@ namespace Lux
 	typedef std::string String;
 	typedef long long int64;
 	typedef unsigned int TextureIndex;
+
+	const vec4 WINDOW_CLEAR_COLOR(0.2f);
 }
 
 #endif

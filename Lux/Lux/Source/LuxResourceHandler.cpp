@@ -2,6 +2,9 @@
 #include "LuxHelpers.h"
 #include "LuxResourceHandler.h"
 #include "LuxResourceHandlerOGL.h"
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+#include "LuxResourceHandlerDX11.h"
+#endif
 
 Lux::Core::ResourceHandler::ResourceHandler()
 {
@@ -23,7 +26,11 @@ Lux::Core::ResourceHandler* Lux::Core::ResourceHandler::Create(Utility::Platform
 		break;
 
 	case Utility::DIRECTX_11:
-		Utility::ThrowError("Resource Handler Not implemented For this Platform.");
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+		retVal = new Internal::ResourceHandlerDX11();
+#else
+		Utility::ThrowError("DirectX is not supported on this machine!");
+#endif
 		break;
 	}
 

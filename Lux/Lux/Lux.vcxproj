@@ -11,6 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Internal\DirectX11\LuxEventListenerDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxPlatformDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxRenderWindowDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxResourceHandlerDX11.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxBufferOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxErrorCheckOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxEventListenerOGL.h" />
@@ -75,6 +79,10 @@
     <ClInclude Include="Include\LuxVertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Internal\DirectX11\LuxEventListenerDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxPlatformDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxRenderWindowDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxResourceHandlerDX11.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxBufferOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxEventListenerOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxMeshOGL.cpp" />
@@ -148,14 +156,14 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -183,6 +191,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/Zm256 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -204,6 +213,7 @@
       <PrecompiledHeaderFile>LuxPCH.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>/Zm256 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

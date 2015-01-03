@@ -255,6 +255,18 @@
     <ClInclude Include="Include\Internal\OpenGL\LuxErrorCheckOGL.h">
       <Filter>Header Files\Utility\Internal\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxPlatformDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxRenderWindowDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxResourceHandlerDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxEventListenerDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -418,6 +430,18 @@
     </ClCompile>
     <ClCompile Include="Source\Internal\OpenGL\LuxBufferOGL.cpp">
       <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxPlatformDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxRenderWindowDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxResourceHandlerDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxEventListenerDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

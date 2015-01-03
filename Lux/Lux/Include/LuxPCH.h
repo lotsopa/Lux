@@ -2,7 +2,20 @@
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 
+// System includes
 #include <windows.h>
+// Windows Runtime Template Library
+#include <wrl.h>
+
+// DirectX includes
+#include <d3d11_1.h>
+#include <d3dcompiler.h>
+
+// Link library dependencies
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "winmm.lib")
 
 #endif
 
@@ -36,6 +49,7 @@
 
 // Math library
 #define GLM_FORCE_RADIANS
+#define GLM_SWIZZLE
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 

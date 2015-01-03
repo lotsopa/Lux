@@ -22,7 +22,15 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context 
-	m_WindowHandle = glfwCreateWindow(a_AppInitOptions.m_WindowWidth, a_AppInitOptions.m_WindowHeight, a_AppInitOptions.m_WindowCaption.c_str(), nullptr, nullptr);
+	if (a_AppInitOptions.m_FullScreen)
+	{
+		m_WindowHandle = glfwCreateWindow(a_AppInitOptions.m_WindowWidth, a_AppInitOptions.m_WindowHeight, a_AppInitOptions.m_WindowCaption.c_str(), glfwGetPrimaryMonitor(), nullptr);
+	}
+	else
+	{
+		m_WindowHandle = glfwCreateWindow(a_AppInitOptions.m_WindowWidth, a_AppInitOptions.m_WindowHeight, a_AppInitOptions.m_WindowCaption.c_str(), nullptr, nullptr);
+	}
+	
 	if (m_WindowHandle == nullptr)
 	{
 		LUX_LOG(Utility::logERROR) << "Failed to initialize specified OpenGL " << 4 << "." << 0 << " Context.";
@@ -51,6 +59,7 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 
 	glDepthRange(0.0f, 1.0f);
 	glClearDepth(1.0f);
+	glClearColor(WINDOW_CLEAR_COLOR.x, WINDOW_CLEAR_COLOR.y, WINDOW_CLEAR_COLOR.z, WINDOW_CLEAR_COLOR.w);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
@@ -59,9 +68,15 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 	glFrontFace(GL_CCW);
 	Utility::Internal::CheckOGLError();
 
+	glfwSwapInterval(a_AppInitOptions.m_ScreenSwapInterval);
+
 	m_WindowWidth = a_AppInitOptions.m_WindowWidth;
 	m_WindowHeight = a_AppInitOptions.m_WindowHeight;
 	m_WindowResized = false;
+	m_Fullscreen = a_AppInitOptions.m_FullScreen;
+	m_SwapInterval = a_AppInitOptions.m_ScreenSwapInterval;
+	m_Caption = a_AppInitOptions.m_WindowCaption;
+	m_AntiAliasing = a_AppInitOptions.m_AntiAliasing;
 
 	return true;
 }
