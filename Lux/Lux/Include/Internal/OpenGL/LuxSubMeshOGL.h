@@ -13,7 +13,7 @@ namespace Lux
 			{
 			public:
 				SubMeshOGL();
-				SubMeshOGL(const SubMesh& a_SubMesh);
+				SubMeshOGL(const SubMeshOGL& a_SubMesh);
 				SubMeshOGL(aiMesh& a_Mesh);
 				virtual ~SubMeshOGL();
 

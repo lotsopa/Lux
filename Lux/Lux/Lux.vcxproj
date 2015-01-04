@@ -12,9 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Internal\DirectX11\LuxEventListenerDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxMeshDX11.h" />
     <ClInclude Include="Include\Internal\DirectX11\LuxPlatformDX11.h" />
     <ClInclude Include="Include\Internal\DirectX11\LuxRenderWindowDX11.h" />
     <ClInclude Include="Include\Internal\DirectX11\LuxResourceHandlerDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxShaderDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxSubMeshDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxTexture1DDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxTexture2DDX11.h" />
+    <ClInclude Include="Include\Internal\DirectX11\LuxTexture3DDX11.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxBufferOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxErrorCheckOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxEventListenerOGL.h" />
@@ -83,6 +89,12 @@
     <ClCompile Include="Source\Internal\DirectX11\LuxPlatformDX11.cpp" />
     <ClCompile Include="Source\Internal\DirectX11\LuxRenderWindowDX11.cpp" />
     <ClCompile Include="Source\Internal\DirectX11\LuxResourceHandlerDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxMeshDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxShaderDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxSubMeshDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxTexture1DDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxTexture2DDX11.cpp" />
+    <ClCompile Include="Source\Internal\DirectX11\LuxTexture3DDX11.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxBufferOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxEventListenerOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxMeshOGL.cpp" />

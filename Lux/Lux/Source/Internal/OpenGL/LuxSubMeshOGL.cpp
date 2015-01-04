@@ -26,7 +26,7 @@ m_VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW)
 	SafeDeleteAttributes();
 }
 
-Lux::Core::Internal::SubMeshOGL::SubMeshOGL(const SubMesh& a_SubMesh) : SubMesh(a_SubMesh),
+Lux::Core::Internal::SubMeshOGL::SubMeshOGL(const SubMeshOGL& a_SubMesh) : SubMesh(a_SubMesh),
 m_VertexArray(),
 m_IndexBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW),
 m_VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW)

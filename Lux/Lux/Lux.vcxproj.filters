@@ -267,6 +267,24 @@
     <ClInclude Include="Include\Internal\DirectX11\LuxEventListenerDX11.h">
       <Filter>Header Files\Core\Internal\DirectX11</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxMeshDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxSubMeshDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxShaderDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxTexture1DDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxTexture2DDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxTexture3DDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -441,6 +459,24 @@
       <Filter>Source Files\Core\Internal\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="Source\Internal\DirectX11\LuxEventListenerDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxMeshDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxSubMeshDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxShaderDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxTexture1DDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxTexture2DDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxTexture3DDX11.cpp">
       <Filter>Source Files\Core\Internal\DirectX11</Filter>
     </ClCompile>
   </ItemGroup>
