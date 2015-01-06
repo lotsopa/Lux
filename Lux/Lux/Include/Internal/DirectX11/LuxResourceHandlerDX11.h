@@ -15,6 +15,8 @@ namespace Lux
 
 		namespace Internal
 		{
+			class RenderWindowDX11;
+
 			class ResourceHandlerDX11 : public ResourceHandler
 			{
 			public:
@@ -38,7 +40,37 @@ namespace Lux
 				virtual bool DeleteTexture(const String& a_Name);
 
 			private:
+				ResourceHandlerDX11(ResourceHandlerDX11 const&);// Don't Implement
+				void operator=(ResourceHandlerDX11 const&);// Don't implement
+				ResourceHandlerDX11(RenderWindowDX11* a_RenderWindow);
+				RenderWindowDX11* m_RenderWindow;
+				friend class ResourceHandler;
 
+				typedef std::map<Key, std::shared_ptr<Texture>> TextureMap;
+				typedef std::map<Key, std::shared_ptr<Mesh>> MeshMap;
+				typedef std::map<Key, Mesh*> MeshMapSimple;
+				typedef std::map<Key, std::shared_ptr<Material>> MaterialMap;
+				typedef std::map<Key, std::shared_ptr<Shader>> ShaderMap;
+				MeshMap m_MeshMap;
+				MeshMapSimple m_LoadedFilenameMeshes;
+				MaterialMap m_MaterialMap;
+				TextureMap m_TextureMap;
+				ShaderMap m_ShaderMap;
+
+#if LUX_THREAD_SAFE == TRUE
+				std::mutex m_MeshMapMutex;
+				std::mutex m_MaterialMapMutex;
+				std::mutex m_TextureMapMutex;
+				std::mutex m_ShaderMapMutex;
+#endif
+
+				void AddMeshToMap(const String& a_Str, Mesh* a_Ent);
+				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
+				Mesh* GetLoadedMesh(const String& a_FileStr);
+				void AddMaterialToMap(const String& a_Str, Material* a_Mat);
+				void AddTextureToMap(const String& a_Str, Texture* a_Tex);
+				void LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType);
+				void AddShaderToMap(const String& a_Str, Shader* a_Shader);
 			};
 		}
 	}

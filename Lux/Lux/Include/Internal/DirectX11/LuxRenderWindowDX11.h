@@ -26,7 +26,8 @@ namespace Lux
 				static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 				inline const bool ShouldQuit() { return m_ShouldQuit; }
 
-
+				inline ID3D11Device* GetDevicePtr() { return m_Device.Get(); }
+				inline ID3D11DeviceContext* GetDeviceContextPtr() { return m_DeviceContext.Get(); }
 			private:
 				RenderWindowDX11();
 				HWND m_WindowHandle;
@@ -44,8 +45,14 @@ namespace Lux
 				Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
 				Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
 				Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
-				ID3D11RenderTargetView* m_Backbuffer;
+				Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_RenderBackbuffer;
+				Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_DepthStencilState;
+				Microsoft::WRL::ComPtr<ID3D11Texture2D> m_DepthStencilBuffer;
+				Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_DepthStencilView;
+				Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_Rasterizer;
 				friend class PlatformDX11;
+
+				bool InitDX11();
 			};
 		}
 	}

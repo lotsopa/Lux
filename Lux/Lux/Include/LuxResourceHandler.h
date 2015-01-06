@@ -12,12 +12,13 @@ namespace Lux
 		class Key;
 		class Texture;
 		struct FileInfo;
+		class RenderWindow;
 
 		class ResourceHandler
 		{
 		public:
 
-			static ResourceHandler* Create(Utility::PlatformType a_PlatformType);
+			static ResourceHandler* Create(Utility::PlatformType a_PlatformType, RenderWindow* a_RenderWindow);
 			virtual ~ResourceHandler();
 
 			virtual Mesh* CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;

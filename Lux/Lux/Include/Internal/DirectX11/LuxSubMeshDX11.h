@@ -10,14 +10,21 @@ namespace Lux
 			class SubMeshDX11 : public SubMesh
 			{
 			public:
-				SubMeshDX11();
+				SubMeshDX11(ID3D11DeviceContext* a_DeviceContext);
 				SubMeshDX11(const SubMeshDX11& a_SubMesh);
-				SubMeshDX11(aiMesh& a_Mesh);
+				SubMeshDX11(aiMesh& a_Mesh, ID3D11DeviceContext* a_DeviceContext);
 				virtual ~SubMeshDX11();
 
-				virtual void PreRender() = 0;
-				virtual void PostRender() = 0;
+				virtual void PreRender();
+				virtual void PostRender();
 
+			private:
+				ID3D11DeviceContext* m_DeviceContext;
+				Microsoft::WRL::ComPtr<ID3D11Buffer> m_VertexBuffer;
+				Microsoft::WRL::ComPtr<ID3D11Buffer> m_IndexBuffer;
+
+				static const int m_NumVertexElements = 6;
+				static const D3D11_INPUT_ELEMENT_DESC m_VertexInputDesc[m_NumVertexElements];
 			};
 		}
 	}

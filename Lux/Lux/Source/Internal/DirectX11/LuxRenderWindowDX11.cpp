@@ -13,11 +13,15 @@
 Lux::Core::Internal::RenderWindowDX11::~RenderWindowDX11()
 {
 	Utility::SafePtrDelete(m_Input);
+
 	// close and release all existing COM objects
 	m_SwapChain.Reset();
 	m_Device.Reset();
 	m_DeviceContext.Reset();
-	m_Backbuffer->Release();
+	m_RenderBackbuffer.Reset();
+	m_DepthStencilBuffer.Reset();
+	m_DepthStencilState.Reset();
+	m_DepthStencilView.Reset();
 }
 
 bool Lux::Core::Internal::RenderWindowDX11::Initialize(Utility::AppInitOptions& a_AppInitOptions)
@@ -66,6 +70,7 @@ bool Lux::Core::Internal::RenderWindowDX11::Initialize(Utility::AppInitOptions& 
 	{
 		return false;
 	}
+
 	// Set the user pointer, so we have access to the Window class inside the message loop
 	SetWindowLong(m_WindowHandle, GWLP_USERDATA, (long)this);
 	ShowWindow(m_WindowHandle, SW_SHOW);
@@ -79,46 +84,10 @@ bool Lux::Core::Internal::RenderWindowDX11::Initialize(Utility::AppInitOptions& 
 	m_Input = new EventListenerDX11(this);
 
 	// Initialize DirectX
+	bool dxInit = InitDX11();
 
-	// create a struct to hold information about the swap chain
-	DXGI_SWAP_CHAIN_DESC scd;
-
-	// clear out the struct for use
-	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
-
-	// fill the swap chain description struct
-	scd.BufferCount = 1;                                    // one back buffer
-	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
-	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-	scd.OutputWindow = m_WindowHandle;                                // the window to be used
-	scd.SampleDesc.Count = a_AppInitOptions.m_AntiAliasing;                               // how many multisamples
-	scd.Windowed = !m_Fullscreen;                                    // windowed/full-screen mode
-
-	// create a device, device context and swap chain using the information in the scd struct
-	D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, NULL, NULL, D3D11_SDK_VERSION,
-		&scd, &m_SwapChain, &m_Device, NULL, &m_DeviceContext);
-
-	// get the address of the back buffer
-	ID3D11Texture2D *pBackBuffer;
-	m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-
-	// use the back buffer address to create the render target
-	m_Device->CreateRenderTargetView(pBackBuffer, NULL, &m_Backbuffer);
-	pBackBuffer->Release();
-
-	// set the render target as the back buffer
-	m_DeviceContext->OMSetRenderTargets(1, &m_Backbuffer, NULL);
-
-	// Set the viewport
-	D3D11_VIEWPORT viewport;
-	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.Width = (float)m_Width;
-	viewport.Height = (float)m_Height;
-
-	m_DeviceContext->RSSetViewports(1, &viewport);
+	if (!dxInit)
+		return false;
 
 	return true;
 }
@@ -135,7 +104,8 @@ void Lux::Core::Internal::RenderWindowDX11::SwapBuffers()
 
 void Lux::Core::Internal::RenderWindowDX11::Clear()
 {
-	m_DeviceContext->ClearRenderTargetView(m_Backbuffer, value_ptr(WINDOW_CLEAR_COLOR));
+	m_DeviceContext->ClearRenderTargetView(m_RenderBackbuffer.Get(), value_ptr(WINDOW_CLEAR_COLOR));
+	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, NULL);
 }
 
 void Lux::Core::Internal::RenderWindowDX11::PollEvents()
@@ -151,7 +121,7 @@ void Lux::Core::Internal::RenderWindowDX11::PollEvents()
 
 void Lux::Core::Internal::RenderWindowDX11::Render(SubMesh* a_SubMesh)
 {
-
+	m_DeviceContext->DrawIndexed(a_SubMesh->GetNumIndices(), 0, 0);
 }
 
 const bool Lux::Core::Internal::RenderWindowDX11::IsWindowResized()
@@ -202,4 +172,131 @@ LRESULT CALLBACK Lux::Core::Internal::RenderWindowDX11::WndProc(HWND hwnd, UINT 
 	}
 
 	}
+}
+
+bool Lux::Core::Internal::RenderWindowDX11::InitDX11()
+{
+	HRESULT hr = 0;
+
+	// create a struct to hold information about the swap chain
+	DXGI_SWAP_CHAIN_DESC scd;
+
+	// clear out the struct for use
+	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
+
+	// fill the swap chain description struct
+	scd.BufferCount = 1;                                    // one back buffer
+	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
+	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
+	scd.OutputWindow = m_WindowHandle;                                // the window to be used
+	scd.SampleDesc.Count = m_AntiAliasing;                               // how many multisamples
+	scd.Windowed = !m_Fullscreen;                                    // windowed/full-screen mode
+
+	// create a device, device context and swap chain using the information in the scd struct
+	hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, NULL, NULL, D3D11_SDK_VERSION,
+		&scd, &m_SwapChain, &m_Device, NULL, &m_DeviceContext);
+
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	// get the address of the back buffer
+	ID3D11Texture2D *pBackBuffer;
+	hr = m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	// use the back buffer address to create the render target
+	hr = m_Device->CreateRenderTargetView(pBackBuffer, NULL, m_RenderBackbuffer.GetAddressOf());
+	pBackBuffer->Release();
+
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	// set the render target as the back buffer
+	m_DeviceContext->OMSetRenderTargets(1, m_RenderBackbuffer.GetAddressOf(), NULL);
+
+	// Set the viewport
+	D3D11_VIEWPORT viewport;
+	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = (float)m_Width;
+	viewport.Height = (float)m_Height;
+
+	// Setup depth/stencil state.
+	D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc;
+	ZeroMemory(&depthStencilStateDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+
+	depthStencilStateDesc.DepthEnable = TRUE;
+	depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthStencilStateDesc.StencilEnable = FALSE;
+
+	hr = m_Device->CreateDepthStencilState(&depthStencilStateDesc, &m_DepthStencilState);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	// Create the depth buffer for use with the depth/stencil view.
+	D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
+	ZeroMemory(&depthStencilBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	depthStencilBufferDesc.ArraySize = 1;
+	depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilBufferDesc.CPUAccessFlags = 0; // No CPU access required.
+	depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilBufferDesc.Width = m_Width;
+	depthStencilBufferDesc.Height = m_Height;
+	depthStencilBufferDesc.MipLevels = 1;
+	depthStencilBufferDesc.SampleDesc.Count = 1;
+	depthStencilBufferDesc.SampleDesc.Quality = 0;
+	depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	hr = m_Device->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_DepthStencilBuffer);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	hr = m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), nullptr, &m_DepthStencilView);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	// Setup rasterizer state.
+	D3D11_RASTERIZER_DESC rasterizerDesc;
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+
+	rasterizerDesc.AntialiasedLineEnable = FALSE;
+	rasterizerDesc.CullMode = D3D11_CULL_BACK;
+	rasterizerDesc.DepthBias = 0;
+	rasterizerDesc.DepthBiasClamp = 0.0f;
+	rasterizerDesc.DepthClipEnable = TRUE;
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.FrontCounterClockwise = FALSE;
+	rasterizerDesc.MultisampleEnable = TRUE;
+	rasterizerDesc.ScissorEnable = FALSE;
+	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+
+	// Create the rasterizer state object.
+	hr = m_Device->CreateRasterizerState(&rasterizerDesc, &m_Rasterizer);
+
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	m_DeviceContext->RSSetViewports(1, &viewport);
+
+	return true;
 }

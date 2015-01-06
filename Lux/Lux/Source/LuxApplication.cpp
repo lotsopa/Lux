@@ -61,7 +61,7 @@ bool Lux::Application::Initialize(Utility::AppInitOptions& a_AppInitOptions)
 	m_SceneManager = new Core::SceneManager(m_Platform->GetRenderWindow());
 
 	// Init Resource Handler
-	m_ResourceHandler = Core::ResourceHandler::Create(a_AppInitOptions.m_PlatformType);
+	m_ResourceHandler = Core::ResourceHandler::Create(a_AppInitOptions.m_PlatformType, m_Platform->GetRenderWindow());
 	LoadComponentTypes();
 	LoadSystemTypes();
 	return true;
