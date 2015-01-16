@@ -66,7 +66,8 @@ Lux::Core::Internal::SubMeshDX11::SubMeshDX11(aiMesh& a_Mesh, ID3D11DeviceContex
 
 Lux::Core::Internal::SubMeshDX11::~SubMeshDX11()
 {
-
+	m_VertexBuffer->Release();
+	m_IndexBuffer->Release();
 }
 
 void Lux::Core::Internal::SubMeshDX11::PreRender()

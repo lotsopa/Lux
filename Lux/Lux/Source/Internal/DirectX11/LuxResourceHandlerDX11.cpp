@@ -14,6 +14,7 @@
 #include "LuxRenderWindowDX11.h"
 #include "LuxMeshDX11.h"
 #include "LuxSubMeshDX11.h"
+#include "LuxShaderDX11.h"
 
 #ifndef YY_NO_UNISTD_H
 #define YY_NO_UNISTD_H
@@ -241,7 +242,90 @@ Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerDX11::CreateTextureFromM
 
 Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFile(const String& a_File, const String& a_ShaderName)
 {
-	// TODO
+	FileHandler& fileHandler = FileHandler::GetInstance();
+	FileInfo* file = fileHandler.LoadFileInMemory(a_File);
+	String str(file->m_RawData, file->m_DataLength);
+	Utility::SafePtrDelete(file);
+
+	// Tokenize file
+	yyscan_t scanner;
+	LuxFileScannerlex_init(&scanner);
+	LuxFileScannerlex_init_extra(a_File.c_str(), &scanner);
+	LuxFileScanner_scan_string(str.c_str(), scanner);
+
+	// Create a new parser
+	fileHandler.CreateShaderParser(Key(a_File));
+	LuxFileScannerlex(scanner);
+	LuxFileScannerlex_destroy(scanner);
+
+	ShaderFileParser& shaderParser = fileHandler.GetShaderParser(Key(a_File));
+	
+	ID3DBlob* errorMessage = nullptr;
+	std::vector<DX11CompiledShader> loadedShaders;
+	HRESULT result;
+	for (unsigned int i = 0; i < NUM_SHADER_PROGRAMS; i++)
+	{
+		String fileName = shaderParser.GetParsedProgramGLSL((ShaderProgram)i);
+		FileInfo* shaderInfo = fileHandler.LoadFileInMemory(fileName);
+
+		ID3DBlob* blob = nullptr;
+		result = D3DCompile(shaderInfo->m_RawData, shaderInfo->m_DataLength, NULL, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, NULL,
+			&blob, &errorMessage);
+
+		if (FAILED(result))
+		{
+			Utility::ThrowError(String((char*)errorMessage->GetBufferPointer(), errorMessage->GetBufferSize()));
+		}
+		DX11CompiledShader compiledShader;
+		switch (i)
+		{
+		case VERTEX_PROGRAM:
+		{
+			ID3D11VertexShader* vertshader = nullptr;
+			result = m_RenderWindow->GetDevicePtr()->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &vertshader);
+			if (FAILED(result))
+			{
+				Utility::ThrowError("Error Compiling Vertex Shader: " + fileName);
+			}
+			compiledShader.m_Shader = vertshader;
+			compiledShader.m_Type = VERTEX_PROGRAM;
+		}
+			break;
+
+		case FRAGMENT_PROGRAM:
+		{
+			ID3D11PixelShader* pixshader = nullptr;
+			result = m_RenderWindow->GetDevicePtr()->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &pixshader);
+			if (FAILED(result))
+			{
+				Utility::ThrowError("Error Compiling Fragment Shader: " + fileName);
+			}
+			compiledShader.m_Shader = pixshader;
+			compiledShader.m_Type = FRAGMENT_PROGRAM;
+		}
+			break;
+
+		case GEOMETRY_PROGRAM:
+		{
+			ID3D11GeometryShader* geomshader = nullptr;
+			result = m_RenderWindow->GetDevicePtr()->CreateGeometryShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &geomshader);
+			if (FAILED(result))
+			{
+				Utility::ThrowError("Error Compiling Geometry Shader: " + fileName);
+			}
+			compiledShader.m_Shader = geomshader;
+			compiledShader.m_Type = GEOMETRY_PROGRAM;
+		}
+			break;
+		}
+		
+		loadedShaders.push_back(compiledShader);
+		Utility::SafePtrDelete(shaderInfo);
+	}
+	// Create a Shader Object
+	ShaderDX11* shader = new ShaderDX11(loadedShaders);
+	AddShaderToMap(a_ShaderName, shader);
+	fileHandler.DestroyShaderParser(Key(a_File));
 	return nullptr;
 }
 

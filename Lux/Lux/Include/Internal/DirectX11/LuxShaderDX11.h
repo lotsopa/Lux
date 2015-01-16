@@ -7,17 +7,25 @@ namespace Lux
 	{
 		namespace Internal
 		{
+			struct DX11CompiledShader
+			{
+				void* m_Shader;
+				ShaderProgram m_Type;
+			};
 			class ShaderDX11 : public Shader
 			{
 			public:
-				ShaderDX11();
+				ShaderDX11(std::vector<DX11CompiledShader>& a_ShaderList);
 				virtual ~ShaderDX11();
 
-				virtual void Activate() = 0;
-				virtual void Deactivate() = 0;
+				virtual void Activate();
+				virtual void Deactivate();
 
-				virtual void SetUniformVariable(const Key& a_Name, ShaderVariable& a_Var) = 0;
-				virtual void Update() = 0;
+				virtual void SetUniformVariable(const Key& a_Name, ShaderVariable& a_Var);
+				virtual void Update();
+
+			private:
+				// TODO
 			};
 		}
 	}

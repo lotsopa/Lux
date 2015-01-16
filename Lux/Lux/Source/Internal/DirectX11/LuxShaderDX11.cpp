@@ -1,9 +1,10 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
 #include "LuxShader.h"
+#include "LuxShaderFileParser.h"
 #include "LuxShaderDX11.h"
 
-Lux::Core::Internal::ShaderDX11::ShaderDX11() : Shader()
+Lux::Core::Internal::ShaderDX11::ShaderDX11(std::vector<DX11CompiledShader>& a_ShaderList) : Shader()
 {
 
 }

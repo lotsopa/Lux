@@ -385,19 +385,6 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile
 	{
 		String fileName = shaderParser.GetParsedProgramGLSL((ShaderProgram)i);
 
-		if (fileName.empty())
-		{
-			// mandatory
-			if (i == VERTEX_PROGRAM || i == FRAGMENT_PROGRAM)
-			{
-				Utility::ThrowError("Could not load shader file. Vertex or Fragment Program path is invalid");
-			}
-			else
-			{
-				continue;
-			}
-		}
-
 		FileInfo* shaderInfo = fileHandler.LoadFileInMemory(fileName);
 		
 		unsigned int loadedShaderHandle = 0;

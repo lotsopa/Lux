@@ -20,6 +20,7 @@ namespace Lux
 
 	// Some typedefs
 	typedef std::string String;
+	typedef std::wstring WideString;
 	typedef long long int64;
 	typedef unsigned int TextureIndex;
 
