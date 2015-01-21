@@ -32,3 +32,15 @@ void Lux::Core::Internal::BufferOGL::SetData(const void* a_Data, unsigned int a_
 	glBufferData(m_BufferType, a_DataSize, a_Data, m_DrawMode);
 	Utility::Internal::CheckOGLError();
 }
+
+void Lux::Core::Internal::BufferOGL::BindBufferBase(unsigned int a_BindingPoint)
+{
+	glBindBufferBase(m_BufferType, a_BindingPoint, m_Buffer);
+	Utility::Internal::CheckOGLError();
+}
+
+void Lux::Core::Internal::BufferOGL::SetSubData(const void* a_Data, unsigned int a_DataSize, unsigned int a_Offset)
+{
+	glBufferSubData(m_BufferType, a_Offset, a_DataSize, a_Data);
+	Utility::Internal::CheckOGLError();
+}

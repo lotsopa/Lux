@@ -2,6 +2,7 @@
 #include "LuxObjectPool.h"
 #include "LuxKey.h"
 #include "LuxSystem.h"
+#include "LuxShader.h"
 #include "LuxRenderingSystem.h"
 #include "LuxSystemFactory.h"
 

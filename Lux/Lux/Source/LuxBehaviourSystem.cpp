@@ -10,6 +10,7 @@
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
 #include "LuxSystem.h"
+#include "LuxShader.h"
 #include "LuxRenderingSystem.h"
 #include "LuxEventSystem.h"
 #include "LuxSystemFactory.h"

@@ -385,6 +385,9 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile
 	{
 		String fileName = shaderParser.GetParsedProgramGLSL((ShaderProgram)i);
 
+		if (fileName.empty())
+			continue;
+
 		FileInfo* shaderInfo = fileHandler.LoadFileInMemory(fileName);
 		
 		unsigned int loadedShaderHandle = 0;
@@ -405,6 +408,11 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile
 		}
 		loadedShaders.push_back(loadedShaderHandle);
 		Utility::SafePtrDelete(shaderInfo);
+	}
+
+	if (loadedShaders.empty())
+	{
+		Utility::ThrowError("Failed to load shader. File is empty.");
 	}
 
 	// Create a Shader Object

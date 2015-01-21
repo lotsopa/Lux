@@ -15,16 +15,16 @@
 #include "LuxEntityFactory.h"
 #include "LuxSceneManager.h"
 #include "LuxSystem.h"
-#include "LuxRenderingSystem.h"
 #include "LuxShader.h"
 #include "LuxShaderComponent.h"
 #include "LuxCamera.h"
+#include "LuxRenderingSystem.h"
 
 #define CONVERT_ID_TO_CLASS_STRING(a) "class " ID_TO_STRING(a)
 #define ADD_COMPONENT_MAP_INSERT(a, b) m_AddComponentFuncMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1, std::placeholders::_2)))
 #define REMOVE_COMPONENT_MAP_INSERT(a, b) m_RemoveComponentProcessMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1)))
 Lux::Graphics::RenderingSystem::RenderingSystem() :
-System(), m_RenderWindow(nullptr), m_MainCamera(nullptr), m_MainCameraTransform(nullptr), m_LightEntry(nullptr),
+System(), m_RenderWindow(nullptr), m_MainCamera(nullptr), m_MainCameraTransform(nullptr), m_LightEntry(nullptr), m_UniformBuffer(3),
 m_MeshRendererKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MeshRenderer)),
 m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
 m_ShaderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::ShaderComponent)),
@@ -168,10 +168,23 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		if (!it->second.m_Init)
 		{
 			mesh->ConnectWithShader(shader);
-			shader->SetUniformVariable("MVP", Core::ShaderVariable(Core::VALUE_MAT4X4, glm::value_ptr(m_ModelViewProj)));
-			shader->SetUniformVariable("LightPos", Core::ShaderVariable(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition())));
-			shader->SetUniformVariable("LightColor", Core::ShaderVariable(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor())));
+			Core::ShaderVariable mvpVal(Core::VALUE_MAT4X4, glm::value_ptr(m_ModelViewProj), sizeof(mat4));
+			Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
+			Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
+			m_UniformBuffer.SetVariable(0, mvpVal);
+			m_UniformBuffer.SetVariable(1, lightVal);
+			m_UniformBuffer.SetVariable(2, lightCol);
+			shader->BindUniformBuffer("UniformBuffer0", m_UniformBuffer);
 			it->second.m_Init = true;
+		}
+		else
+		{
+			Core::ShaderVariable mvpVal(Core::VALUE_MAT4X4, glm::value_ptr(m_ModelViewProj), sizeof(mat4));
+			Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
+			Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
+			m_UniformBuffer.SetVariable(0, mvpVal);
+			m_UniformBuffer.SetVariable(1, lightVal);
+			m_UniformBuffer.SetVariable(2, lightCol);
 		}
 
 		shader->Update();

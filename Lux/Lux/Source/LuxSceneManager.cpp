@@ -13,6 +13,7 @@
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
 #include "LuxSystem.h"
+#include "LuxShader.h"
 #include "LuxRenderingSystem.h"
 #include "LuxBehaviourSystem.h"
 #include "LuxEventSystem.h"

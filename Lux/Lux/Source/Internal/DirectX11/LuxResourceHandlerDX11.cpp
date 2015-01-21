@@ -323,7 +323,7 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFil
 		Utility::SafePtrDelete(shaderInfo);
 	}
 	// Create a Shader Object
-	ShaderDX11* shader = new ShaderDX11(loadedShaders);
+	ShaderDX11* shader = new ShaderDX11(loadedShaders, m_RenderWindow->GetDeviceContextPtr());
 	AddShaderToMap(a_ShaderName, shader);
 	fileHandler.DestroyShaderParser(Key(a_File));
 	return nullptr;

@@ -14,8 +14,10 @@ namespace Lux
 				~BufferOGL();
 
 				void Bind();
+				void BindBufferBase(unsigned int a_BindingPoint);
 				void Unbind();
 				void SetData(const void* a_Data, unsigned int a_DataSize);
+				void SetSubData(const void* a_Data, unsigned int a_DataSize, unsigned int a_Offset);
 
 			private:
 				unsigned int m_Buffer;
