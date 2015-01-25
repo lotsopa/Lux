@@ -265,22 +265,27 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFil
 	HRESULT result;
 	for (unsigned int i = 0; i < NUM_SHADER_PROGRAMS; i++)
 	{
-		String fileName = shaderParser.GetParsedProgramGLSL((ShaderProgram)i);
+		String fileName = shaderParser.GetParsedProgramHLSL((ShaderProgram)i);
+
+		if (fileName.empty())
+			continue;
+
 		FileInfo* shaderInfo = fileHandler.LoadFileInMemory(fileName);
 
 		ID3DBlob* blob = nullptr;
-		result = D3DCompile(shaderInfo->m_RawData, shaderInfo->m_DataLength, NULL, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, NULL,
-			&blob, &errorMessage);
-
-		if (FAILED(result))
-		{
-			Utility::ThrowError(String((char*)errorMessage->GetBufferPointer(), errorMessage->GetBufferSize()));
-		}
 		DX11CompiledShader compiledShader;
 		switch (i)
 		{
 		case VERTEX_PROGRAM:
 		{
+			result = D3DCompile(shaderInfo->m_RawData, shaderInfo->m_DataLength, NULL, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, NULL,
+				&blob, &errorMessage);
+
+			if (FAILED(result))
+			{
+				Utility::ThrowError(String((char*)errorMessage->GetBufferPointer(), errorMessage->GetBufferSize()));
+			}
+
 			ID3D11VertexShader* vertshader = nullptr;
 			result = m_RenderWindow->GetDevicePtr()->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &vertshader);
 			if (FAILED(result))
@@ -294,6 +299,14 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFil
 
 		case FRAGMENT_PROGRAM:
 		{
+			result = D3DCompile(shaderInfo->m_RawData, shaderInfo->m_DataLength, NULL, NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, NULL,
+				&blob, &errorMessage);
+
+			if (FAILED(result))
+			{
+				Utility::ThrowError(String((char*)errorMessage->GetBufferPointer(), errorMessage->GetBufferSize()));
+			}
+
 			ID3D11PixelShader* pixshader = nullptr;
 			result = m_RenderWindow->GetDevicePtr()->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &pixshader);
 			if (FAILED(result))
@@ -307,6 +320,14 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFil
 
 		case GEOMETRY_PROGRAM:
 		{
+			result = D3DCompile(shaderInfo->m_RawData, shaderInfo->m_DataLength, NULL, NULL, NULL, "main", "gs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, NULL,
+				&blob, &errorMessage);
+
+			if (FAILED(result))
+			{
+				Utility::ThrowError(String((char*)errorMessage->GetBufferPointer(), errorMessage->GetBufferSize()));
+			}
+
 			ID3D11GeometryShader* geomshader = nullptr;
 			result = m_RenderWindow->GetDevicePtr()->CreateGeometryShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &geomshader);
 			if (FAILED(result))
