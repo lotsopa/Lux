@@ -15,7 +15,7 @@ namespace Lux
 				virtual void Activate();
 				virtual void Deactivate();
 
-				virtual void BindUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer);
+				virtual void BindUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type);
 				inline const unsigned int GetShaderProgram() { return m_ShaderProgram;  }
 				unsigned int GetAttribLocation(const Key& a_Name);
 				virtual void Update();

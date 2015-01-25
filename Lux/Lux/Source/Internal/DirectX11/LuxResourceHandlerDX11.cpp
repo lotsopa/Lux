@@ -318,7 +318,7 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFil
 		}
 			break;
 		}
-		
+		compiledShader.m_CompileBlob = blob;
 		loadedShaders.push_back(compiledShader);
 		Utility::SafePtrDelete(shaderInfo);
 	}

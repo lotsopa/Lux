@@ -14,6 +14,12 @@
 #define MEMBER_OFFSET(s,m) ((char*)NULL + (offsetof(s,m)))
 #define ID_TO_STRING(a) #a
 
+#ifdef WIN32
+#define LUX_ALIGNED_MALLOC(size, alignment) _aligned_malloc(size, alignment)
+#define LUX_ALIGNED_FREE(memoryPtr) _aligned_free(memoryPtr)
+#else
+#define LUX_ALIGNED_MALLOC(size, alignment) aligned_alloc(alignment, size)
+#endif
 namespace Lux
 {
 	using namespace glm;
@@ -25,6 +31,14 @@ namespace Lux
 	typedef unsigned int TextureIndex;
 
 	const vec4 WINDOW_CLEAR_COLOR(0.2f);
+
+	enum ShaderProgram
+	{
+		VERTEX_PROGRAM = 0,
+		FRAGMENT_PROGRAM,
+		GEOMETRY_PROGRAM,
+		NUM_SHADER_PROGRAMS
+	};
 }
 
 #endif

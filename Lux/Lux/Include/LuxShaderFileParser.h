@@ -7,13 +7,6 @@ namespace Lux
 	{
 		class Key;
 
-		enum ShaderProgram
-		{
-			VERTEX_PROGRAM = 0,
-			FRAGMENT_PROGRAM,
-			GEOMETRY_PROGRAM,
-			NUM_SHADER_PROGRAMS
-		};
 		class ShaderFileParser
 		{
 		public:

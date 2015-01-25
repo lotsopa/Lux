@@ -174,7 +174,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 			m_UniformBuffer.SetVariable(0, mvpVal);
 			m_UniformBuffer.SetVariable(1, lightVal);
 			m_UniformBuffer.SetVariable(2, lightCol);
-			shader->BindUniformBuffer("UniformBuffer0", m_UniformBuffer);
+			shader->BindUniformBuffer("UniformBuffer0", m_UniformBuffer, VERTEX_PROGRAM);
 			it->second.m_Init = true;
 		}
 		else
