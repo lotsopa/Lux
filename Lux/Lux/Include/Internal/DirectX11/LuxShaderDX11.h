@@ -41,7 +41,7 @@ namespace Lux
 						// Fill in a buffer description.
 						D3D11_BUFFER_DESC cbDesc;
 						cbDesc.ByteWidth = m_BufferSize;
-						cbDesc.Usage = D3D11_USAGE_DEFAULT;
+						cbDesc.Usage = D3D11_USAGE_DYNAMIC;
 						cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 						cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 						cbDesc.MiscFlags = 0;
@@ -49,6 +49,7 @@ namespace Lux
 
 						// Fill in the sub-resource data.
 						D3D11_SUBRESOURCE_DATA InitData;
+						ZeroMemory(&InitData, sizeof(InitData));
 						InitData.pSysMem = m_Buffer.GetRawValueArray(); 
 						InitData.SysMemPitch = 0;
 						InitData.SysMemSlicePitch = 0;
@@ -64,7 +65,7 @@ namespace Lux
 					}
 					~UniformBufferEntry()
 					{
-						m_DXBuffer->Release();
+						m_DXBuffer.Reset();
 					}
 
 					UniformBufferEntry& operator=(const UniformBufferEntry& other) // copy assignment
@@ -81,18 +82,20 @@ namespace Lux
 					{
 						HRESULT result;
 						D3D11_MAPPED_SUBRESOURCE mappedResource;
-						result = m_DeviceContext->Map(m_DXBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+						ZeroMemory(&mappedResource, sizeof(mappedResource));
+						result = m_DeviceContext->Map(m_DXBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 						if (FAILED(result))
 							Utility::ThrowError("Could not map DX11 constant buffer.");
 
 						float* destPtr = (float*)mappedResource.pData;
 						float* srcPtr = (float*)m_Buffer.GetRawValueArray();
-						for (unsigned int i = 0; i < m_BufferSize; ++i)
+						const unsigned int arraySize = m_BufferSize / sizeof(float);
+						for (unsigned int i = 0; i < arraySize; ++i)
 						{
 							destPtr[i] = srcPtr[i];
 						}
-						m_DeviceContext->Unmap(m_DXBuffer, 0);
+						m_DeviceContext->Unmap(m_DXBuffer.Get(), 0);
 					}
 
 					void Use()
@@ -100,20 +103,20 @@ namespace Lux
 						switch (m_BufferType)
 						{
 						case VERTEX_PROGRAM:
-							m_DeviceContext->VSSetConstantBuffers(m_BufferIndex, 1, &m_DXBuffer);
+							m_DeviceContext->VSSetConstantBuffers(m_BufferIndex, 1, m_DXBuffer.GetAddressOf());
 							break;
 
 						case FRAGMENT_PROGRAM:
-							m_DeviceContext->PSSetConstantBuffers(m_BufferIndex, 1, &m_DXBuffer);
+							m_DeviceContext->PSSetConstantBuffers(m_BufferIndex, 1, m_DXBuffer.GetAddressOf());
 							break;
 
 						case GEOMETRY_PROGRAM:
-							m_DeviceContext->GSSetConstantBuffers(m_BufferIndex, 1, &m_DXBuffer);
+							m_DeviceContext->GSSetConstantBuffers(m_BufferIndex, 1, m_DXBuffer.GetAddressOf());
 							break;
 						}
 					}
 
-					ID3D11Buffer* m_DXBuffer;
+					Microsoft::WRL::ComPtr<ID3D11Buffer> m_DXBuffer;
 					unsigned int m_BufferIndex;
 					unsigned int m_BufferSize;
 					ShaderUniformBuffer& m_Buffer;
@@ -131,21 +134,21 @@ namespace Lux
 				void SetShader<ID3D11PixelShader>(void* shader)
 				{
 					ID3D11PixelShader* pixShader = (ID3D11PixelShader*)shader;
-					m_DeviceContext->PSSetShader(pixShader, NULL, 0);
+					m_DeviceContext->PSSetShader(pixShader, nullptr, 0);
 				}
 
 				template<>
 				void SetShader<ID3D11VertexShader>(void* shader)
 				{
 					ID3D11VertexShader* vertShader = (ID3D11VertexShader*)shader;
-					m_DeviceContext->VSSetShader(vertShader, NULL, 0);
+					m_DeviceContext->VSSetShader(vertShader, nullptr, 0);
 				}
 
 				template<>
 				void SetShader<ID3D11GeometryShader>(void* shader)
 				{
 					ID3D11GeometryShader* geomShader = (ID3D11GeometryShader*)shader;
-					m_DeviceContext->GSSetShader(geomShader, NULL, 0);
+					m_DeviceContext->GSSetShader(geomShader, nullptr, 0);
 				}
 			};
 		}

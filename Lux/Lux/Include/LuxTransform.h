@@ -18,7 +18,7 @@ namespace Lux
 				WORLD
 			};
 
-			inline const mat4x4& GetMatrix() { return m_TransformMatrix;  }
+			inline mat4x4& GetMatrix() { return m_TransformMatrix;  }
 
 			void ApplyTransform();
 

@@ -77,12 +77,13 @@ void Lux::Core::Internal::ShaderDX11::BindUniformBuffer(const Key& a_Name, Shade
 				IID_ID3D11ShaderReflection, (void**)&shaderReflector);
 
 			ID3D11ShaderReflectionConstantBuffer* cBuffer = shaderReflector->GetConstantBufferByName(a_Name.GetName().c_str());
-			D3D11_SHADER_BUFFER_DESC cBufferDesc;
-			cBuffer->GetDesc(&cBufferDesc);
+
 			if (cBuffer == nullptr)
 			{
 				Utility::ThrowError("Invalid Uniform Buffer Name: " + a_Name.GetName());
 			}
+			D3D11_SHADER_BUFFER_DESC cBufferDesc;
+			cBuffer->GetDesc(&cBufferDesc);
 
 			for (unsigned int i = 0; i < D3D11_COMMONSHADER_CONSTANT_BUFFER_HW_SLOT_COUNT; i++)
 			{
@@ -104,7 +105,6 @@ void Lux::Core::Internal::ShaderDX11::BindUniformBuffer(const Key& a_Name, Shade
 			}
 		}
 	}
-	
-	// TODO - Figure out how to set the proper index
+
 	m_ConstantBuffers.emplace(m_ConstantBuffers.end(), a_Buffer, bufferIdx, bufferSize, a_Type, m_DeviceContext);
 }

@@ -44,7 +44,8 @@ namespace Lux
 		class ShaderUniformBuffer
 		{
 		public:
-			ShaderUniformBuffer(unsigned int a_NumVars) : m_NumVariables(a_NumVars), m_RawData(nullptr), m_AlignedSize(0)
+			ShaderUniformBuffer(unsigned int a_NumVars) : m_NumVariables(a_NumVars), m_RawData(nullptr), 
+				m_AlignedByteSize(0), m_RawDataSize(0)
 			{
 				m_Variables = new ShaderVariable[m_NumVariables];
 			}
@@ -53,10 +54,7 @@ namespace Lux
 			{
 				Utility::SafePtrDelete(m_Variables);
 				
-				if (m_RawData)
-				{
-					LUX_ALIGNED_FREE(m_RawData);
-				}
+				Utility::SafeArrayDelete(m_RawData);
 			}
 
 			void SetVariable(const unsigned int a_Idx, ShaderVariable& a_Var)
@@ -100,14 +98,14 @@ namespace Lux
 				unsigned int currByteBoundary = 0;
 				for (unsigned int i = 0; i < m_NumVariables; i++)
 				{
-					LuxAssert(currindex < m_AlignedSize);
-					ShaderVariableType type = m_Variables->GetType();
+					LuxAssert(currindex < m_RawDataSize);
+					ShaderVariableType type = m_Variables[i].GetType();
 					switch (type)
 					{
 					case VALUE_FLOAT:
 					{
 						currByteBoundary += sizeof(float);
-						memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float));
+						memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(float));
 						currindex++;
 					}
 						break;
@@ -115,7 +113,7 @@ namespace Lux
 					case VALUE_INT:
 					{
 						currByteBoundary += sizeof(int);
-						memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(int));
+						memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(int));
 						currindex++;
 					}
 						break;
@@ -126,15 +124,15 @@ namespace Lux
 						{
 							// Skip an index and go for the next one
 							currindex++;
-							currByteBoundary += sizeof(float) * 2;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 2);
+							currByteBoundary += sizeof(vec2);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec2));
 							currindex += 2;
 
 						}
 						else
 						{
-							currByteBoundary += sizeof(float) * 2;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 2);
+							currByteBoundary += sizeof(vec2);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec2));
 							currindex += 2;
 						}
 					}
@@ -146,23 +144,23 @@ namespace Lux
 						{
 							// Skip an index and go for the next one
 							currindex++;
-							currByteBoundary += sizeof(float) * 3;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 3);
+							currByteBoundary += sizeof(vec3);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec3));
 							currindex += 3;
 
 						}
-						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(float) * 2)
+						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(vec2))
 						{
 							// Skip an index and go for the next one
 							currindex += 2;
-							currByteBoundary += sizeof(float) * 3;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 3);
+							currByteBoundary += sizeof(vec3);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec3));
 							currindex += 3;
 						}
 						else
 						{
-							currByteBoundary += sizeof(float) * 3;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 3);
+							currByteBoundary += sizeof(vec3);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec3));
 							currindex += 3;
 						}
 					}
@@ -174,31 +172,30 @@ namespace Lux
 						{
 							// Skip an index and go for the next one
 							currindex++;
-							currByteBoundary += sizeof(float) * 4;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 4);
+							currByteBoundary += sizeof(vec4);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec4));
 							currindex += 4;
-
 						}
-						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(float) * 2)
+						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(vec2))
 						{
 							// Skip an index and go for the next one
 							currindex += 2;
-							currByteBoundary += sizeof(float) * 4;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 4);
+							currByteBoundary += sizeof(vec4);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec4));
 							currindex += 4;
 						}
-						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(float) * 3)
+						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(vec3))
 						{
 							// Skip an index and go for the next one
 							currindex += 3;
-							currByteBoundary += sizeof(float) * 4;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 4);
+							currByteBoundary += sizeof(vec4);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec4));
 							currindex += 4;
 						}
 						else
 						{
-							currByteBoundary += sizeof(float) * 4;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 4);
+							currByteBoundary += sizeof(vec4);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec4));
 							currindex += 4;
 						}
 					}
@@ -206,43 +203,89 @@ namespace Lux
 
 					case VALUE_MAT3X3:
 					{
-						currByteBoundary += sizeof(float) * 9;
-						memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 9);
-						currindex += 9;
+						// Not tested
+						if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(float))
+						{
+							currindex++;
+							currByteBoundary += sizeof(vec4) * 3;
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec3));
+							currindex += 4;
+
+							// Next 3 components
+							float* castedPtr = (float*)m_Variables[i].GetData();
+							memcpy(&m_RawData[currindex], &castedPtr[3], sizeof(vec3));
+							currindex += 4;
+
+							// Final 3
+							memcpy(&m_RawData[currindex], &castedPtr[6], sizeof(vec3));
+							currindex += 4;
+						}
+						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(vec2))
+						{
+							// Skip an index and go for the next one
+							currindex += 2;
+							currByteBoundary += sizeof(vec4) * 3;
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec3));
+							currindex += 4;
+
+							// Next 3 components
+							float* castedPtr = (float*)m_Variables[i].GetData();
+							memcpy(&m_RawData[currindex], &castedPtr[3], sizeof(vec3));
+							currindex += 4;
+
+							// Final 3
+							memcpy(&m_RawData[currindex], &castedPtr[6], sizeof(vec3));
+							currindex += 4;
+						}
+						else
+						{
+							currByteBoundary += sizeof(vec4) * 3;
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(vec3));
+							currindex += 4;
+
+							// Next 3 components
+							float* castedPtr = (float*)m_Variables[i].GetData();
+							memcpy(&m_RawData[currindex], &castedPtr[3], sizeof(vec3));
+							currindex += 4;
+
+							// Final 3
+							memcpy(&m_RawData[currindex], &castedPtr[6], sizeof(vec3));
+							currindex += 4;
+						}
 					}
 						break;
 
 					case VALUE_MAT4X4:
-					{
+					{				
 						if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(float))
 						{
 							// Skip an index and go for the next one
 							currindex++;
-							currByteBoundary += sizeof(float) * 16;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 16);
+							currByteBoundary += sizeof(mat4);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(mat4));
 							currindex += 16;
 
 						}
-						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(float) * 2)
+						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(vec2))
 						{
 							// Skip an index and go for the next one
 							currindex += 2;
-							currByteBoundary += sizeof(float) * 16;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 16);
+							currByteBoundary += sizeof(mat4);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(mat4));
 							currindex += 16;
 						}
-						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(float) * 3)
+						else if (currByteBoundary >= LUX_SHADER_PACK_OFFSET - sizeof(vec3))
 						{
 							// Skip an index and go for the next one
 							currindex += 3;
-							currByteBoundary += sizeof(float) * 16;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 16);
+							currByteBoundary += sizeof(mat4);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(mat4));
 							currindex += 16;
 						}
 						else
 						{
-							currByteBoundary += sizeof(float) * 16;
-							memcpy(&m_RawData[currindex], m_Variables->GetData(), sizeof(float) * 16);
+							currByteBoundary += sizeof(mat4);
+							memcpy(&m_RawData[currindex], m_Variables[i].GetData(), sizeof(mat4));
 							currindex += 16;
 						}
 					}
@@ -256,11 +299,26 @@ namespace Lux
 					}
 					else if (currByteBoundary > LUX_SHADER_PACK_OFFSET)
 					{
-						currByteBoundary = currByteBoundary - LUX_SHADER_PACK_OFFSET;
+						if (currByteBoundary % LUX_SHADER_PACK_OFFSET != 0)
+						{
+							currByteBoundary = currByteBoundary - LUX_SHADER_PACK_OFFSET;
+						}
+						else
+						{
+							currByteBoundary = 0;
+						}
+						
 					}
 					else if (currByteBoundary > LUX_SHADER_PACK_OFFSET * 2)
 					{
-						currByteBoundary = currByteBoundary - LUX_SHADER_PACK_OFFSET * 2;
+						if (currByteBoundary % LUX_SHADER_PACK_OFFSET != 0)
+						{
+							currByteBoundary = currByteBoundary - LUX_SHADER_PACK_OFFSET * 2;
+						}
+						else
+						{
+							currByteBoundary = 0;
+						}
 					}
 				}
 
@@ -269,8 +327,9 @@ namespace Lux
 
 			void AllocateRawData(unsigned int a_AlignedSize)
 			{
-				m_AlignedSize = a_AlignedSize;
-				m_RawData = (float*)LUX_ALIGNED_MALLOC(m_AlignedSize, LUX_SHADER_PACK_OFFSET);
+				m_AlignedByteSize = a_AlignedSize;
+				m_RawDataSize = m_AlignedByteSize / sizeof(float);
+				m_RawData = new float[m_RawDataSize];
 			}
 
 			std::queue<unsigned int>& GetModifiedValues() { return m_ModifiedValues; }
@@ -279,7 +338,8 @@ namespace Lux
 			ShaderVariable* m_Variables;
 			std::queue<unsigned int> m_ModifiedValues;
 			float* m_RawData;
-			unsigned int m_AlignedSize;
+			unsigned int m_AlignedByteSize;
+			unsigned int m_RawDataSize;
 		};
 
 		class Shader

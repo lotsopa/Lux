@@ -50,9 +50,11 @@ namespace Lux
 				Microsoft::WRL::ComPtr<ID3D11Texture2D> m_DepthStencilBuffer;
 				Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_DepthStencilView;
 				Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_Rasterizer;
+				D3D11_VIEWPORT m_ViewPort;
 				friend class PlatformDX11;
 
 				bool InitDX11();
+				void ResetViewPortTargets();
 			};
 		}
 	}

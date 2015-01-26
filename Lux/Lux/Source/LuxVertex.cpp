@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxVertex.h"
 
-Lux::Core::Vertex::Vertex()
+Lux::Core::Vertex::Vertex() : m_Color(1.0f)
 {
 
 }
@@ -11,7 +11,8 @@ m_Position(a_Pos),
 m_Normal(a_Normal),
 m_TexCoords(a_TexCoords),
 m_Tangent(a_Tangent),
-m_Bitangent(a_Bitangent)
+m_Bitangent(a_Bitangent),
+m_Color(1.0f)
 {
 
 }

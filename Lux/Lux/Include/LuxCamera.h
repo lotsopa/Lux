@@ -18,7 +18,7 @@ namespace Lux
 			inline void SetMainCamera(const bool a_Val) { m_IsMainCamera = a_Val; }
 			inline const bool IsMainCamera() { return m_IsMainCamera; }
 
-			inline const mat4x4& GetProjectionMatrix() { return m_ProjectionMatrix; }
+			inline mat4x4& GetProjectionMatrix() { return m_ProjectionMatrix; }
 
 		private:
 			mat4x4 m_ProjectionMatrix;

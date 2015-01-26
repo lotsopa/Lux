@@ -15,6 +15,7 @@
 #include "LuxMeshDX11.h"
 #include "LuxSubMeshDX11.h"
 #include "LuxShaderDX11.h"
+#include "LuxMeshPostProcess.h"
 
 #ifndef YY_NO_UNISTD_H
 #define YY_NO_UNISTD_H
@@ -62,7 +63,7 @@ Lux::Core::Internal::ResourceHandlerDX11::~ResourceHandlerDX11()
 
 Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerDX11::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
-	// Have we already loaded this mesh before? If we have just return it.
+	// Have we already loaded this mesh before? If we have, just return it.
 	Mesh* loadedMesh = GetLoadedMesh(a_File);
 	if (loadedMesh != nullptr)
 	{
@@ -140,7 +141,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerDX11::CreateMeshFromMemory(
 {
 	if (a_Info == nullptr)
 	{
-		Utility::ThrowError("Failed to create entity from Memory. The passed FileInfo pointer is NULL.");
+		Utility::ThrowError("Failed to create mesh from Memory. The passed FileInfo pointer is NULL.");
 	}
 
 	Assimp::Importer importer;
@@ -347,7 +348,7 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFil
 	ShaderDX11* shader = new ShaderDX11(loadedShaders, m_RenderWindow->GetDeviceContextPtr());
 	AddShaderToMap(a_ShaderName, shader);
 	fileHandler.DestroyShaderParser(Key(a_File));
-	return nullptr;
+	return shader;
 }
 
 Lux::Core::Material* Lux::Core::Internal::ResourceHandlerDX11::CreateMaterial(const String& a_Name)

@@ -24,7 +24,7 @@
 #define ADD_COMPONENT_MAP_INSERT(a, b) m_AddComponentFuncMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1, std::placeholders::_2)))
 #define REMOVE_COMPONENT_MAP_INSERT(a, b) m_RemoveComponentProcessMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1)))
 Lux::Graphics::RenderingSystem::RenderingSystem() :
-System(), m_RenderWindow(nullptr), m_MainCamera(nullptr), m_MainCameraTransform(nullptr), m_LightEntry(nullptr), m_UniformBuffer(3),
+System(), m_RenderWindow(nullptr), m_MainCamera(nullptr), m_MainCameraTransform(nullptr), m_LightEntry(nullptr), m_UniformBuffer(5),
 m_MeshRendererKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MeshRenderer)),
 m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
 m_ShaderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::ShaderComponent)),
@@ -137,7 +137,6 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 	}
 
 	m_MainCameraTransform->GetRawPtr()->ApplyTransform();
-	const mat4x4 ViewProjMatrix = m_MainCamera->GetRawPtr()->GetProjectionMatrix() * m_MainCameraTransform->GetRawPtr()->GetMatrix();
 
 	for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
 	{
@@ -159,8 +158,8 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		if (!mesh)
 			continue;
 
-		const mat4x4& transform = it->second.m_Transform->GetRawPtr()->GetMatrix();
-		m_ModelViewProj = ViewProjMatrix * transform;
+		mat4x4& transform = it->second.m_Transform->GetRawPtr()->GetMatrix();
+
 		unsigned int numSubMeshes = mesh->GetNumSubMeshes();
 
 		shader->Activate();
@@ -168,23 +167,31 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		if (!it->second.m_Init)
 		{
 			mesh->ConnectWithShader(shader);
-			Core::ShaderVariable mvpVal(Core::VALUE_MAT4X4, glm::value_ptr(m_ModelViewProj), sizeof(mat4));
+			Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
+			Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetMatrix()), sizeof(mat4));
+			Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
 			Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
 			Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
-			m_UniformBuffer.SetVariable(0, mvpVal);
-			m_UniformBuffer.SetVariable(1, lightVal);
-			m_UniformBuffer.SetVariable(2, lightCol);
+			m_UniformBuffer.SetVariable(0, viewMatVal);
+			m_UniformBuffer.SetVariable(1, projMatVal);
+			m_UniformBuffer.SetVariable(2, worldMatVal);
+			m_UniformBuffer.SetVariable(3, lightVal);
+			m_UniformBuffer.SetVariable(4, lightCol);
 			shader->BindUniformBuffer("UniformBuffer0", m_UniformBuffer, VERTEX_PROGRAM);
 			it->second.m_Init = true;
 		}
 		else
 		{
-			Core::ShaderVariable mvpVal(Core::VALUE_MAT4X4, glm::value_ptr(m_ModelViewProj), sizeof(mat4));
+			Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
+			Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetMatrix()), sizeof(mat4));
+			Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
 			Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
 			Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
-			m_UniformBuffer.SetVariable(0, mvpVal);
-			m_UniformBuffer.SetVariable(1, lightVal);
-			m_UniformBuffer.SetVariable(2, lightCol);
+			m_UniformBuffer.SetVariable(0, viewMatVal);
+			m_UniformBuffer.SetVariable(1, projMatVal);
+			m_UniformBuffer.SetVariable(2, worldMatVal);
+			m_UniformBuffer.SetVariable(3, lightVal);
+			m_UniformBuffer.SetVariable(4, lightCol);
 		}
 
 		shader->Update();

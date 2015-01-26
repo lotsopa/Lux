@@ -99,13 +99,21 @@ Lux::Core::EventListener* Lux::Core::Internal::RenderWindowDX11::GetEventListene
 
 void Lux::Core::Internal::RenderWindowDX11::SwapBuffers()
 {
-	m_SwapChain->Present(m_SwapInterval, 0);
+	HRESULT hr;
+	hr = m_SwapChain->Present(m_SwapInterval, 0);
+
+	if (FAILED(hr))
+	{
+		Utility::ThrowError("Error Swapping Back Buffer");
+	}
 }
 
 void Lux::Core::Internal::RenderWindowDX11::Clear()
 {
 	m_DeviceContext->ClearRenderTargetView(m_RenderBackbuffer.Get(), value_ptr(WINDOW_CLEAR_COLOR));
 	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, NULL);
+
+	ResetViewPortTargets();
 }
 
 void Lux::Core::Internal::RenderWindowDX11::PollEvents()
@@ -223,13 +231,14 @@ bool Lux::Core::Internal::RenderWindowDX11::InitDX11()
 	m_DeviceContext->OMSetRenderTargets(1, m_RenderBackbuffer.GetAddressOf(), NULL);
 
 	// Set the viewport
-	D3D11_VIEWPORT viewport;
-	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+	ZeroMemory(&m_ViewPort, sizeof(D3D11_VIEWPORT));
 
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.Width = (float)m_Width;
-	viewport.Height = (float)m_Height;
+	m_ViewPort.TopLeftX = 0;
+	m_ViewPort.TopLeftY = 0;
+	m_ViewPort.Width = (float)m_Width;
+	m_ViewPort.Height = (float)m_Height;
+	m_ViewPort.MinDepth = 0.0f;
+	m_ViewPort.MaxDepth = 1.0f;
 
 	// Setup depth/stencil state.
 	D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc;
@@ -240,7 +249,7 @@ bool Lux::Core::Internal::RenderWindowDX11::InitDX11()
 	depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	depthStencilStateDesc.StencilEnable = FALSE;
 
-	hr = m_Device->CreateDepthStencilState(&depthStencilStateDesc, &m_DepthStencilState);
+	hr = m_Device->CreateDepthStencilState(&depthStencilStateDesc, m_DepthStencilState.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -257,17 +266,17 @@ bool Lux::Core::Internal::RenderWindowDX11::InitDX11()
 	depthStencilBufferDesc.Width = m_Width;
 	depthStencilBufferDesc.Height = m_Height;
 	depthStencilBufferDesc.MipLevels = 1;
-	depthStencilBufferDesc.SampleDesc.Count = 1;
+	depthStencilBufferDesc.SampleDesc.Count = m_AntiAliasing;
 	depthStencilBufferDesc.SampleDesc.Quality = 0;
 	depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 
-	hr = m_Device->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_DepthStencilBuffer);
+	hr = m_Device->CreateTexture2D(&depthStencilBufferDesc, nullptr, m_DepthStencilBuffer.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
 	}
 
-	hr = m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), nullptr, &m_DepthStencilView);
+	hr = m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), nullptr, m_DepthStencilView.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -277,13 +286,13 @@ bool Lux::Core::Internal::RenderWindowDX11::InitDX11()
 	D3D11_RASTERIZER_DESC rasterizerDesc;
 	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
 
-	rasterizerDesc.AntialiasedLineEnable = FALSE;
+	rasterizerDesc.AntialiasedLineEnable = TRUE;
 	rasterizerDesc.CullMode = D3D11_CULL_BACK;
 	rasterizerDesc.DepthBias = 0;
 	rasterizerDesc.DepthBiasClamp = 0.0f;
 	rasterizerDesc.DepthClipEnable = TRUE;
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	rasterizerDesc.FrontCounterClockwise = FALSE;
+	rasterizerDesc.FrontCounterClockwise = TRUE;
 	rasterizerDesc.MultisampleEnable = TRUE;
 	rasterizerDesc.ScissorEnable = FALSE;
 	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
@@ -296,7 +305,15 @@ bool Lux::Core::Internal::RenderWindowDX11::InitDX11()
 		return false;
 	}
 
-	m_DeviceContext->RSSetViewports(1, &viewport);
-
+	ResetViewPortTargets();
+	
 	return true;
+}
+
+void Lux::Core::Internal::RenderWindowDX11::ResetViewPortTargets()
+{
+	m_DeviceContext->RSSetState(m_Rasterizer.Get());
+	m_DeviceContext->RSSetViewports(1, &m_ViewPort);
+	m_DeviceContext->OMSetRenderTargets(1, m_RenderBackbuffer.GetAddressOf(), m_DepthStencilView.Get());
+	m_DeviceContext->OMSetDepthStencilState(m_DepthStencilState.Get(), 0);
 }

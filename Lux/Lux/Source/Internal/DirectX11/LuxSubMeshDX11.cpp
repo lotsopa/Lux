@@ -58,7 +58,7 @@ Lux::Core::Internal::SubMeshDX11::SubMeshDX11(const SubMeshDX11& a_SubMesh) : Su
 Lux::Core::Internal::SubMeshDX11::SubMeshDX11(aiMesh& a_Mesh, ID3D11DeviceContext* a_DeviceContext) : SubMesh(a_Mesh), m_DeviceContext(a_DeviceContext)
 {
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
-	m_DeviceContext->GetDevice(&device);
+	m_DeviceContext->GetDevice(device.GetAddressOf());
 	CreateBuffer(device.Get(), m_Vertices, m_NumVertices, D3D11_BIND_VERTEX_BUFFER, &m_VertexBuffer);
 	CreateBuffer(device.Get(), m_Indices, m_NumIndices, D3D11_BIND_INDEX_BUFFER, &m_IndexBuffer);
 	SafeDeleteAttributes();
