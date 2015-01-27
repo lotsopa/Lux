@@ -39,6 +39,9 @@ namespace Lux
 			const vec3& GetForwardVector() const;
 			const vec3& GetUpVector() const;
 			const vec3& GetRightVector() const;
+
+			const inline bool IsDirty() { return m_TransformDirty; }
+			inline mat4x4& GetInverseTranslationMatrix() { return m_InverseTranslationMatrix; }
 		private:
 			vec3 m_Right;
 			vec3 m_Up;
@@ -49,6 +52,7 @@ namespace Lux
 			quat m_Rotation;
 			quat m_LocalRotation;
 			mat4x4 m_TransformMatrix;
+			mat4x4 m_InverseTranslationMatrix;
 			bool m_TransformDirty;
 
 		protected:

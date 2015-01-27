@@ -7,6 +7,7 @@ m_TransformMatrix(),
 m_Scale(1.0f),
 m_Position(0.0f),
 m_Rotation(),
+m_LocalRotation(),
 m_TransformDirty(true)
 {
 
@@ -38,13 +39,18 @@ void Lux::Core::Transform::ApplyTransform()
 		m_TransformMatrix = scale(m_TransformMatrix, m_Scale);
 
 		// Calculate forward vector
-		m_Forward =  vec3(0, 0, 1) * m_LocalRotation;
+		m_Forward =  vec3(0, 0, -1) * m_LocalRotation;
 
 		// Calculate Right vector
-		m_Right = vec3(-1, 0, 0) * m_LocalRotation;
+		m_Right = vec3(1, 0, 0) * m_LocalRotation;
 
 		// Calculate Up vector
 		m_Up = vec3(0, 1, 0) * m_LocalRotation;
+
+		m_InverseTranslationMatrix = m_TransformMatrix;
+		m_InverseTranslationMatrix[3][0] *= -1;
+		m_InverseTranslationMatrix[3][1] *= -1;
+		m_InverseTranslationMatrix[3][2] *= -1;
 
 		m_TransformDirty = false;
 	}

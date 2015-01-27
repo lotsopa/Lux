@@ -88,5 +88,10 @@ void Lux::Core::Internal::SubMeshOGL::ConnectWithShader(ShaderOGL* a_Shader)
 	glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Normal));
 	Utility::Internal::CheckOGLError();
 
+	unsigned int colorLoc = a_Shader->GetAttribLocation("in_Color");
+	glEnableVertexAttribArray(colorLoc);
+	glVertexAttribPointer(colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Color));
+	Utility::Internal::CheckOGLError();
+
 	m_VertexArray.Unbind();
 }

@@ -62,7 +62,6 @@ void Lux::Core::FreeLookCamera::Update(const float a_DeltaTime)
 	{
 		m_Transform->GetRawPtr()->Translate(m_Transform->GetRawPtr()->GetRightVector() * m_SpeedMultiplier * a_DeltaTime);
 	}
-
 	m_LastMousePos = currMousePos;
 }
 

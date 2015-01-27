@@ -119,7 +119,9 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 					{
 						m_MainCamera = it->second.m_Camera;
 						m_MainCameraTransform = it->second.m_Transform;
+						m_EntityMap.erase(it);
 						end = false;
+						break;
 					}
 				}
 			}
@@ -135,7 +137,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		float aspect = m_RenderWindow->GetWidth() / (float)m_RenderWindow->GetHeight();
 		m_MainCamera->GetRawPtr()->ChangeAspect(aspect);
 	}
-
+	
 	m_MainCameraTransform->GetRawPtr()->ApplyTransform();
 
 	for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
@@ -168,7 +170,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		{
 			mesh->ConnectWithShader(shader);
 			Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
-			Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetMatrix()), sizeof(mat4));
+			Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetInverseTranslationMatrix()), sizeof(mat4));
 			Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
 			Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
 			Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
@@ -183,7 +185,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		else
 		{
 			Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
-			Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetMatrix()), sizeof(mat4));
+			Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetInverseTranslationMatrix()), sizeof(mat4));
 			Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
 			Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
 			Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
