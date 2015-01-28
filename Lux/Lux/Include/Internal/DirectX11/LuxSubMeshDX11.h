@@ -22,9 +22,6 @@ namespace Lux
 				ID3D11DeviceContext* m_DeviceContext;
 				Microsoft::WRL::ComPtr<ID3D11Buffer> m_VertexBuffer;
 				Microsoft::WRL::ComPtr<ID3D11Buffer> m_IndexBuffer;
-
-				static const int m_NumVertexElements = 6;
-				static const D3D11_INPUT_ELEMENT_DESC m_VertexInputDesc[m_NumVertexElements];
 			};
 		}
 	}

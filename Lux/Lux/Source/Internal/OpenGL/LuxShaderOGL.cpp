@@ -90,8 +90,14 @@ void Lux::Core::Internal::ShaderOGL::Update()
 	}
 }
 
-void Lux::Core::Internal::ShaderOGL::BindUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type)
+void Lux::Core::Internal::ShaderOGL::InitializeUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type)
 {
+	for (unsigned int i = 0; i < m_InitializedConstantBuffers.size(); ++i)
+	{
+		if (m_InitializedConstantBuffers[i] == a_Name)
+			return;
+	}
+
 	static unsigned int globalBindingPoint = 0;
 	unsigned int blockIndex = glGetUniformBlockIndex(m_ShaderProgram, a_Name.GetName().c_str());
 	glUniformBlockBinding(m_ShaderProgram, blockIndex, globalBindingPoint);
@@ -99,4 +105,5 @@ void Lux::Core::Internal::ShaderOGL::BindUniformBuffer(const Key& a_Name, Shader
 	m_UniformBuffers.emplace(m_UniformBuffers.end(), a_Buffer, globalBindingPoint);
 	Utility::Internal::CheckOGLError();
 	globalBindingPoint++;
+	m_InitializedConstantBuffers.push_back(a_Name);
 }

@@ -93,5 +93,31 @@ void Lux::Core::Internal::SubMeshOGL::ConnectWithShader(ShaderOGL* a_Shader)
 	glVertexAttribPointer(colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Color));
 	Utility::Internal::CheckOGLError();
 
+	unsigned int texLoc = a_Shader->GetAttribLocation("in_TexCoord");
+
+	if (texLoc != UINT_MAX)
+	{
+		glEnableVertexAttribArray(texLoc);
+		glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_TexCoords));
+		Utility::Internal::CheckOGLError();
+	}
+
+	unsigned int tangentLoc = a_Shader->GetAttribLocation("in_Tangent");
+
+	if (tangentLoc != UINT_MAX)
+	{
+		glEnableVertexAttribArray(tangentLoc);
+		glVertexAttribPointer(tangentLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Tangent));
+		Utility::Internal::CheckOGLError();
+	}
+
+	unsigned int bitangentLoc = a_Shader->GetAttribLocation("in_Bitangent");
+	if (bitangentLoc != UINT_MAX)
+	{
+		glEnableVertexAttribArray(bitangentLoc);
+		glVertexAttribPointer(bitangentLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Bitangent));
+		Utility::Internal::CheckOGLError();
+	}
+
 	m_VertexArray.Unbind();
 }

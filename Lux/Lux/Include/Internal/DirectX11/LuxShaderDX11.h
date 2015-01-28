@@ -9,8 +9,13 @@ namespace Lux
 		{
 			struct DX11CompiledShader
 			{
+				DX11CompiledShader() : m_Shader(nullptr), m_CompileBlob(nullptr), m_InputLayout(nullptr)
+				{
+
+				}
 				void* m_Shader;
 				ID3DBlob* m_CompileBlob; // Used for reflection
+				ID3D11InputLayout* m_InputLayout; // Could be null
 				ShaderProgram m_Type;
 			};
 			class ShaderDX11 : public Shader
@@ -22,11 +27,11 @@ namespace Lux
 				virtual void Activate();
 				virtual void Deactivate();
 
-				virtual void BindUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type);
+				virtual void InitializeUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type);
 				virtual void Update();
 
 			private:
-				// TODO
+				
 				typedef std::vector <std::function<void(void*)>> DX11ShaderFuncList;
 				DX11ShaderFuncList m_BindShaderFuncList;
 				ID3D11DeviceContext* m_DeviceContext;
@@ -124,6 +129,8 @@ namespace Lux
 					ShaderProgram m_BufferType;
 				};
 				std::vector<UniformBufferEntry> m_ConstantBuffers;
+				ID3D11InputLayout* m_InputLayout; // Could be null
+				std::vector<Key> m_InitializedConstantBuffers;
 				template<class T>
 				void SetShader(void* shader)
 				{

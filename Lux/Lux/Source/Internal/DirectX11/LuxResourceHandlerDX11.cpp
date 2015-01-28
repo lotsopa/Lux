@@ -59,6 +59,14 @@ Lux::Core::Internal::ResourceHandlerDX11::~ResourceHandlerDX11()
 		it4->second.reset();
 	}
 	m_ShaderMap.clear();
+
+	InputLayoutMap::iterator it5;
+
+	for (it5 = m_InputLayouts.begin(); it5 != m_InputLayouts.end(); ++it5)
+	{
+		it5->second.Reset();
+	}
+	m_InputLayouts.clear();
 }
 
 Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerDX11::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
@@ -295,6 +303,17 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFil
 			}
 			compiledShader.m_Shader = vertshader;
 			compiledShader.m_Type = VERTEX_PROGRAM;
+			// Create Input Layout
+			ID3D11InputLayout* inputLayout = nullptr;
+			result = CreateInputLayoutDescFromVertexShaderSignature(blob, m_RenderWindow->GetDevicePtr(), &inputLayout);
+
+			if (FAILED(result))
+			{
+				Utility::ThrowError("Could not create Vertex Shader Input Layout from the shader " + a_ShaderName);
+			}
+
+			AddInputLayoutToMap(a_ShaderName, inputLayout);
+			compiledShader.m_InputLayout = inputLayout;
 		}
 			break;
 
@@ -344,9 +363,11 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFil
 		loadedShaders.push_back(compiledShader);
 		Utility::SafePtrDelete(shaderInfo);
 	}
+
 	// Create a Shader Object
 	ShaderDX11* shader = new ShaderDX11(loadedShaders, m_RenderWindow->GetDeviceContextPtr());
 	AddShaderToMap(a_ShaderName, shader);
+
 	fileHandler.DestroyShaderParser(Key(a_File));
 	return shader;
 }
@@ -357,6 +378,74 @@ Lux::Core::Material* Lux::Core::Internal::ResourceHandlerDX11::CreateMaterial(co
 	mat->SetName(a_Name);
 	AddMaterialToMap(a_Name, mat);
 	return mat;
+}
+
+// Source : https://takinginitiative.wordpress.com/2011/12/11/directx-1011-basic-shader-reflection-automatic-input-layout-creation/
+HRESULT Lux::Core::Internal::ResourceHandlerDX11::CreateInputLayoutDescFromVertexShaderSignature( ID3DBlob* pShaderBlob, ID3D11Device* pD3DDevice, ID3D11InputLayout** pInputLayout )
+{
+	// Reflect shader info
+	ID3D11ShaderReflection* pVertexShaderReflection = NULL;
+	if ( FAILED( D3DReflect( pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**) &pVertexShaderReflection ) ) )
+	{
+		return S_FALSE;
+	}
+
+	// Get shader info
+	D3D11_SHADER_DESC shaderDesc;
+	pVertexShaderReflection->GetDesc( &shaderDesc );
+
+	// Read input layout description from shader info
+	std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+	for ( unsigned int i=0; i< shaderDesc.InputParameters; i++ )
+	{
+		D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+		pVertexShaderReflection->GetInputParameterDesc(i, &paramDesc );
+
+		// fill out input element desc
+		D3D11_INPUT_ELEMENT_DESC elementDesc;
+		elementDesc.SemanticName = paramDesc.SemanticName;
+		elementDesc.SemanticIndex = paramDesc.SemanticIndex;
+		elementDesc.InputSlot = 0;
+		elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		elementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		elementDesc.InstanceDataStepRate = 0;   
+
+		// determine DXGI format
+		if ( paramDesc.Mask == 1 )
+		{
+			if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32 ) elementDesc.Format = DXGI_FORMAT_R32_UINT;
+			else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32 ) elementDesc.Format = DXGI_FORMAT_R32_SINT;
+			else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32 ) elementDesc.Format = DXGI_FORMAT_R32_FLOAT;
+		}
+		else if ( paramDesc.Mask <= 3 )
+		{
+			if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32_UINT;
+			else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32_SINT;
+			else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32 ) elementDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+		}
+		else if ( paramDesc.Mask <= 7 )
+		{
+			if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
+			else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
+			else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		}
+		else if ( paramDesc.Mask <= 15 )
+		{
+			if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+			else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
+			else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		}
+
+		//save element desc
+		inputLayoutDesc.push_back(elementDesc);
+	}       
+
+	// Try to create Input Layout
+	HRESULT hr = pD3DDevice->CreateInputLayout( &inputLayoutDesc[0], inputLayoutDesc.size(), pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), pInputLayout );
+
+	//Free allocation shader reflection memory
+	pVertexShaderReflection->Release();
+	return hr;
 }
 
 #if LUX_THREAD_SAFE == TRUE
@@ -496,6 +585,12 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::GetShader(const Str
 	return m_ShaderMap.at(Key(a_Name)).get();
 }
 
+void Lux::Core::Internal::ResourceHandlerDX11::AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout)
+{
+	std::unique_lock<std::mutex> lock(m_InputLayoutMutex);
+	m_InputLayouts.insert(std::make_pair(Key(a_Str), Microsoft::WRL::ComPtr<ID3D11InputLayout>(a_Layout)));
+}
+
 #else
 void Lux::Core::Internal::ResourceHandlerDX11::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
@@ -625,4 +720,9 @@ Lux::Core::Internal::ResourceHandlerDX11::ResourceHandlerDX11(RenderWindowDX11* 
 m_RenderWindow(a_RenderWindow)
 {
 	LUX_LOG(Utility::logINFO) << "Resource Handler created successfully.";
+}
+
+void Lux::Core::Internal::ResourceHandlerDX11::AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout)
+{
+	m_InputLayouts.insert(std::make_pair(Key(a_Str), Microsoft::WRL::ComPtr<ID3D11InputLayout>(a_Layout)));
 }

@@ -15,7 +15,7 @@ namespace Lux
 				virtual void Activate();
 				virtual void Deactivate();
 
-				virtual void BindUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type);
+				virtual void InitializeUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type);
 				inline const unsigned int GetShaderProgram() { return m_ShaderProgram;  }
 				unsigned int GetAttribLocation(const Key& a_Name);
 				virtual void Update();
@@ -71,6 +71,7 @@ namespace Lux
 					unsigned int m_BlockIndex;
 				};
 				std::vector<UniformBufferEntry> m_UniformBuffers;
+				std::vector<Key> m_InitializedConstantBuffers;
 			};
 		}
 	}

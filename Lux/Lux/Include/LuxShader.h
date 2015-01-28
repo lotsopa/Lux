@@ -351,7 +351,7 @@ namespace Lux
 			virtual void Activate() = 0;
 			virtual void Deactivate() = 0;
 
-			virtual void BindUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type) = 0;
+			virtual void InitializeUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type) = 0;
 			virtual void Update() = 0;
 
 		};

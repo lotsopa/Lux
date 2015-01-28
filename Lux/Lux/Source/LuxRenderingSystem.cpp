@@ -166,34 +166,23 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 
 		shader->Activate();
 
+		// Set the default uniform buffer
+		Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
+		Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetInverseTranslationMatrix()), sizeof(mat4));
+		Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
+		Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
+		Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
+		m_UniformBuffer.SetVariable(0, viewMatVal);
+		m_UniformBuffer.SetVariable(1, projMatVal);
+		m_UniformBuffer.SetVariable(2, worldMatVal);
+		m_UniformBuffer.SetVariable(3, lightVal);
+		m_UniformBuffer.SetVariable(4, lightCol);
+
 		if (!it->second.m_Init)
 		{
 			mesh->ConnectWithShader(shader);
-			Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
-			Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetInverseTranslationMatrix()), sizeof(mat4));
-			Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
-			Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
-			Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
-			m_UniformBuffer.SetVariable(0, viewMatVal);
-			m_UniformBuffer.SetVariable(1, projMatVal);
-			m_UniformBuffer.SetVariable(2, worldMatVal);
-			m_UniformBuffer.SetVariable(3, lightVal);
-			m_UniformBuffer.SetVariable(4, lightCol);
-			shader->BindUniformBuffer("UniformBuffer0", m_UniformBuffer, VERTEX_PROGRAM);
+			shader->InitializeUniformBuffer("UniformBuffer0", m_UniformBuffer, VERTEX_PROGRAM);
 			it->second.m_Init = true;
-		}
-		else
-		{
-			Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
-			Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetInverseTranslationMatrix()), sizeof(mat4));
-			Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
-			Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
-			Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
-			m_UniformBuffer.SetVariable(0, viewMatVal);
-			m_UniformBuffer.SetVariable(1, projMatVal);
-			m_UniformBuffer.SetVariable(2, worldMatVal);
-			m_UniformBuffer.SetVariable(3, lightVal);
-			m_UniformBuffer.SetVariable(4, lightCol);
 		}
 
 		shader->Update();

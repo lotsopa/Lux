@@ -51,17 +51,20 @@ namespace Lux
 				typedef std::map<Key, Mesh*> MeshMapSimple;
 				typedef std::map<Key, std::shared_ptr<Material>> MaterialMap;
 				typedef std::map<Key, std::shared_ptr<Shader>> ShaderMap;
+				typedef std::map<Key, Microsoft::WRL::ComPtr<ID3D11InputLayout>> InputLayoutMap;
 				MeshMap m_MeshMap;
 				MeshMapSimple m_LoadedFilenameMeshes;
 				MaterialMap m_MaterialMap;
 				TextureMap m_TextureMap;
 				ShaderMap m_ShaderMap;
+				InputLayoutMap m_InputLayouts;
 
 #if LUX_THREAD_SAFE == TRUE
 				std::mutex m_MeshMapMutex;
 				std::mutex m_MaterialMapMutex;
 				std::mutex m_TextureMapMutex;
 				std::mutex m_ShaderMapMutex;
+				std::mutex m_InputLayoutMutex;
 #endif
 
 				void AddMeshToMap(const String& a_Str, Mesh* a_Ent);
@@ -71,6 +74,8 @@ namespace Lux
 				void AddTextureToMap(const String& a_Str, Texture* a_Tex);
 				void LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType);
 				void AddShaderToMap(const String& a_Str, Shader* a_Shader);
+				void AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout);
+				HRESULT CreateInputLayoutDescFromVertexShaderSignature(ID3DBlob* pShaderBlob, ID3D11Device* pD3DDevice, ID3D11InputLayout** pInputLayout);
 			};
 		}
 	}

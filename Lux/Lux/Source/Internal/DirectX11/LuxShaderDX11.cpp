@@ -6,6 +6,7 @@
 
 Lux::Core::Internal::ShaderDX11::ShaderDX11(std::vector<DX11CompiledShader>& a_ShaderList, ID3D11DeviceContext* a_DeviceContext) : Shader(), m_DeviceContext(a_DeviceContext)
 {
+	m_InputLayout = nullptr;
 	m_ShaderList = a_ShaderList;
 	for (unsigned int i = 0; i < m_ShaderList.size(); i++)
 	{
@@ -17,6 +18,7 @@ Lux::Core::Internal::ShaderDX11::ShaderDX11(std::vector<DX11CompiledShader>& a_S
 
 		case VERTEX_PROGRAM:
 			m_BindShaderFuncList.push_back(std::bind(&ShaderDX11::SetShader<ID3D11VertexShader>, this, m_ShaderList[i].m_Shader));
+			m_InputLayout = m_ShaderList[i].m_InputLayout;
 			break;
 
 		case GEOMETRY_PROGRAM:
@@ -62,10 +64,21 @@ void Lux::Core::Internal::ShaderDX11::Update()
 
 		m_ConstantBuffers[i].Use();
 	}
+
+	if (m_InputLayout)
+	{
+		m_DeviceContext->IASetInputLayout(m_InputLayout);
+	}
 }
 
-void Lux::Core::Internal::ShaderDX11::BindUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type)
+void Lux::Core::Internal::ShaderDX11::InitializeUniformBuffer(const Key& a_Name, ShaderUniformBuffer& a_Buffer, ShaderProgram a_Type)
 {
+	for (unsigned int i = 0; i < m_InitializedConstantBuffers.size(); ++i)
+	{
+		if (m_InitializedConstantBuffers[i] == a_Name)
+			return;
+	}
+
 	ID3D11ShaderReflection* shaderReflector = nullptr;
 	unsigned int bufferSize = 0;
 	unsigned int bufferIdx = D3D11_COMMONSHADER_CONSTANT_BUFFER_HW_SLOT_COUNT + 1;
@@ -107,4 +120,5 @@ void Lux::Core::Internal::ShaderDX11::BindUniformBuffer(const Key& a_Name, Shade
 	}
 
 	m_ConstantBuffers.emplace(m_ConstantBuffers.end(), a_Buffer, bufferIdx, bufferSize, a_Type, m_DeviceContext);
+	m_InitializedConstantBuffers.push_back(a_Name);
 }
