@@ -110,6 +110,24 @@ void Lux::Core::Internal::RenderWindowDX11::SwapBuffers()
 
 void Lux::Core::Internal::RenderWindowDX11::Clear()
 {
+	RECT rect;
+	if (GetWindowRect(m_WindowHandle, &rect))
+	{
+		int width = rect.right - rect.left;
+		int height = rect.bottom - rect.top;
+
+		if (width != m_Width || height != m_Height)
+		{
+			m_Width = width;
+			m_Height = height;
+			ResizeSwapChain(m_Width, m_Height);
+			m_WindowResized = true;
+		}
+		else
+		{
+			m_WindowResized = false;
+		}
+	}
 	m_DeviceContext->ClearRenderTargetView(m_RenderBackbuffer.Get(), value_ptr(WINDOW_CLEAR_COLOR));
 	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, NULL);
 
@@ -316,4 +334,74 @@ void Lux::Core::Internal::RenderWindowDX11::ResetViewPortTargets()
 	m_DeviceContext->RSSetViewports(1, &m_ViewPort);
 	m_DeviceContext->OMSetRenderTargets(1, m_RenderBackbuffer.GetAddressOf(), m_DepthStencilView.Get());
 	m_DeviceContext->OMSetDepthStencilState(m_DepthStencilState.Get(), 0);
+}
+
+void Lux::Core::Internal::RenderWindowDX11::ResizeSwapChain(int width, int height)
+{
+	// Don't allow for 0 size swap chain buffers.
+	if (width <= 0) width = 1;
+	if (height <= 0) height = 1;
+
+	m_DeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+	// First release the render target and depth/stencil views.
+	m_RenderBackbuffer.Reset();
+	m_DepthStencilBuffer.Reset();
+	m_DepthStencilView.Reset();
+
+	// Resize the swap chain buffers.
+	m_SwapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+	// Next initialize the back buffer of the swap chain and associate it to a 
+	// render target view.
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
+	HRESULT hr = m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer);
+	if (FAILED(hr))
+	{
+		Utility::ThrowError("Could not initialize new back buffer.");
+	}
+
+	hr = m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, m_RenderBackbuffer.GetAddressOf());
+	if (FAILED(hr))
+	{
+		Utility::ThrowError("Could not create render target view.");
+	}
+
+	backBuffer.Reset();
+
+	// Create the depth buffer for use with the depth/stencil view.
+	D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
+	ZeroMemory(&depthStencilBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	depthStencilBufferDesc.ArraySize = 1;
+	depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilBufferDesc.CPUAccessFlags = 0; // No CPU access required.
+	depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilBufferDesc.Width = width;
+	depthStencilBufferDesc.Height = height;
+	depthStencilBufferDesc.MipLevels = 1;
+	depthStencilBufferDesc.SampleDesc.Count = m_AntiAliasing;
+	depthStencilBufferDesc.SampleDesc.Quality = 0;
+	depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	hr = m_Device->CreateTexture2D(&depthStencilBufferDesc, nullptr, m_DepthStencilBuffer.GetAddressOf());
+	if (FAILED(hr))
+	{
+		Utility::ThrowError("Could not create depth stencil buffer.");
+	}
+
+	hr = m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), nullptr, m_DepthStencilView.GetAddressOf());
+	if (FAILED(hr))
+	{
+		Utility::ThrowError("Could not create depth stencil view.");
+	}
+
+	ZeroMemory(&m_ViewPort, sizeof(D3D11_VIEWPORT));
+
+	m_ViewPort.TopLeftX = 0;
+	m_ViewPort.TopLeftY = 0;
+	m_ViewPort.Width = (float)width;
+	m_ViewPort.Height = (float)height;
+	m_ViewPort.MinDepth = 0.0f;
+	m_ViewPort.MaxDepth = 1.0f;
 }

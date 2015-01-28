@@ -55,6 +55,7 @@ namespace Lux
 
 				bool InitDX11();
 				void ResetViewPortTargets();
+				void ResizeSwapChain(int width, int height);
 			};
 		}
 	}
