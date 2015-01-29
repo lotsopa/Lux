@@ -24,20 +24,30 @@ namespace Lux
 
 				virtual Mesh* CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags);
 				virtual Mesh* CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags);
-				virtual Texture* CreateTextureFromFile(const String& a_File, const String& a_TexName);
-				virtual Texture* CreateTextureFromMemory(FileInfo* a_Info, const String& a_TexName) ;
+				virtual Texture2D* CreateTexture2DFromFile(const String& a_File, const String& a_TexName);
+				virtual Texture2D* CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName) ;
+				virtual Texture1D* CreateTexture1DFromFile(const String& a_File, const String& a_TexName);
+				virtual Texture1D* CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName);
+				virtual Texture3D* CreateTexture3DFromFile(const String& a_File, const String& a_TexName);
+				virtual Texture3D* CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName);
 				virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
 				virtual Material* CreateMaterial(const String& a_Name);
 
 				virtual Mesh* GetMesh(const String& a_Name);
 				virtual Shader* GetShader(const String& a_Name);
 				virtual Material* GetMaterial(const String& a_Name);
-				virtual Texture* GetTexture(const String& a_Name);
+				virtual Texture2D* GetTexture2D(const String& a_Name);
+				virtual Texture1D* GetTexture1D(const String& a_Name);
+				virtual Texture3D* GetTexture3D(const String& a_Name);
 				virtual bool MaterialExists(const String& a_Name);
 				virtual bool MeshExists(const String& a_Name);
 				virtual bool ShaderExists(const String& a_Name);
-				virtual bool TextureExists(const String& a_Name);
-				virtual bool DeleteTexture(const String& a_Name);
+				virtual bool Texture2DExists(const String& a_Name);
+				virtual bool Texture1DExists(const String& a_Name);
+				virtual bool Texture3DExists(const String& a_Name);
+				virtual bool DeleteTexture2D(const String& a_Name);
+				virtual bool DeleteTexture1D(const String& a_Name);
+				virtual bool DeleteTexture3D(const String& a_Name);
 
 			private:
 				ResourceHandlerDX11(ResourceHandlerDX11 const&);// Don't Implement
@@ -46,7 +56,9 @@ namespace Lux
 				RenderWindowDX11* m_RenderWindow;
 				friend class ResourceHandler;
 
-				typedef std::map<Key, std::shared_ptr<Texture>> TextureMap;
+				typedef std::map<Key, std::shared_ptr<Texture2D>> Texture2DMap;
+				typedef std::map<Key, std::shared_ptr<Texture1D>> Texture1DMap;
+				typedef std::map<Key, std::shared_ptr<Texture3D>> Texture3DMap;
 				typedef std::map<Key, std::shared_ptr<Mesh>> MeshMap;
 				typedef std::map<Key, Mesh*> MeshMapSimple;
 				typedef std::map<Key, std::shared_ptr<Material>> MaterialMap;
@@ -55,7 +67,9 @@ namespace Lux
 				MeshMap m_MeshMap;
 				MeshMapSimple m_LoadedFilenameMeshes;
 				MaterialMap m_MaterialMap;
-				TextureMap m_TextureMap;
+				Texture2DMap m_Texture2DMap;
+				Texture3DMap m_Texture3DMap;
+				Texture1DMap m_Texture1DMap;
 				ShaderMap m_ShaderMap;
 				InputLayoutMap m_InputLayouts;
 
@@ -71,10 +85,14 @@ namespace Lux
 				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
 				Mesh* GetLoadedMesh(const String& a_FileStr);
 				void AddMaterialToMap(const String& a_Str, Material* a_Mat);
-				void AddTextureToMap(const String& a_Str, Texture* a_Tex);
+				void AddTexture2DToMap(const String& a_Str, Texture2D* a_Tex);
+				void AddTexture1DToMap(const String& a_Str, Texture1D* a_Tex);
+				void AddTexture3DToMap(const String& a_Str, Texture3D* a_Tex);
 				void LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType);
 				void AddShaderToMap(const String& a_Str, Shader* a_Shader);
 				void AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout);
+				void LoadImageData(const String& a_Path, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData);
+				void LoadImageData(FileInfo* a_File, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData);
 				HRESULT CreateInputLayoutDescFromVertexShaderSignature(ID3DBlob* pShaderBlob, ID3D11Device* pD3DDevice, ID3D11InputLayout** pInputLayout);
 			};
 		}

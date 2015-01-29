@@ -14,7 +14,14 @@
 #include "LuxRenderWindowDX11.h"
 #include "LuxMeshDX11.h"
 #include "LuxSubMeshDX11.h"
+#include "LuxTexture.h"
+#include "LuxTexture2D.h"
 #include "LuxShaderDX11.h"
+#include "LuxTexture2DDX11.h"
+#include "LuxTexture1D.h"
+#include "LuxTexture1DDX11.h"
+#include "LuxTexture3D.h"
+#include "LuxTexture3DDX11.h"
 #include "LuxMeshPostProcess.h"
 
 #ifndef YY_NO_UNISTD_H
@@ -44,13 +51,14 @@ Lux::Core::Internal::ResourceHandlerDX11::~ResourceHandlerDX11()
 	}
 	m_MaterialMap.clear();
 
-	TextureMap::iterator it3;
+	Texture2DMap::iterator it3;
 
-	for (it3 = m_TextureMap.begin(); it3 != m_TextureMap.end(); ++it3)
+	for (it3 = m_Texture2DMap.begin(); it3 != m_Texture2DMap.end(); ++it3)
 	{
 		it3->second.reset();
 	}
-	m_TextureMap.clear();
+	m_Texture2DMap.clear();
+
 
 	ShaderMap::iterator it4;
 
@@ -60,11 +68,27 @@ Lux::Core::Internal::ResourceHandlerDX11::~ResourceHandlerDX11()
 	}
 	m_ShaderMap.clear();
 
-	InputLayoutMap::iterator it5;
+	Texture1DMap::iterator it5;
 
-	for (it5 = m_InputLayouts.begin(); it5 != m_InputLayouts.end(); ++it5)
+	for (it5 = m_Texture1DMap.begin(); it5 != m_Texture1DMap.end(); ++it5)
 	{
-		it5->second.Reset();
+		it5->second.reset();
+	}
+	m_Texture1DMap.clear();
+
+	Texture3DMap::iterator it6;
+
+	for (it6 = m_Texture3DMap.begin(); it6 != m_Texture3DMap.end(); ++it6)
+	{
+		it6->second.reset();
+	}
+	m_Texture3DMap.clear();
+
+	InputLayoutMap::iterator it7;
+
+	for (it7 = m_InputLayouts.begin(); it7 != m_InputLayouts.end(); ++it7)
+	{
+		it7->second.Reset();
 	}
 	m_InputLayouts.clear();
 }
@@ -233,20 +257,52 @@ void Lux::Core::Internal::ResourceHandlerDX11::LoadAllTexturesOfTypeFromMaterial
 			LUX_LOG(Utility::logWARNING) << "Could not find texture " << texName.C_Str();
 			continue;
 		}
-		CreateTextureFromFile(String(texName.C_Str()), String(texName.C_Str()));
+		CreateTexture2DFromFile(String(texName.C_Str()), String(texName.C_Str()));
 	}
 }
 
-Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerDX11::CreateTextureFromFile(const String& a_File, const String& a_TexName)
+Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture2DFromFile(const String& a_File, const String& a_TexName)
 {
-	// TODO
-	return nullptr;
+	unsigned int width = 0;
+	unsigned int height = 0;
+	unsigned char* data = nullptr;
+	LoadImageData(a_File, width, height, data);
+
+	// Check if a texture with this name already exists
+	if (Texture2DExists(a_TexName))
+	{
+		// Delete the old one
+		DeleteTexture2D(a_TexName);
+	}
+
+	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(width, height, data);
+
+	// Put it in the map
+	AddTexture2DToMap(a_TexName, tex2d);
+
+	return tex2d;
 }
 
-Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerDX11::CreateTextureFromMemory(FileInfo* a_Info, const String& a_TexName)
+Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName)
 {
-	// TODO
-	return nullptr;
+	unsigned int width = 0;
+	unsigned int height = 0;
+	unsigned char* data = nullptr;
+	LoadImageData(a_Info, width, height, data);
+
+	// Check if a texture with this name already exists
+	if (Texture2DExists(a_TexName))
+	{
+		// Delete the old one
+		DeleteTexture2D(a_TexName);
+	}
+
+	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(width, height, data);
+
+	// Put it in the map
+	AddTexture2DToMap(a_TexName, tex2d);
+
+	return tex2d;
 }
 
 Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::CreateShaderFromFile(const String& a_File, const String& a_ShaderName)
@@ -504,7 +560,7 @@ bool Lux::Core::Internal::ResourceHandlerDX11::TextureExists(const String& a_Nam
 {
 	Key k(a_Name);
 	std::unique_lock<std::mutex> lock(m_TextureMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	unsigned int count = m_TextureMap.count(k);
+	unsigned int count = m_Texture2DMap.count(k);
 
 	if (count > 0)
 	{
@@ -517,13 +573,13 @@ bool Lux::Core::Internal::ResourceHandlerDX11::TextureExists(const String& a_Nam
 Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerDX11::GetTexture(const String& a_Name)
 {
 	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	return m_TextureMap.at(Key(a_Name)).get();
+	return m_Texture2DMap.at(Key(a_Name)).get();
 }
 
-void Lux::Core::Internal::ResourceHandlerDX11::AddTextureToMap(const String& a_Str, Texture* a_Tex)
+void Lux::Core::Internal::ResourceHandlerDX11::AddTexture2DToMap(const String& a_Str, Texture* a_Tex)
 {
 	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	m_TextureMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture>(a_Tex)));
+	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture>(a_Tex)));
 }
 
 bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture(const String& a_Name)
@@ -534,8 +590,8 @@ bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture(const String& a_Nam
 		return false;
 	}
 	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	m_TextureMap.at(Key(a_Name)).reset();
-	m_TextureMap.erase(Key(a_Name));
+	m_Texture2DMap.at(Key(a_Name)).reset();
+	m_Texture2DMap.erase(Key(a_Name));
 
 	return true;
 }
@@ -638,10 +694,10 @@ bool Lux::Core::Internal::ResourceHandlerDX11::MeshExists(const String& a_Name)
 	return false;
 }
 
-bool Lux::Core::Internal::ResourceHandlerDX11::TextureExists(const String& a_Name)
+bool Lux::Core::Internal::ResourceHandlerDX11::Texture2DExists(const String& a_Name)
 {
 	Key k(a_Name);
-	unsigned int count = m_TextureMap.count(k);
+	unsigned int count = m_Texture2DMap.count(k);
 
 	if (count > 0)
 	{
@@ -651,25 +707,25 @@ bool Lux::Core::Internal::ResourceHandlerDX11::TextureExists(const String& a_Nam
 	return false;
 }
 
-Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerDX11::GetTexture(const String& a_Name)
+Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::GetTexture2D(const String& a_Name)
 {
-	return m_TextureMap.at(Key(a_Name)).get();
+	return m_Texture2DMap.at(Key(a_Name)).get();
 }
 
-void Lux::Core::Internal::ResourceHandlerDX11::AddTextureToMap(const String& a_Str, Texture* a_Tex)
+void Lux::Core::Internal::ResourceHandlerDX11::AddTexture2DToMap(const String& a_Str, Texture2D* a_Tex)
 {
-	m_TextureMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture>(a_Tex)));
+	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture2D>(a_Tex)));
 }
 
-bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture(const String& a_Name)
+bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture2D(const String& a_Name)
 {
-	if (!TextureExists(a_Name))
+	if (!Texture2DExists(a_Name))
 	{
 		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
 		return false;
 	}
-	m_TextureMap.at(Key(a_Name)).reset();
-	m_TextureMap.erase(Key(a_Name));
+	m_Texture2DMap.at(Key(a_Name)).reset();
+	m_Texture2DMap.erase(Key(a_Name));
 
 	return true;
 }
@@ -714,6 +770,83 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::GetShader(const Str
 	return m_ShaderMap.at(Key(a_Name)).get();
 }
 
+void Lux::Core::Internal::ResourceHandlerDX11::AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout)
+{
+	m_InputLayouts.insert(std::make_pair(Key(a_Str), Microsoft::WRL::ComPtr<ID3D11InputLayout>(a_Layout)));
+}
+
+Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerDX11::GetTexture1D(const String& a_Name)
+{
+	return m_Texture1DMap.at(a_Name).get();
+}
+
+Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerDX11::GetTexture3D(const String& a_Name)
+{
+	return m_Texture3DMap.at(a_Name).get();
+}
+
+bool Lux::Core::Internal::ResourceHandlerDX11::Texture1DExists(const String& a_Name)
+{
+	Key k(a_Name);
+	unsigned int count = m_Texture1DMap.count(k);
+
+	if (count > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool Lux::Core::Internal::ResourceHandlerDX11::Texture3DExists(const String& a_Name)
+{
+	Key k(a_Name);
+	unsigned int count = m_Texture3DMap.count(k);
+
+	if (count > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void Lux::Core::Internal::ResourceHandlerDX11::AddTexture1DToMap(const String& a_Str, Texture1D* a_Tex)
+{
+	m_Texture1DMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture1D>(a_Tex)));
+}
+
+void Lux::Core::Internal::ResourceHandlerDX11::AddTexture3DToMap(const String& a_Str, Texture3D* a_Tex)
+{
+	m_Texture3DMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture3D>(a_Tex)));
+}
+
+bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture1D(const String& a_Name)
+{
+	if (!Texture1DExists(a_Name))
+	{
+		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
+		return false;
+	}
+	m_Texture1DMap.at(Key(a_Name)).reset();
+	m_Texture1DMap.erase(Key(a_Name));
+
+	return true;
+}
+
+bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture3D(const String& a_Name)
+{
+	if (!Texture3DExists(a_Name))
+	{
+		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
+		return false;
+	}
+	m_Texture3DMap.at(Key(a_Name)).reset();
+	m_Texture3DMap.erase(Key(a_Name));
+
+	return true;
+}
+
 #endif // LUX_THREAD_SAFE
 
 Lux::Core::Internal::ResourceHandlerDX11::ResourceHandlerDX11(RenderWindowDX11* a_RenderWindow) :
@@ -722,7 +855,108 @@ m_RenderWindow(a_RenderWindow)
 	LUX_LOG(Utility::logINFO) << "Resource Handler created successfully.";
 }
 
-void Lux::Core::Internal::ResourceHandlerDX11::AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout)
+Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture1DFromFile(const String& a_File, const String& a_TexName)
 {
-	m_InputLayouts.insert(std::make_pair(Key(a_Str), Microsoft::WRL::ComPtr<ID3D11InputLayout>(a_Layout)));
+	unsigned int width = 0;
+	unsigned int height = 0;
+	unsigned char* data = nullptr;
+	LoadImageData(a_File, width, height, data);
+
+	// Check if a texture with this name already exists
+	if (Texture1DExists(a_TexName))
+	{
+		// Delete the old one
+		DeleteTexture1D(a_TexName);
+	}
+
+	Internal::Texture1DDX11* tex1d = new Internal::Texture1DDX11(width, data);
+
+	// Put it in the map
+	AddTexture1DToMap(a_TexName, tex1d);
+
+	return tex1d;
+}
+
+Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName)
+{
+	unsigned int width = 0;
+	unsigned int height = 0;
+	unsigned char* data = nullptr;
+	LoadImageData(a_Info, width, height, data);
+
+	// Check if a texture with this name already exists
+	if (Texture1DExists(a_TexName))
+	{
+		// Delete the old one
+		DeleteTexture1D(a_TexName);
+	}
+
+	Internal::Texture1DDX11* tex1d = new Internal::Texture1DDX11(width, data);
+
+	// Put it in the map
+	AddTexture1DToMap(a_TexName, tex1d);
+
+	return tex1d;
+}
+
+// TODO - 3D textures
+Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture3DFromFile(const String& a_File, const String& a_TexName)
+{
+	return nullptr;
+}
+
+Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName)
+{
+	return nullptr;
+}
+
+void Lux::Core::Internal::ResourceHandlerDX11::LoadImageData(const String& a_Path, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData)
+{
+	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_Path);
+	LoadImageData(file, outWidth, outHeight, outData);
+}
+
+void Lux::Core::Internal::ResourceHandlerDX11::LoadImageData(FileInfo* a_File, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData)
+{
+	FIMEMORY* freeImgMemoryPtr = nullptr;
+	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_File->m_RawData, a_File->m_DataLength);
+	FREE_IMAGE_FORMAT imgFormat = FreeImage_GetFileTypeFromMemory(freeImgMemoryPtr, a_File->m_DataLength);
+
+	if (imgFormat == FIF_UNKNOWN)
+	{
+		String err("The file from memory could not be loaded. Unknown format.");
+		Utility::ThrowError(err);
+	}
+
+	//Does the extension support reading?
+	if (!FreeImage_FIFSupportsReading(imgFormat))
+	{
+		String err("The file could not be loaded. The file extension does not support reading.");
+		Utility::ThrowError(err);
+	}
+
+	// Load the file in a bitmap
+	FIBITMAP* bitmap = FreeImage_LoadFromMemory(imgFormat, freeImgMemoryPtr);
+	FIBITMAP* convertedBitmap = FreeImage_ConvertTo32Bits(bitmap);
+
+	if (convertedBitmap == nullptr)
+	{
+		String err("The file could not be loaded. Loading function returned NULL.");
+		Utility::ThrowError(err);
+	}
+
+	outWidth = FreeImage_GetWidth(convertedBitmap);
+	outHeight = FreeImage_GetHeight(convertedBitmap);
+	outData = FreeImage_GetBits(convertedBitmap);
+
+	// Normally this should never happen, but just to be safe
+	if (outWidth == 0 || outHeight == 0 || outData == nullptr)
+	{
+		String err("The file could not be created. Failed to retrieve proper data from the loaded file.");
+		Utility::ThrowError(err);
+	}
+
+	//Free FreeImage's copy of the data
+	FreeImage_Unload(convertedBitmap);
+	Utility::SafePtrDelete(a_File);
 }

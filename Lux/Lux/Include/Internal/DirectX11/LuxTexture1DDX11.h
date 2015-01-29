@@ -10,7 +10,8 @@ namespace Lux
 			class Texture1DDX11 : public Texture1D
 			{
 			public:
-
+				Texture1DDX11(unsigned int a_Width, unsigned char* a_Data);
+				~Texture1DDX11();
 			};
 		}
 	}

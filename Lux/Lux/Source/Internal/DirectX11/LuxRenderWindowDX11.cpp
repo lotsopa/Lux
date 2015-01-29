@@ -8,8 +8,6 @@
 #include "LuxShader.h"
 #include "LuxSubMesh.h"
 
-// TODO
-
 Lux::Core::Internal::RenderWindowDX11::~RenderWindowDX11()
 {
 	Utility::SafePtrDelete(m_Input);

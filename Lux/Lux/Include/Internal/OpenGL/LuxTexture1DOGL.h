@@ -10,7 +10,7 @@ namespace Lux
 			class Texture1DOGL : public Texture1D
 			{
 			public:
-				Texture1DOGL();
+				Texture1DOGL(unsigned int a_Width, unsigned char* a_Data);
 				virtual ~Texture1DOGL();
 
 			private:

@@ -3,7 +3,7 @@
 #include "LuxTexture1D.h"
 #include "LuxTexture1DOGL.h"
 
-Lux::Core::Internal::Texture1DOGL::Texture1DOGL()
+Lux::Core::Internal::Texture1DOGL::Texture1DOGL(unsigned int a_Width, unsigned char* a_Data)
 {
 
 }

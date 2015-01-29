@@ -11,6 +11,9 @@ namespace Lux
 		class Mesh;
 		class Key;
 		class Texture;
+		class Texture1D;
+		class Texture2D;
+		class Texture3D;
 		struct FileInfo;
 		class RenderWindow;
 
@@ -23,20 +26,30 @@ namespace Lux
 
 			virtual Mesh* CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
 			virtual Mesh* CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
-			virtual Texture* CreateTextureFromFile(const String& a_File, const String& a_TexName) = 0;
-			virtual Texture* CreateTextureFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
+			virtual Texture2D* CreateTexture2DFromFile(const String& a_File, const String& a_TexName) = 0;
+			virtual Texture2D* CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
+			virtual Texture1D* CreateTexture1DFromFile(const String& a_File, const String& a_TexName) = 0;
+			virtual Texture1D* CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
+			virtual Texture3D* CreateTexture3DFromFile(const String& a_File, const String& a_TexName) = 0;
+			virtual Texture3D* CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
 			virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName) = 0;
 			virtual Material* CreateMaterial(const String& a_Name) = 0;
 
 			virtual Mesh* GetMesh(const String& a_Name) = 0;
 			virtual Shader* GetShader(const String& a_Name) = 0;
 			virtual Material* GetMaterial(const String& a_Name) = 0;
-			virtual Texture* GetTexture(const String& a_Name) = 0;
+			virtual Texture2D* GetTexture2D(const String& a_Name) = 0;
+			virtual Texture3D* GetTexture3D(const String& a_Name) = 0;
+			virtual Texture1D* GetTexture1D(const String& a_Name) = 0;
 			virtual bool MaterialExists(const String& a_Name) = 0;
 			virtual bool MeshExists(const String& a_Name) = 0;
 			virtual bool ShaderExists(const String& a_Name) = 0;
-			virtual bool TextureExists(const String& a_Name) = 0;
-			virtual bool DeleteTexture(const String& a_Name) = 0;
+			virtual bool Texture2DExists(const String& a_Name) = 0;
+			virtual bool Texture1DExists(const String& a_Name) = 0;
+			virtual bool Texture3DExists(const String& a_Name) = 0;
+			virtual bool DeleteTexture2D(const String& a_Name) = 0;
+			virtual bool DeleteTexture1D(const String& a_Name) = 0;
+			virtual bool DeleteTexture3D(const String& a_Name) = 0;
 
 		protected:
 			ResourceHandler();
