@@ -81,7 +81,6 @@
     <ClInclude Include="Include\LuxTransform.h" />
     <ClInclude Include="Include\LuxMeshRenderer.h" />
     <ClInclude Include="Include\LuxTexture1D.h" />
-    <ClInclude Include="Include\LuxShaderComponent.h" />
     <ClInclude Include="Include\LuxVertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -136,7 +135,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\LuxShader.cpp" />
-    <ClCompile Include="Source\LuxShaderComponent.cpp" />
     <ClCompile Include="Source\LuxShaderFileParser.cpp" />
     <ClCompile Include="Source\LuxSubMesh.cpp" />
     <ClCompile Include="Source\LuxMeshAnimation.cpp" />

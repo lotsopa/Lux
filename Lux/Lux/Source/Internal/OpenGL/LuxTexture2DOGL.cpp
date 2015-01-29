@@ -2,6 +2,7 @@
 #include "LuxTexture.h"
 #include "LuxTexture2D.h"
 #include "LuxTexture2DOGL.h"
+#include "LuxErrorCheckOGL.h"
 
 Lux::Core::Internal::Texture2DOGL::Texture2DOGL(unsigned int a_ImgWidth, unsigned int a_ImgHeight, unsigned char* a_Bits) : m_TextureID(-1)
 {
@@ -16,6 +17,7 @@ Lux::Core::Internal::Texture2DOGL::Texture2DOGL(unsigned int a_ImgWidth, unsigne
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
+	Utility::Internal::CheckOGLError();
 }
 
 Lux::Core::Internal::Texture2DOGL::~Texture2DOGL()

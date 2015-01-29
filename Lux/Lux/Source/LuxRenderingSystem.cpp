@@ -16,7 +16,6 @@
 #include "LuxSceneManager.h"
 #include "LuxSystem.h"
 #include "LuxShader.h"
-#include "LuxShaderComponent.h"
 #include "LuxCamera.h"
 #include "LuxRenderingSystem.h"
 
@@ -147,10 +146,10 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 
 		it->second.m_Transform->GetRawPtr()->ApplyTransform();
 
-		if (!it->second.m_MeshRenderer || !it->second.m_Shader)
+		if (!it->second.m_MeshRenderer || !it->second.m_Material)
 			continue;
 
-		Core::Shader* shader = it->second.m_Shader->GetRawPtr()->GetShader();
+		Core::Shader* shader = it->second.m_Material->GetRawPtr()->GetShader();
 		
 		if (!shader)
 			continue;

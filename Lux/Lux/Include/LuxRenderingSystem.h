@@ -42,8 +42,8 @@ namespace Lux
 
 			struct EntityEntry
 			{
-				EntityEntry() : m_Transform(nullptr), m_MeshRenderer(nullptr), m_Shader(nullptr), m_Camera(nullptr),
-					m_Init(false), m_Light(nullptr), m_Material(nullptr)
+				EntityEntry() : m_Transform(nullptr), m_MeshRenderer(nullptr), m_Material(nullptr), m_Camera(nullptr),
+					m_Init(false), m_Light(nullptr)
 				{
 
 				}
@@ -52,15 +52,14 @@ namespace Lux
 				{
 					m_Transform = nullptr;
 					m_MeshRenderer = nullptr;
-					m_Shader = nullptr;
+					m_Material = nullptr;
 					m_Camera = nullptr;
 					m_Light = nullptr;
-					m_Material = nullptr;
 				}
 
 				inline bool IsNull()
 				{
-					if (!m_Transform && !m_MeshRenderer && !m_Shader && !m_Camera && !m_Light && !m_Material)
+					if (!m_Transform && !m_MeshRenderer && !m_Camera && !m_Light && !m_Material)
 					{
 						return true;
 					}
@@ -74,12 +73,6 @@ namespace Lux
 					if (m_MeshRenderer)
 					{
 						if (!m_MeshRenderer->IsValid())
-							return false;
-					}
-
-					if (m_Shader)
-					{
-						if (!m_Shader->IsValid())
 							return false;
 					}
 
@@ -106,7 +99,6 @@ namespace Lux
 
 				Core::ObjectHandle<Core::Transform>* m_Transform;
 				Core::ObjectHandle<MeshRenderer>* m_MeshRenderer;
-				Core::ObjectHandle<ShaderComponent>* m_Shader;
 				Core::ObjectHandle<MaterialComponent>* m_Material;
 				Core::ObjectHandle<Camera>* m_Camera;
 				Core::ObjectHandle<Light>* m_Light;
@@ -146,15 +138,15 @@ namespace Lux
 			{
 				m_EntityMap[&a_Owner].m_MeshRenderer = (Core::ObjectHandle<MeshRenderer>*)(a_CompPtr);
 
-				if (m_EntityMap[&a_Owner].m_Shader)
+				if (m_EntityMap[&a_Owner].m_Material)
 				{
 					m_EntityMap[&a_Owner].m_Init = false;
 				}
 			}
 
-			template<> void AddComponentInternal<ShaderComponent>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			template<> void AddComponentInternal<MaterialComponent>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
-				m_EntityMap[&a_Owner].m_Shader = (Core::ObjectHandle<ShaderComponent>*)(a_CompPtr);
+				m_EntityMap[&a_Owner].m_Material = (Core::ObjectHandle<MaterialComponent>*)(a_CompPtr);
 
 				if (m_EntityMap[&a_Owner].m_MeshRenderer)
 				{
@@ -178,11 +170,6 @@ namespace Lux
 				m_LightEntry = &m_EntityMap[&a_Owner];
 			}
 
-			template<> void AddComponentInternal<MaterialComponent>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
-			{
-				m_EntityMap[&a_Owner].m_Material = (Core::ObjectHandle<MaterialComponent>*)(a_CompPtr);
-			}
-
 			template<class ComponentType>
 			void RemoveComponentInternal(Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
@@ -202,7 +189,7 @@ namespace Lux
 
 			template<> void RemoveComponentInternal<ShaderComponent>(Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
-				m_EntityMap[&a_Owner].m_Shader = nullptr;
+				m_EntityMap[&a_Owner].m_Material = nullptr;
 			}
 
 			template<> void RemoveComponentInternal<Camera>(Core::ObjectHandle<Core::Entity>& a_Owner)

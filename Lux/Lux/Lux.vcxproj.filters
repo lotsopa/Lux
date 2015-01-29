@@ -183,9 +183,6 @@
     <ClInclude Include="Include\LuxShaderFileParser.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxShaderComponent.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxRenderWindow.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -388,9 +385,6 @@
     </ClCompile>
     <ClCompile Include="Source\LuxShaderFileParser.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LuxShaderComponent.cpp">
-      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxVertex.cpp">
       <Filter>Source Files\Core</Filter>

@@ -21,7 +21,6 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxBehaviourComponent.h"
 #include "LuxFreeLookCamera.h"
 #include "LuxMeshRenderer.h"
-#include "LuxShaderComponent.h"
 #include "LuxMaterialComponent.h"
 #include "LuxCamera.h"
 #include "LuxEntity.h"
