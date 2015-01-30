@@ -38,3 +38,4 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxSceneManager.h"
 #include "LuxFileHandler.h"
 #include "LuxResourceHandler.h"
+#include "LuxTextureSampler.h"

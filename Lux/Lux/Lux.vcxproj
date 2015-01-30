@@ -33,6 +33,7 @@
     <ClInclude Include="Include\Internal\OpenGL\LuxTexture1DOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxTexture2DOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxTexture3DOGL.h" />
+    <ClInclude Include="Include\Internal\OpenGL\LuxTextureSamplerOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxVertexArrayOGL.h" />
     <ClInclude Include="Include\LuxBehaviourComponent.h" />
     <ClInclude Include="Include\LuxBehaviourSystem.h" />
@@ -75,6 +76,7 @@
     <ClInclude Include="Include\LuxTexture.h" />
     <ClInclude Include="Include\LuxTexture2D.h" />
     <ClInclude Include="Include\LuxTexture3D.h" />
+    <ClInclude Include="Include\LuxTextureSampler.h" />
     <ClInclude Include="Include\LuxThreadSafeQueue.h" />
     <ClInclude Include="Include\LuxTimer.h" />
     <ClInclude Include="Include\LuxResourceHandler.h" />
@@ -105,6 +107,7 @@
     <ClCompile Include="Source\Internal\OpenGL\LuxTexture1DOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxTexture2DOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxTexture3DOGL.cpp" />
+    <ClCompile Include="Source\Internal\OpenGL\LuxTextureSamplerOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxVertexArrayOGL.cpp" />
     <ClCompile Include="Source\LuxBehaviourComponent.cpp" />
     <ClCompile Include="Source\LuxBehaviourSystem.cpp" />
@@ -151,6 +154,7 @@
     <ClCompile Include="Source\LuxTexture.cpp" />
     <ClCompile Include="Source\LuxTexture2D.cpp" />
     <ClCompile Include="Source\LuxTexture3D.cpp" />
+    <ClCompile Include="Source\LuxTextureSampler.cpp" />
     <ClCompile Include="Source\LuxThreadSafeQueue.cpp" />
     <ClCompile Include="Source\LuxTimer.cpp" />
     <ClCompile Include="Source\LuxTransform.cpp" />
