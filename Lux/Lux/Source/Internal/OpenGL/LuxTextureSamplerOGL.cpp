@@ -3,8 +3,6 @@
 #include "LuxTextureSamplerOGL.h"
 #include "LuxErrorCheckOGL.h"
 
-// TODO
-
 Lux::Core::Internal::TextureSamplerOGL::TextureSamplerOGL(TextureSamplerOptions& a_Options) : TextureSampler(a_Options)
 {
 	glGenSamplers(1, &m_SamplerState);
@@ -159,12 +157,13 @@ void Lux::Core::Internal::TextureSamplerOGL::SetFilterMode(TextureFilter filter)
 	}
 }
 
-void Lux::Core::Internal::TextureSamplerOGL::Activate()
+void Lux::Core::Internal::TextureSamplerOGL::Activate(unsigned int a_Unit, ShaderProgram a_Program)
 {
-	
+	m_LastBoundUnit = a_Unit;
+	glBindSampler(a_Unit, m_SamplerState);
 }
 
 void Lux::Core::Internal::TextureSamplerOGL::Deactivate()
 {
-
+	glBindSampler(m_LastBoundUnit, 0);
 }

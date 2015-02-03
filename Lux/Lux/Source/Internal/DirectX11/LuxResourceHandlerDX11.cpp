@@ -285,7 +285,7 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture2DF
 		DeleteTexture2D(a_TexName);
 	}
 
-	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(width, height, data);
+	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(m_RenderWindow->GetDeviceContextPtr(), width, height, data);
 
 	// Put it in the map
 	AddTexture2DToMap(a_TexName, tex2d);
@@ -307,7 +307,7 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture2DF
 		DeleteTexture2D(a_TexName);
 	}
 
-	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(width, height, data);
+	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(m_RenderWindow->GetDeviceContextPtr(), width, height, data);
 
 	// Put it in the map
 	AddTexture2DToMap(a_TexName, tex2d);

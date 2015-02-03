@@ -12,10 +12,11 @@ namespace Lux
 			public:
 				TextureSamplerOGL(TextureSamplerOptions& a_Options);
 				virtual ~TextureSamplerOGL();
-				virtual void Activate();
+				virtual void Activate(unsigned int a_Unit, ShaderProgram a_Program);
 				virtual void Deactivate();
 			private:
 				GLuint m_SamplerState;
+				GLuint m_LastBoundUnit;
 				void SetTextureWrap(TextureAddressMode mode, GLint axis);
 				void SetCompareFunc(TextureComparisonFunc func);
 				void SetFilterMode(TextureFilter filter);

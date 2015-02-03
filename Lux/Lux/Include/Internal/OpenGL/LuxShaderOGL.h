@@ -19,9 +19,8 @@ namespace Lux
 				inline const unsigned int GetShaderProgram() { return m_ShaderProgram;  }
 				unsigned int GetAttribLocation(const Key& a_Name);
 				virtual void Update();
-
-			private:
 				unsigned int GetUniformLocation(const Key& a_Name);
+			private:
 				unsigned int m_ShaderProgram;
 				unsigned int CreateShaderProgram(std::vector<unsigned int>& shaders);
 

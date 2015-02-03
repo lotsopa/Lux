@@ -12,3 +12,13 @@ Lux::Core::Internal::Texture1DOGL::~Texture1DOGL()
 {
 
 }
+
+void Lux::Core::Internal::Texture1DOGL::Bind(unsigned int a_Slot, const Key& a_Name, Shader* a_Shader, ShaderProgram a_Program)
+{
+
+}
+
+void Lux::Core::Internal::Texture1DOGL::Unbind()
+{
+
+}

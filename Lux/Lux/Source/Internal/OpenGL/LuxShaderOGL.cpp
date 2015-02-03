@@ -107,3 +107,16 @@ void Lux::Core::Internal::ShaderOGL::InitializeUniformBuffer(const Key& a_Name, 
 	globalBindingPoint++;
 	m_InitializedConstantBuffers.push_back(a_Name);
 }
+
+unsigned int Lux::Core::Internal::ShaderOGL::GetUniformLocation(const Key& a_Name)
+{
+	unsigned int loc = UINT_MAX;
+
+	loc = glGetUniformLocation(m_ShaderProgram, a_Name.GetName().c_str());
+
+	if (loc == UINT_MAX)
+	{
+		Utility::ThrowError("Failed to retrieve uniform location from shader.");
+	}
+	return loc;
+}

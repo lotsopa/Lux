@@ -12,3 +12,13 @@ Lux::Core::Internal::Texture1DDX11::~Texture1DDX11()
 {
 
 }
+
+void Lux::Core::Internal::Texture1DDX11::Bind(unsigned int a_Slot, const Key& a_Name, Shader* a_Shader, ShaderProgram a_Program)
+{
+
+}
+
+void Lux::Core::Internal::Texture1DDX11::Unbind()
+{
+
+}
