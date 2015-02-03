@@ -10,12 +10,15 @@ namespace Lux
 			class TextureSamplerOGL : public TextureSampler
 			{
 			public:
-				TextureSamplerOGL();
 				TextureSamplerOGL(TextureSamplerOptions& a_Options);
 				virtual ~TextureSamplerOGL();
-
+				virtual void Activate();
+				virtual void Deactivate();
 			private:
 				GLuint m_SamplerState;
+				void SetTextureWrap(TextureAddressMode mode, GLint axis);
+				void SetCompareFunc(TextureComparisonFunc func);
+				void SetFilterMode(TextureFilter filter);
 			};
 		}
 	}

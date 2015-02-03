@@ -22,6 +22,8 @@
 #include "LuxFileHandler.h"
 #include "LuxShaderFileParser.h"
 #include "LuxErrorCheckOGL.h"
+#include "LuxTextureSampler.h"
+#include "LuxTextureSamplerOGL.h"
 
 #ifndef YY_NO_UNISTD_H
 #define YY_NO_UNISTD_H
@@ -82,6 +84,14 @@ Lux::Core::Internal::ResourceHandlerOGL::~ResourceHandlerOGL()
 		it6->second.reset();
 	}
 	m_Texture3DMap.clear();
+
+	SamplerMap::iterator it8;
+
+	for (it8 = m_SamplerMap.begin(); it8 != m_SamplerMap.end(); ++it8)
+	{
+		it8->second.reset();
+	}
+	m_SamplerMap.clear();
 }
 
 Lux::Core::Internal::ResourceHandlerOGL::ResourceHandlerOGL()
@@ -518,7 +528,7 @@ void Lux::Core::Internal::ResourceHandlerOGL::LoadImageData( FileInfo* a_File, u
 void Lux::Core::Internal::ResourceHandlerOGL::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
 	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	m_MeshMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Mesh>(a_Ent)));
+	m_MeshMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Mesh>(a_Ent)));
 }
 Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& a_Name)
 {
@@ -529,7 +539,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& 
 void Lux::Core::Internal::ResourceHandlerOGL::AddMaterialToMap(const String& a_Str, Material* a_Mat)
 {
 	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Material>(a_Mat)));
+	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Material>(a_Mat)));
 }
 
 Lux::Core::Material* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
@@ -589,7 +599,7 @@ Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerOGL::GetTexture(const St
 void Lux::Core::Internal::ResourceHandlerOGL::AddTextureToMap(const String& a_Str, Texture* a_Tex)
 {
 	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture>(a_Tex)));
+	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture>(a_Tex)));
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture(const String& a_Name)
@@ -628,7 +638,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetLoadedMesh(const St
 void Lux::Core::Internal::ResourceHandlerOGL::AddShaderToMap(const String& a_Str, Shader* a_Shader)
 {
 	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
-	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Shader>(a_Shader)));
+	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Shader>(a_Shader)));
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::ShaderExists(const String& a_Name)
@@ -654,7 +664,7 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::GetShader(const Stri
 #else
 void Lux::Core::Internal::ResourceHandlerOGL::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
-	m_MeshMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Mesh>(a_Ent)));
+	m_MeshMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Mesh>(a_Ent)));
 }
 
 Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& a_Name)
@@ -664,7 +674,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& 
 
 void Lux::Core::Internal::ResourceHandlerOGL::AddMaterialToMap(const String& a_Str, Material* a_Mat)
 {
-	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Material>(a_Mat)));
+	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Material>(a_Mat)));
 }
 
 Lux::Core::Material* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
@@ -718,7 +728,7 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::GetTexture2D(cons
 
 void Lux::Core::Internal::ResourceHandlerOGL::AddTexture2DToMap(const String& a_Str, Texture2D* a_Tex)
 {
-	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture2D>(a_Tex)));
+	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture2D>(a_Tex)));
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture2D(const String& a_Name)
@@ -753,7 +763,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetLoadedMesh(const St
 
 void Lux::Core::Internal::ResourceHandlerOGL::AddShaderToMap(const String& a_Str, Shader* a_Shader)
 {
-	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Shader>(a_Shader)));
+	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Shader>(a_Shader)));
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::ShaderExists(const String& a_Name)
@@ -812,12 +822,12 @@ bool Lux::Core::Internal::ResourceHandlerOGL::Texture3DExists(const String& a_Na
 
 void Lux::Core::Internal::ResourceHandlerOGL::AddTexture1DToMap(const String& a_Str, Texture1D* a_Tex)
 {
-	m_Texture1DMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture1D>(a_Tex)));
+	m_Texture1DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture1D>(a_Tex)));
 }
 
 void Lux::Core::Internal::ResourceHandlerOGL::AddTexture3DToMap(const String& a_Str, Texture3D* a_Tex)
 {
-	m_Texture3DMap.insert(std::make_pair(Key(a_Str), std::shared_ptr<Texture3D>(a_Tex)));
+	m_Texture3DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture3D>(a_Tex)));
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture1D(const String& a_Name)
@@ -847,3 +857,47 @@ bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture3D(const String& a_Na
 }
 
 #endif // LUX_THREAD_SAFE
+
+
+Lux::Core::TextureSampler* Lux::Core::Internal::ResourceHandlerOGL::CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions)
+{
+	TextureSamplerOGL* sampler = new TextureSamplerOGL(a_InitOptions);
+	AddSamplerToMap(a_Name, sampler);
+	return sampler;
+}
+
+Lux::Core::TextureSampler* Lux::Core::Internal::ResourceHandlerOGL::GetTextureSampler(const String& a_Name)
+{
+	return m_SamplerMap.at(a_Name).get();
+}
+
+bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTextureSampler(const String& a_Name)
+{
+	if (!TextureSamplerExists(a_Name))
+	{
+		LUX_LOG(Utility::logWARNING) << "Could not delete texture sampler with name " << a_Name << ". Texture Sampler doesn't exist.";
+		return false;
+	}
+	m_SamplerMap.at(Key(a_Name)).reset();
+	m_SamplerMap.erase(Key(a_Name));
+
+	return true;
+}
+
+void Lux::Core::Internal::ResourceHandlerOGL::AddSamplerToMap(const String& a_Str, TextureSampler* a_Sampler)
+{
+	m_SamplerMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<TextureSampler>(a_Sampler)));
+}
+
+bool Lux::Core::Internal::ResourceHandlerOGL::TextureSamplerExists(const String& a_Name)
+{
+	Key k(a_Name);
+	unsigned int count = m_SamplerMap.count(k);
+
+	if (count > 0)
+	{
+		return true;
+	}
+
+	return false;
+}

@@ -288,6 +288,9 @@
     <ClInclude Include="Include\Internal\OpenGL\LuxTextureSamplerOGL.h">
       <Filter>Header Files\Core\Internal\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxTextureSamplerDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -484,6 +487,9 @@
     </ClCompile>
     <ClCompile Include="Source\Internal\OpenGL\LuxTextureSamplerOGL.cpp">
       <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxTextureSamplerDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

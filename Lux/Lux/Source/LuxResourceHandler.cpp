@@ -1,6 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxHelpers.h"
 #include "LuxKeyCodes.h"
+#include "LuxTextureSampler.h"
 #include "LuxResourceHandler.h"
 #include "LuxResourceHandlerOGL.h"
 #include "LuxRenderWindow.h"

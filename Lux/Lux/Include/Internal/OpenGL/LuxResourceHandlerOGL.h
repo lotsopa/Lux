@@ -13,6 +13,7 @@ namespace Lux
 		class Texture1D;
 		class Texture2D;
 		class Texture3D;
+		class TextureSampler;
 		struct FileInfo;
 
 		namespace Internal
@@ -31,23 +32,27 @@ namespace Lux
 				Texture3D* CreateTexture3DFromFile(const String& a_File, const String& a_TexName);
 				Texture3D* CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName);
 				Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
+				TextureSampler* CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
 
-				virtual Material* CreateMaterial(const String& a_Name);
+				Material* CreateMaterial(const String& a_Name);
 				Mesh* GetMesh(const String& a_Name);
 				Material* GetMaterial(const String& a_Name);
 				Texture2D* GetTexture2D(const String& a_Name);
 				Texture3D* GetTexture3D(const String& a_Name);
 				Texture1D* GetTexture1D(const String& a_Name);
+				TextureSampler* GetTextureSampler(const String& a_Name);
 				bool MaterialExists(const String& a_Name);
 				bool MeshExists(const String& a_Name);
+				bool TextureSamplerExists(const String& a_Name);
 				bool Texture2DExists(const String& a_Name);
 				bool Texture1DExists(const String& a_Name);
 				bool Texture3DExists(const String& a_Name);
 				bool DeleteTexture2D(const String& a_Name);
 				bool DeleteTexture1D(const String& a_Name);
 				bool DeleteTexture3D(const String& a_Name);
-				virtual bool ShaderExists(const String& a_Name);
-				virtual Shader* GetShader(const String& a_Name);
+				bool ShaderExists(const String& a_Name);
+				Shader* GetShader(const String& a_Name);
+				bool DeleteTextureSampler(const String& a_Name);
 
 			protected:
 				friend class ResourceHandler;
@@ -55,13 +60,14 @@ namespace Lux
 				ResourceHandlerOGL(ResourceHandlerOGL const&);// Don't Implement
 				void operator=(ResourceHandlerOGL const&);// Don't implement
 
-				typedef std::map<Key, std::shared_ptr<Texture2D>> Texture2DMap;
-				typedef std::map<Key, std::shared_ptr<Texture1D>> Texture1DMap;
-				typedef std::map<Key, std::shared_ptr<Texture3D>> Texture3DMap;
-				typedef std::map<Key, std::shared_ptr<Mesh>> MeshMap;
+				typedef std::map<Key, std::unique_ptr<Texture2D>> Texture2DMap;
+				typedef std::map<Key, std::unique_ptr<Texture1D>> Texture1DMap;
+				typedef std::map<Key, std::unique_ptr<Texture3D>> Texture3DMap;
+				typedef std::map<Key, std::unique_ptr<Mesh>> MeshMap;
 				typedef std::map<Key, Mesh*> MeshMapSimple;
-				typedef std::map<Key, std::shared_ptr<Material>> MaterialMap;
-				typedef std::map<Key, std::shared_ptr<Shader>> ShaderMap;
+				typedef std::map<Key, std::unique_ptr<Material>> MaterialMap;
+				typedef std::map<Key, std::unique_ptr<Shader>> ShaderMap;
+				typedef std::map<Key, std::unique_ptr<TextureSampler>> SamplerMap;
 				MeshMap m_MeshMap;
 				MeshMapSimple m_LoadedFilenameMeshes;
 				MaterialMap m_MaterialMap;
@@ -69,6 +75,7 @@ namespace Lux
 				Texture3DMap m_Texture3DMap;
 				Texture1DMap m_Texture1DMap;
 				ShaderMap m_ShaderMap;
+				SamplerMap m_SamplerMap;
 
 #if LUX_THREAD_SAFE == TRUE
 				std::mutex m_MeshMapMutex;
@@ -76,7 +83,7 @@ namespace Lux
 				std::mutex m_TextureMapMutex;
 				std::mutex m_ShaderMapMutex;
 #endif
-
+				void AddSamplerToMap(const String& a_Str, TextureSampler* a_Sampler);
 				void AddMeshToMap(const String& a_Str, Mesh* a_Ent);
 				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
 				Mesh* GetLoadedMesh(const String& a_FileStr);

@@ -14,6 +14,8 @@ namespace Lux
 		class Texture1D;
 		class Texture2D;
 		class Texture3D;
+		class TextureSampler;
+		struct TextureSamplerOptions;
 		struct FileInfo;
 		class RenderWindow;
 
@@ -34,6 +36,7 @@ namespace Lux
 			virtual Texture3D* CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
 			virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName) = 0;
 			virtual Material* CreateMaterial(const String& a_Name) = 0;
+			virtual TextureSampler* CreateTextureSampler(const String& a_Name,TextureSamplerOptions& a_InitOptions) = 0;
 
 			virtual Mesh* GetMesh(const String& a_Name) = 0;
 			virtual Shader* GetShader(const String& a_Name) = 0;
@@ -41,15 +44,18 @@ namespace Lux
 			virtual Texture2D* GetTexture2D(const String& a_Name) = 0;
 			virtual Texture3D* GetTexture3D(const String& a_Name) = 0;
 			virtual Texture1D* GetTexture1D(const String& a_Name) = 0;
+			virtual TextureSampler* GetTextureSampler(const String& a_Name) = 0;
 			virtual bool MaterialExists(const String& a_Name) = 0;
 			virtual bool MeshExists(const String& a_Name) = 0;
 			virtual bool ShaderExists(const String& a_Name) = 0;
 			virtual bool Texture2DExists(const String& a_Name) = 0;
 			virtual bool Texture1DExists(const String& a_Name) = 0;
 			virtual bool Texture3DExists(const String& a_Name) = 0;
+			virtual bool TextureSamplerExists(const String& a_Name) = 0;
 			virtual bool DeleteTexture2D(const String& a_Name) = 0;
 			virtual bool DeleteTexture1D(const String& a_Name) = 0;
 			virtual bool DeleteTexture3D(const String& a_Name) = 0;
+			virtual bool DeleteTextureSampler(const String& a_Name) = 0;
 
 		protected:
 			ResourceHandler();

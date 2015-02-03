@@ -5,6 +5,7 @@ namespace Lux
 {
 	namespace Core
 	{
+
 		enum TextureFilter
 		{
 			LUX_FILTER_MIN_MAG_MIP_POINT = 0,
@@ -102,7 +103,9 @@ namespace Lux
 			TextureSampler();
 			TextureSampler(TextureSamplerOptions& a_Options);
 			virtual ~TextureSampler();
-
+			
+			virtual void Activate() = 0;
+			virtual void Deactivate() = 0;
 		protected:
 			TextureSamplerOptions m_Options;
 		};

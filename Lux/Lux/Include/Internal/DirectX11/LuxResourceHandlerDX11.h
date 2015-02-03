@@ -11,6 +11,7 @@ namespace Lux
 		class Mesh;
 		class Key;
 		class Texture;
+		class TextureSampler;
 		struct FileInfo;
 
 		namespace Internal
@@ -32,6 +33,7 @@ namespace Lux
 				virtual Texture3D* CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName);
 				virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
 				virtual Material* CreateMaterial(const String& a_Name);
+				virtual TextureSampler* CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
 
 				virtual Mesh* GetMesh(const String& a_Name);
 				virtual Shader* GetShader(const String& a_Name);
@@ -39,16 +41,18 @@ namespace Lux
 				virtual Texture2D* GetTexture2D(const String& a_Name);
 				virtual Texture1D* GetTexture1D(const String& a_Name);
 				virtual Texture3D* GetTexture3D(const String& a_Name);
+				virtual TextureSampler* GetTextureSampler(const String& a_Name);
 				virtual bool MaterialExists(const String& a_Name);
 				virtual bool MeshExists(const String& a_Name);
 				virtual bool ShaderExists(const String& a_Name);
 				virtual bool Texture2DExists(const String& a_Name);
 				virtual bool Texture1DExists(const String& a_Name);
 				virtual bool Texture3DExists(const String& a_Name);
+				virtual bool TextureSamplerExists(const String& a_Name);
 				virtual bool DeleteTexture2D(const String& a_Name);
 				virtual bool DeleteTexture1D(const String& a_Name);
 				virtual bool DeleteTexture3D(const String& a_Name);
-
+				virtual bool DeleteTextureSampler(const String& a_Name);
 			private:
 				ResourceHandlerDX11(ResourceHandlerDX11 const&);// Don't Implement
 				void operator=(ResourceHandlerDX11 const&);// Don't implement
@@ -56,14 +60,15 @@ namespace Lux
 				RenderWindowDX11* m_RenderWindow;
 				friend class ResourceHandler;
 
-				typedef std::map<Key, std::shared_ptr<Texture2D>> Texture2DMap;
-				typedef std::map<Key, std::shared_ptr<Texture1D>> Texture1DMap;
-				typedef std::map<Key, std::shared_ptr<Texture3D>> Texture3DMap;
-				typedef std::map<Key, std::shared_ptr<Mesh>> MeshMap;
+				typedef std::map<Key, std::unique_ptr<Texture2D>> Texture2DMap;
+				typedef std::map<Key, std::unique_ptr<Texture1D>> Texture1DMap;
+				typedef std::map<Key, std::unique_ptr<Texture3D>> Texture3DMap;
+				typedef std::map<Key, std::unique_ptr<Mesh>> MeshMap;
 				typedef std::map<Key, Mesh*> MeshMapSimple;
-				typedef std::map<Key, std::shared_ptr<Material>> MaterialMap;
-				typedef std::map<Key, std::shared_ptr<Shader>> ShaderMap;
+				typedef std::map<Key, std::unique_ptr<Material>> MaterialMap;
+				typedef std::map<Key, std::unique_ptr<Shader>> ShaderMap;
 				typedef std::map<Key, Microsoft::WRL::ComPtr<ID3D11InputLayout>> InputLayoutMap;
+				typedef std::map<Key, std::unique_ptr<TextureSampler>> SamplerMap;
 				MeshMap m_MeshMap;
 				MeshMapSimple m_LoadedFilenameMeshes;
 				MaterialMap m_MaterialMap;
@@ -72,6 +77,7 @@ namespace Lux
 				Texture1DMap m_Texture1DMap;
 				ShaderMap m_ShaderMap;
 				InputLayoutMap m_InputLayouts;
+				SamplerMap m_SamplerMap;
 
 #if LUX_THREAD_SAFE == TRUE
 				std::mutex m_MeshMapMutex;
@@ -80,7 +86,7 @@ namespace Lux
 				std::mutex m_ShaderMapMutex;
 				std::mutex m_InputLayoutMutex;
 #endif
-
+				void AddSamplerToMap(const String& a_Str, TextureSampler* a_Sampler);
 				void AddMeshToMap(const String& a_Str, Mesh* a_Ent);
 				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
 				Mesh* GetLoadedMesh(const String& a_FileStr);

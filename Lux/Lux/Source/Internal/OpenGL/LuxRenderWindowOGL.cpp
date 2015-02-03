@@ -17,7 +17,7 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 {
 	glfwWindowHint(GLFW_SAMPLES, a_AppInitOptions.m_AntiAliasing);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -33,7 +33,7 @@ bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a
 	
 	if (m_WindowHandle == nullptr)
 	{
-		LUX_LOG(Utility::logERROR) << "Failed to initialize specified OpenGL " << 4 << "." << 0 << " Context.";
+		LUX_LOG(Utility::logERROR) << "Failed to initialize specified OpenGL " << 4 << "." << 5 << " Context.";
 		glfwTerminate();
 		return false;
 	}
