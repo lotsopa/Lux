@@ -196,6 +196,10 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 			continue;
 
 		Core::TextureSampler* texSampler = diffuseTex->GetSampler();
+
+		if (!texSampler)
+			continue;
+
 		texSampler->Activate(0, FRAGMENT_PROGRAM); // 0 is the diffuse texture
 		diffuseTex->Bind(0, "DiffuseTexture", shader, FRAGMENT_PROGRAM);
 

@@ -13,6 +13,7 @@ namespace Lux
 				{
 
 				}
+
 				void* m_Shader;
 				ID3DBlob* m_CompileBlob; // Used for reflection
 				ID3D11InputLayout* m_InputLayout; // Could be null

@@ -34,7 +34,11 @@ Lux::Core::Internal::ShaderDX11::ShaderDX11(std::vector<DX11CompiledShader>& a_S
 
 Lux::Core::Internal::ShaderDX11::~ShaderDX11()
 {
-
+	for (unsigned int i = 0; i < m_ShaderList.size(); i++)
+	{
+		m_ShaderList[i].m_CompileBlob->Release();
+	}
+	m_InputLayout->Release();
 }
 
 void Lux::Core::Internal::ShaderDX11::Activate()
