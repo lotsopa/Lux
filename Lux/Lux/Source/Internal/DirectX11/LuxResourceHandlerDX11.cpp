@@ -273,10 +273,51 @@ void Lux::Core::Internal::ResourceHandlerDX11::LoadAllTexturesOfTypeFromMaterial
 
 Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture2DFromFile(const String& a_File, const String& a_TexName)
 {
-	unsigned int width = 0;
-	unsigned int height = 0;
-	unsigned char* data = nullptr;
-	LoadImageData(a_File, width, height, data);
+	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
+
+	FIMEMORY* freeImgMemoryPtr = nullptr;
+	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)file->m_RawData, file->m_DataLength);
+	FREE_IMAGE_FORMAT imgFormat = FreeImage_GetFileTypeFromMemory(freeImgMemoryPtr, file->m_DataLength);
+
+	if (imgFormat == FIF_UNKNOWN)
+	{
+		imgFormat = FreeImage_GetFIFFromFilename(a_File.c_str());
+
+		// If it's still unknown, throw
+		if (imgFormat == FIF_UNKNOWN)
+		{
+			String err("The file " + a_File + " Could not be loaded. Unknown format.");
+			Utility::ThrowError(err);
+		}
+	}
+
+	//Does the extension support reading?
+	if (!FreeImage_FIFSupportsReading(imgFormat))
+	{
+		String err("The file " + a_File + " Could not be loaded. The file extension does not support reading.");
+		Utility::ThrowError(err);
+	}
+
+	// Load the file in a bitmap
+	FIBITMAP* bitmap = FreeImage_LoadFromMemory(imgFormat, freeImgMemoryPtr);
+	FIBITMAP* convertedBitmap = FreeImage_ConvertTo32Bits(bitmap);
+	FreeImage_Unload(bitmap);
+	if (convertedBitmap == nullptr)
+	{
+		String err("The file " + a_File + " Could not be loaded. Loading function returned NULL.");
+		Utility::ThrowError(err);
+	}
+
+	unsigned int imgWidth = FreeImage_GetWidth(convertedBitmap);
+	unsigned int imgHeight = FreeImage_GetHeight(convertedBitmap);
+	unsigned char* bits = FreeImage_GetBits(convertedBitmap);
+
+	// Normally this should never happen, but just to be safe
+	if (imgWidth == 0 || imgHeight == 0 || bits == nullptr)
+	{
+		String err("The file " + a_File + " Could not be created. Failed to retrieve proper data from the loaded file.");
+		Utility::ThrowError(err);
+	}
 
 	// Check if a texture with this name already exists
 	if (Texture2DExists(a_TexName))
@@ -285,20 +326,62 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture2DF
 		DeleteTexture2D(a_TexName);
 	}
 
-	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(m_RenderWindow->GetDeviceContextPtr(), width, height, data);
+	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(m_RenderWindow->GetDeviceContextPtr(), imgWidth, imgHeight, bits);
 
 	// Put it in the map
 	AddTexture2DToMap(a_TexName, tex2d);
 
+	//Free FreeImage's copy of the data
+	FreeImage_Unload(convertedBitmap);
+	Utility::SafePtrDelete(file);
 	return tex2d;
 }
 
 Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName)
 {
-	unsigned int width = 0;
-	unsigned int height = 0;
-	unsigned char* data = nullptr;
-	LoadImageData(a_Info, width, height, data);
+	FIMEMORY* freeImgMemoryPtr = nullptr;
+	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_Info->m_RawData, a_Info->m_DataLength);
+	FREE_IMAGE_FORMAT imgFormat = FreeImage_GetFileTypeFromMemory(freeImgMemoryPtr, a_Info->m_DataLength);
+
+	if (imgFormat == FIF_UNKNOWN)
+	{
+		imgFormat = FreeImage_GetFIFFromFilename(a_TexName.c_str());
+
+		// If it's still unknown, throw
+		if (imgFormat == FIF_UNKNOWN)
+		{
+			String err("The file Could not be loaded. Unknown format.");
+			Utility::ThrowError(err);
+		}
+	}
+
+	//Does the extension support reading?
+	if (!FreeImage_FIFSupportsReading(imgFormat))
+	{
+		String err("The file Could not be loaded. The file extension does not support reading.");
+		Utility::ThrowError(err);
+	}
+
+	// Load the file in a bitmap
+	FIBITMAP* bitmap = FreeImage_LoadFromMemory(imgFormat, freeImgMemoryPtr);
+	FIBITMAP* convertedBitmap = FreeImage_ConvertTo32Bits(bitmap);
+	FreeImage_Unload(bitmap);
+	if (convertedBitmap == nullptr)
+	{
+		String err("The file Could not be loaded. Loading function returned NULL.");
+		Utility::ThrowError(err);
+	}
+
+	unsigned int imgWidth = FreeImage_GetWidth(convertedBitmap);
+	unsigned int imgHeight = FreeImage_GetHeight(convertedBitmap);
+	unsigned char* bits = FreeImage_GetBits(convertedBitmap);
+
+	// Normally this should never happen, but just to be safe
+	if (imgWidth == 0 || imgHeight == 0 || bits == nullptr)
+	{
+		String err("The file Could not be created. Failed to retrieve proper data from the loaded file.");
+		Utility::ThrowError(err);
+	}
 
 	// Check if a texture with this name already exists
 	if (Texture2DExists(a_TexName))
@@ -307,11 +390,14 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture2DF
 		DeleteTexture2D(a_TexName);
 	}
 
-	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(m_RenderWindow->GetDeviceContextPtr(), width, height, data);
+	Internal::Texture2DDX11* tex2d = new Internal::Texture2DDX11(m_RenderWindow->GetDeviceContextPtr(), imgWidth, imgHeight, bits);
 
 	// Put it in the map
 	AddTexture2DToMap(a_TexName, tex2d);
 
+	//Free FreeImage's copy of the data
+	FreeImage_Unload(convertedBitmap);
+	Utility::SafePtrDelete(a_Info);
 	return tex2d;
 }
 
@@ -867,10 +953,51 @@ m_RenderWindow(a_RenderWindow)
 
 Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture1DFromFile(const String& a_File, const String& a_TexName)
 {
-	unsigned int width = 0;
-	unsigned int height = 0;
-	unsigned char* data = nullptr;
-	LoadImageData(a_File, width, height, data);
+	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
+
+	FIMEMORY* freeImgMemoryPtr = nullptr;
+	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)file->m_RawData, file->m_DataLength);
+	FREE_IMAGE_FORMAT imgFormat = FreeImage_GetFileTypeFromMemory(freeImgMemoryPtr, file->m_DataLength);
+
+	if (imgFormat == FIF_UNKNOWN)
+	{
+		imgFormat = FreeImage_GetFIFFromFilename(a_File.c_str());
+
+		// If it's still unknown, throw
+		if (imgFormat == FIF_UNKNOWN)
+		{
+			String err("The file " + a_File + " Could not be loaded. Unknown format.");
+			Utility::ThrowError(err);
+		}
+	}
+
+	//Does the extension support reading?
+	if (!FreeImage_FIFSupportsReading(imgFormat))
+	{
+		String err("The file " + a_File + " Could not be loaded. The file extension does not support reading.");
+		Utility::ThrowError(err);
+	}
+
+	// Load the file in a bitmap
+	FIBITMAP* bitmap = FreeImage_LoadFromMemory(imgFormat, freeImgMemoryPtr);
+	FIBITMAP* convertedBitmap = FreeImage_ConvertTo32Bits(bitmap);
+	FreeImage_Unload(bitmap);
+	if (convertedBitmap == nullptr)
+	{
+		String err("The file " + a_File + " Could not be loaded. Loading function returned NULL.");
+		Utility::ThrowError(err);
+	}
+
+	unsigned int imgWidth = FreeImage_GetWidth(convertedBitmap);
+	unsigned int imgHeight = FreeImage_GetHeight(convertedBitmap);
+	unsigned char* bits = FreeImage_GetBits(convertedBitmap);
+
+	// Normally this should never happen, but just to be safe
+	if (imgWidth == 0 || imgHeight == 0 || bits == nullptr)
+	{
+		String err("The file " + a_File + " Could not be created. Failed to retrieve proper data from the loaded file.");
+		Utility::ThrowError(err);
+	}
 
 	// Check if a texture with this name already exists
 	if (Texture1DExists(a_TexName))
@@ -879,20 +1006,62 @@ Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture1DF
 		DeleteTexture1D(a_TexName);
 	}
 
-	Internal::Texture1DDX11* tex1d = new Internal::Texture1DDX11(width, data);
+	Internal::Texture1DDX11* tex1d = new Internal::Texture1DDX11(imgWidth, bits);
 
 	// Put it in the map
 	AddTexture1DToMap(a_TexName, tex1d);
 
+	//Free FreeImage's copy of the data
+	FreeImage_Unload(convertedBitmap);
+	Utility::SafePtrDelete(file);
 	return tex1d;
 }
 
 Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName)
 {
-	unsigned int width = 0;
-	unsigned int height = 0;
-	unsigned char* data = nullptr;
-	LoadImageData(a_Info, width, height, data);
+	FIMEMORY* freeImgMemoryPtr = nullptr;
+	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_Info->m_RawData, a_Info->m_DataLength);
+	FREE_IMAGE_FORMAT imgFormat = FreeImage_GetFileTypeFromMemory(freeImgMemoryPtr, a_Info->m_DataLength);
+
+	if (imgFormat == FIF_UNKNOWN)
+	{
+		imgFormat = FreeImage_GetFIFFromFilename(a_TexName.c_str());
+
+		// If it's still unknown, throw
+		if (imgFormat == FIF_UNKNOWN)
+		{
+			String err("The file Could not be loaded. Unknown format.");
+			Utility::ThrowError(err);
+		}
+	}
+
+	//Does the extension support reading?
+	if (!FreeImage_FIFSupportsReading(imgFormat))
+	{
+		String err("The file Could not be loaded. The file extension does not support reading.");
+		Utility::ThrowError(err);
+	}
+
+	// Load the file in a bitmap
+	FIBITMAP* bitmap = FreeImage_LoadFromMemory(imgFormat, freeImgMemoryPtr);
+	FIBITMAP* convertedBitmap = FreeImage_ConvertTo32Bits(bitmap);
+	FreeImage_Unload(bitmap);
+	if (convertedBitmap == nullptr)
+	{
+		String err("The file Could not be loaded. Loading function returned NULL.");
+		Utility::ThrowError(err);
+	}
+
+	unsigned int imgWidth = FreeImage_GetWidth(convertedBitmap);
+	unsigned int imgHeight = FreeImage_GetHeight(convertedBitmap);
+	unsigned char* bits = FreeImage_GetBits(convertedBitmap);
+
+	// Normally this should never happen, but just to be safe
+	if (imgWidth == 0 || imgHeight == 0 || bits == nullptr)
+	{
+		String err("The file Could not be created. Failed to retrieve proper data from the loaded file.");
+		Utility::ThrowError(err);
+	}
 
 	// Check if a texture with this name already exists
 	if (Texture1DExists(a_TexName))
@@ -901,11 +1070,14 @@ Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture1DF
 		DeleteTexture1D(a_TexName);
 	}
 
-	Internal::Texture1DDX11* tex1d = new Internal::Texture1DDX11(width, data);
+	Internal::Texture1DDX11* tex1d = new Internal::Texture1DDX11(imgWidth, bits);
 
 	// Put it in the map
 	AddTexture1DToMap(a_TexName, tex1d);
 
+	//Free FreeImage's copy of the data
+	FreeImage_Unload(convertedBitmap);
+	Utility::SafePtrDelete(a_Info);
 	return tex1d;
 }
 
@@ -918,57 +1090,6 @@ Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture3DF
 Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerDX11::CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName)
 {
 	return nullptr;
-}
-
-void Lux::Core::Internal::ResourceHandlerDX11::LoadImageData(const String& a_Path, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData)
-{
-	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_Path);
-	LoadImageData(file, outWidth, outHeight, outData);
-}
-
-void Lux::Core::Internal::ResourceHandlerDX11::LoadImageData(FileInfo* a_File, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData)
-{
-	FIMEMORY* freeImgMemoryPtr = nullptr;
-	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_File->m_RawData, a_File->m_DataLength);
-	FREE_IMAGE_FORMAT imgFormat = FreeImage_GetFileTypeFromMemory(freeImgMemoryPtr, a_File->m_DataLength);
-
-	if (imgFormat == FIF_UNKNOWN)
-	{
-		String err("The file from memory could not be loaded. Unknown format.");
-		Utility::ThrowError(err);
-	}
-
-	//Does the extension support reading?
-	if (!FreeImage_FIFSupportsReading(imgFormat))
-	{
-		String err("The file could not be loaded. The file extension does not support reading.");
-		Utility::ThrowError(err);
-	}
-
-	// Load the file in a bitmap
-	FIBITMAP* bitmap = FreeImage_LoadFromMemory(imgFormat, freeImgMemoryPtr);
-	FIBITMAP* convertedBitmap = FreeImage_ConvertTo32Bits(bitmap);
-
-	if (convertedBitmap == nullptr)
-	{
-		String err("The file could not be loaded. Loading function returned NULL.");
-		Utility::ThrowError(err);
-	}
-
-	outWidth = FreeImage_GetWidth(convertedBitmap);
-	outHeight = FreeImage_GetHeight(convertedBitmap);
-	outData = FreeImage_GetBits(convertedBitmap);
-
-	// Normally this should never happen, but just to be safe
-	if (outWidth == 0 || outHeight == 0 || outData == nullptr)
-	{
-		String err("The file could not be created. Failed to retrieve proper data from the loaded file.");
-		Utility::ThrowError(err);
-	}
-
-	//Free FreeImage's copy of the data
-	FreeImage_Unload(convertedBitmap);
-	Utility::SafePtrDelete(a_File);
 }
 
 Lux::Core::TextureSampler* Lux::Core::Internal::ResourceHandlerDX11::CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions)

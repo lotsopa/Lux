@@ -4,7 +4,7 @@
 #include "LuxTexture3DOGL.h"
 #include "LuxKey.h"
 
-Lux::Core::Internal::Texture3DOGL::Texture3DOGL()
+Lux::Core::Internal::Texture3DOGL::Texture3DOGL() : Texture3D()
 {
 
 }

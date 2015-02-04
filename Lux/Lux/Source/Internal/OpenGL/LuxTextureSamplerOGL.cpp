@@ -33,15 +33,8 @@ Lux::Core::Internal::TextureSamplerOGL::TextureSamplerOGL(TextureSamplerOptions&
 
 	SetCompareFunc(m_Options.m_ComparisonFunc);
 
-	if (glewIsSupported("GL_EXT_texture_filter_anisotropic"))
-	{
-		glSamplerParameterf(m_SamplerState, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)m_Options.m_MaxAnisotropy);
-		Utility::Internal::CheckOGLError();
-	}
-	else
-	{
-		LUX_LOG(Utility::logWARNING) << "Anisotropic filtering is not supported by the GPU.";
-	}
+	glSamplerParameterf(m_SamplerState, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)m_Options.m_MaxAnisotropy);
+	Utility::Internal::CheckOGLError();
 }
 
 Lux::Core::Internal::TextureSamplerOGL::~TextureSamplerOGL()

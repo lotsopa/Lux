@@ -5,7 +5,7 @@
 
 // TODO
 Lux::Core::Internal::Texture2DDX11::Texture2DDX11(ID3D11DeviceContext* a_Context, unsigned int a_ImgWidth, unsigned int a_ImgHeight, unsigned char* a_Bits) :
-m_DeviceContext(a_Context)
+Texture2D(), m_DeviceContext(a_Context)
 {
 	ID3D11Device* device = nullptr;
 	m_DeviceContext->GetDevice(&device);

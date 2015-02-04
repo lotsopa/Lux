@@ -8,7 +8,7 @@
 #include "LuxShader.h"
 #include "LuxShaderOGL.h"
 
-Lux::Core::Internal::Texture2DOGL::Texture2DOGL(unsigned int a_ImgWidth, unsigned int a_ImgHeight, unsigned char* a_Bits) : m_TextureID(-1)
+Lux::Core::Internal::Texture2DOGL::Texture2DOGL(unsigned int a_ImgWidth, unsigned int a_ImgHeight, unsigned char* a_Bits) : Texture2D(), m_TextureID(-1)
 {
 	glGenTextures(1, &m_TextureID);
 
@@ -37,6 +37,7 @@ void Lux::Core::Internal::Texture2DOGL::Bind(unsigned int a_Slot, const Key& a_N
 	glActiveTexture(GL_TEXTURE0 + m_LastSlot);
 	glBindTexture(GL_TEXTURE_2D, m_TextureID);
 	glUniform1i(texLoc, m_LastSlot);
+	Utility::Internal::CheckOGLError();
 }
 
 void Lux::Core::Internal::Texture2DOGL::Unbind()

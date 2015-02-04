@@ -39,3 +39,7 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxFileHandler.h"
 #include "LuxResourceHandler.h"
 #include "LuxTextureSampler.h"
+#include "LuxTexture.h"
+#include "LuxTexture1D.h"
+#include "LuxTexture2D.h"
+#include "LuxTexture3D.h"

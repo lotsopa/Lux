@@ -97,8 +97,6 @@ namespace Lux
 				void LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType);
 				void AddShaderToMap(const String& a_Str, Shader* a_Shader);
 				void AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout);
-				void LoadImageData(const String& a_Path, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData);
-				void LoadImageData(FileInfo* a_File, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData);
 				HRESULT CreateInputLayoutDescFromVertexShaderSignature(ID3DBlob* pShaderBlob, ID3D11Device* pD3DDevice, ID3D11InputLayout** pInputLayout);
 			};
 		}

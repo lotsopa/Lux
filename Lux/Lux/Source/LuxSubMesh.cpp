@@ -88,7 +88,7 @@ SubMesh()
 				// Only 1 set supported in the vertices for now
 				if (i == 0)
 				{
-					m_Vertices[i].m_TexCoords = vec2(a_Mesh.mTextureCoords[i][j].x, a_Mesh.mTextureCoords[i][j].y);
+					m_Vertices[j].m_TexCoords = vec2(m_TextureCoordSets[i][j].x, m_TextureCoordSets[i][j].y);
 				}
 			}
 		}

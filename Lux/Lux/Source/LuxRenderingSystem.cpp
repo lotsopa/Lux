@@ -18,6 +18,11 @@
 #include "LuxShader.h"
 #include "LuxCamera.h"
 #include "LuxRenderingSystem.h"
+#include "LuxTextureSampler.h"
+#include "LuxTexture.h"
+#include "LuxTexture1D.h"
+#include "LuxTexture2D.h"
+#include "LuxTexture3D.h"
 
 #define CONVERT_ID_TO_CLASS_STRING(a) "class " ID_TO_STRING(a)
 #define ADD_COMPONENT_MAP_INSERT(a, b) m_AddComponentFuncMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1, std::placeholders::_2)))
@@ -184,6 +189,16 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 			it->second.m_Init = true;
 		}
 
+		// Bind Samplers and Textures
+		Core::Texture2D* diffuseTex = it->second.m_Material->GetRawPtr()->GetDiffuseTexture();
+
+		if (!diffuseTex)
+			continue;
+
+		Core::TextureSampler* texSampler = diffuseTex->GetSampler();
+		texSampler->Activate(0, FRAGMENT_PROGRAM); // 0 is the diffuse texture
+		diffuseTex->Bind(0, "DiffuseTexture", shader, FRAGMENT_PROGRAM);
+
 		shader->Update();
 
 		for (unsigned int i = 0; i < numSubMeshes; ++i)
@@ -195,6 +210,9 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 			subMesh->PostRender();
 		}
 		
+		diffuseTex->Unbind();
+		texSampler->Deactivate();
+
 		shader->Deactivate();
 	}
 }
