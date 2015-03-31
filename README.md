@@ -1,4 +1,4 @@
-# README #
+# What is Lux? #
 
 Lux is a personal side project I started working on in the summer of 2014. It started out as a Component Entity System, but grew into a graphics platform agnostic engine. The whole engine is heavily inspired by the Unity 3D game engine.
 
