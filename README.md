@@ -15,6 +15,7 @@ Switching renderers is as easy as changing an enumerator in the application init
 * Support for any type of custom component
 * Behaviour System
 * Memory Pools to optimize cache coherency
+* Handle based resource management to reduce the likeliness of memory leaks.
 
 ### Contact ###
 
