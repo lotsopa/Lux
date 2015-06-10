@@ -65,6 +65,7 @@ namespace Lux
 				m_MaxObjects(a_InitialSize), m_GrowSize(a_GrowSize)
 			{
 				AllocateObjects();
+				m_CurrIndex = 0;
 			}
 
 			~ObjectPool()
@@ -86,13 +87,13 @@ namespace Lux
 			// Returns null if an object cannot be created.
 			ObjectHandle<ObjectType>& CreateObject()
 			{
-				if (m_AvailableObjects.empty())
+				if (m_CurrIndex >= m_MaxObjects)
 				{
 					Grow();
 				}
 
-				unsigned int idx = m_AvailableObjects.front();
-				m_AvailableObjects.pop();
+				unsigned int idx = m_CurrIndex;
+				m_CurrIndex++;
 				m_ObjectHandleMap[idx].m_RawPtr = &m_ObjectMemory[idx];
 				return m_ObjectHandleMap[idx];
 			}
@@ -102,7 +103,17 @@ namespace Lux
 			//The passed pointer is set to null regardless.
 			bool  DeleteObject(ObjectHandle<ObjectType>& a_Obj)
 			{
-				m_AvailableObjects.push(a_Obj.m_Index);
+				unsigned int deletedIdx = a_Obj.m_Index;
+
+				// Shift by one to the left
+				for (unsigned int i = deletedIdx; i < m_MaxObjects-1; i++)
+				{
+					m_ObjectMemory[i] = m_ObjectMemory[i + 1];
+				}
+
+				m_CurrIndex--;
+				LuxAssert(m_CurrIndex >= 0);
+
 				a_Obj.m_RawPtr = nullptr;
 				return true;
 			}
@@ -112,7 +123,7 @@ namespace Lux
 			unsigned int m_MaxObjects;
 			unsigned int m_GrowSize;
 			std::vector<ObjectType> m_ObjectMemory;
-			std::queue<unsigned int> m_AvailableObjects;
+			unsigned int m_CurrIndex;
 			std::map<unsigned int, ObjectHandle<ObjectType>> m_ObjectHandleMap;
 
 			void Grow()
@@ -124,7 +135,6 @@ namespace Lux
 				{
 					m_ObjectMemory.push_back(ObjectType());
 					m_ObjectMemory[i].m_Index = i;
-					m_AvailableObjects.push(i);
 				}
 				m_MaxObjects = newVal;
 
@@ -141,8 +151,6 @@ namespace Lux
 				{
 					Utility::SafePtrDelete(m_ObjectMemory[i]);
 				}*/
-				std::queue<unsigned int> empty;
-				m_AvailableObjects.swap(empty);
 				std::vector<ObjectType> emptyVec;
 				m_ObjectMemory.swap(emptyVec);
 
@@ -159,7 +167,6 @@ namespace Lux
 				{
 					m_ObjectMemory.push_back(ObjectType());
 					m_ObjectMemory[i].m_Index = i;
-					m_AvailableObjects.push(i);
 					m_ObjectHandleMap[i].m_RawPtr = &m_ObjectMemory[i];
 					m_ObjectHandleMap[i].m_Index = i;
 				}
