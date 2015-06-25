@@ -65,6 +65,9 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
+// PhysX
+#include "PxPhysicsAPI.h"
+
 // Engine specific include
 #include "LuxDefines.h"
 #include "LuxLog.h"

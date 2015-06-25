@@ -64,7 +64,7 @@ bool TestApp::LoadContent()
 	Lux::Core::ObjectHandle<Lux::Graphics::MaterialComponent>& materialComp2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MaterialComponent>(ent2);
 	materialComp2.GetRawPtr()->SetShader(shader);
 	materialComp2.GetRawPtr()->SetDiffuseTexture(diffuseTex);
-	m_SceneManager->DestroyEntity(ent);
+
 	return true;
 }
 
