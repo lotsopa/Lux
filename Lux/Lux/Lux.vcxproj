@@ -216,6 +216,7 @@
     <Lib>
       <AdditionalLibraryDirectories>..\Extern\PhysX\lib;..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Debug\Win32;..\Extern\physfs\lib\Debug;..\Extern\Assimp-3.1.1\lib\Debug;%(AdditionalLibraryDirectories);..\Extern\FreeImage\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32sd.lib;opengl32.lib;glfw3.lib;physfs.lib;assimpd.lib;FreeImage.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3VehicleDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -231,6 +232,7 @@
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalOptions>/Zm256 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -240,6 +242,7 @@
     <Lib>
       <AdditionalLibraryDirectories>..\Extern\PhysX\lib;..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Release\Win32;..\Extern\physfs\lib\Release;..\Extern\Assimp-3.1.1\lib\Release;%(AdditionalLibraryDirectories);..\Extern\FreeImage\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;physfs.lib;assimp.lib;FreeImage.lib;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Vehicle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
