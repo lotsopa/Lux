@@ -67,6 +67,12 @@
     <Filter Include="Header Files\Utility\Internal\DirectX11">
       <UniqueIdentifier>{deff472a-c70d-471c-ab09-7a87412a455a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{fefcf967-ac05-4d72-96f6-886924b4ace9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{584107a9-a0f6-4a30-8e66-6457356962a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\LuxPCH.h">
@@ -291,6 +297,9 @@
     <ClInclude Include="Include\Internal\DirectX11\LuxTextureSamplerDX11.h">
       <Filter>Header Files\Core\Internal\DirectX11</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxPhysicsSystem.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -490,6 +499,9 @@
     </ClCompile>
     <ClCompile Include="Source\Internal\DirectX11\LuxTextureSamplerDX11.cpp">
       <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxPhysicsSystem.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -27,6 +27,7 @@
 #include "LuxResourceHandler.h"
 #include "LuxBehaviourComponent.h"
 #include "LuxFreeLookCamera.h"
+#include "LuxPhysicsSystem.h"
 
 Lux::Application::Application() :
 m_Platform(nullptr), m_SceneManager(nullptr), m_ResourceHandler(nullptr)
@@ -135,5 +136,8 @@ bool Lux::Application::LoadSystemTypes()
 
 	m_SceneManager->RegisterNewSystemType<Core::BehaviourSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Core::FreeLookCamera, Core::BehaviourSystem>();
+
+	m_SceneManager->RegisterNewSystemType<Physics::PhysicsSystem>();
+
 	return true;
 }

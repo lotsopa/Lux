@@ -54,6 +54,7 @@
     <ClInclude Include="Include\LuxMaterialComponent.h" />
     <ClInclude Include="Include\LuxMeshPostProcess.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
+    <ClInclude Include="Include\LuxPhysicsSystem.h" />
     <ClInclude Include="Include\LuxPlatform.h" />
     <ClInclude Include="Include\LuxRenderingSystem.h" />
     <ClInclude Include="Include\LuxScannerToParser.h" />
@@ -133,6 +134,7 @@
     <ClCompile Include="Source\LuxMaterial.cpp" />
     <ClCompile Include="Source\LuxMaterialComponent.cpp" />
     <ClCompile Include="Source\LuxMeshRenderer.cpp" />
+    <ClCompile Include="Source\LuxPhysicsSystem.cpp" />
     <ClCompile Include="Source\LuxPlatform.cpp" />
     <ClCompile Include="Source\LuxRenderingSystem.cpp" />
     <ClCompile Include="Source\LuxScannerToParser.cpp">
@@ -215,7 +217,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>..\Extern\PhysX\lib;..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Debug\Win32;..\Extern\physfs\lib\Debug;..\Extern\Assimp-3.1.1\lib\Debug;%(AdditionalLibraryDirectories);..\Extern\FreeImage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32sd.lib;opengl32.lib;glfw3.lib;physfs.lib;assimpd.lib;FreeImage.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3VehicleDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32sd.lib;opengl32.lib;glfw3.lib;physfs.lib;assimpd.lib;FreeImage.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3VehicleDEBUG.lib;PhysX3ExtensionsDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
   </ItemDefinitionGroup>
@@ -241,7 +243,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>..\Extern\PhysX\lib;..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Release\Win32;..\Extern\physfs\lib\Release;..\Extern\Assimp-3.1.1\lib\Release;%(AdditionalLibraryDirectories);..\Extern\FreeImage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;physfs.lib;assimp.lib;FreeImage.lib;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Vehicle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;physfs.lib;assimp.lib;FreeImage.lib;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Vehicle.lib;PhysX3Extensions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
   </ItemDefinitionGroup>
