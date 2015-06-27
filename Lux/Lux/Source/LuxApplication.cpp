@@ -27,6 +27,7 @@
 #include "LuxResourceHandler.h"
 #include "LuxBehaviourComponent.h"
 #include "LuxFreeLookCamera.h"
+#include "LuxPhysicsMaterialComponent.h"
 #include "LuxPhysicsSystem.h"
 
 Lux::Application::Application() :
@@ -138,6 +139,7 @@ bool Lux::Application::LoadSystemTypes()
 	m_SceneManager->RegisterComponentTypeWithSystem<Core::FreeLookCamera, Core::BehaviourSystem>();
 
 	m_SceneManager->RegisterNewSystemType<Physics::PhysicsSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem < Physics::PhysicsMaterialComponent, Physics::PhysicsSystem>();
 
 	return true;
 }

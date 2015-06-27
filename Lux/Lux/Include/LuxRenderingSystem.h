@@ -66,35 +66,35 @@ namespace Lux
 
 					if (m_Transform)
 					{
-						if (!m_Transform->IsValid())
+						if (m_Transform->IsValid())
 							return false;
 					}
 
 					if (m_MeshRenderer)
 					{
-						if (!m_MeshRenderer->IsValid())
+						if (m_MeshRenderer->IsValid())
 							return false;
 					}
 
 					if (m_Material)
 					{
-						if (!m_Material->IsValid())
+						if (m_Material->IsValid())
 							return false;
 					}
 
 					if (m_Camera)
 					{
-						if (!m_Camera->IsValid())
+						if (m_Camera->IsValid())
 							return false;
 					}
 
 					if (m_Light)
 					{
-						if (!m_Light->IsValid())
+						if (m_Light->IsValid())
 							return false;
 					}
 
-					return false;
+					return true;
 				}
 
 				Core::ObjectHandle<Core::Transform>* m_Transform;

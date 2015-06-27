@@ -86,6 +86,7 @@
     <ClInclude Include="Include\LuxMeshRenderer.h" />
     <ClInclude Include="Include\LuxTexture1D.h" />
     <ClInclude Include="Include\LuxVertex.h" />
+    <ClInclude Include="Include\LuxPhysicsMaterialComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Internal\DirectX11\LuxEventListenerDX11.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="Source\LuxMaterial.cpp" />
     <ClCompile Include="Source\LuxMaterialComponent.cpp" />
     <ClCompile Include="Source\LuxMeshRenderer.cpp" />
+    <ClCompile Include="Source\LuxPhysicsMaterialComponent.cpp" />
     <ClCompile Include="Source\LuxPhysicsSystem.cpp" />
     <ClCompile Include="Source\LuxPlatform.cpp" />
     <ClCompile Include="Source\LuxRenderingSystem.cpp" />

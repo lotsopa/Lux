@@ -23,12 +23,13 @@
 namespace Lux
 {
 	using namespace glm;
+	using namespace physx;
 
 	// Some typedefs
 	typedef std::string String;
 	typedef std::wstring WideString;
 	typedef long long int64;
-	typedef unsigned int TextureIndex;
+	typedef unsigned int TextureIndex; 
 
 	const vec4 WINDOW_CLEAR_COLOR(0.2f);
 

@@ -12,9 +12,18 @@
 #include "LuxSystem.h"
 #include "LuxTimer.h"
 #include "LuxPhysicsSystem.h"
+#include "LuxPhysicsMaterialComponent.h"
 
-Lux::Physics::PhysicsSystem::PhysicsSystem() : System(), m_RecordAllocations(true), m_NumPhysicsThreads(1), m_StepTimeSec(0.1f)
+#define CONVERT_ID_TO_CLASS_STRING(a) "class " ID_TO_STRING(a)
+#define ADD_COMPONENT_MAP_INSERT(a, b) m_AddComponentFuncMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1, std::placeholders::_2)))
+#define REMOVE_COMPONENT_MAP_INSERT(a, b) m_RemoveComponentProcessMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1)))
+
+Lux::Physics::PhysicsSystem::PhysicsSystem() : System(), m_RecordAllocations(true), m_NumPhysicsThreads(1), m_StepTimeSec(0.1f),
+m_MaterialKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::PhysicsMaterialComponent))
 {
+	ADD_COMPONENT_MAP_INSERT(m_MaterialKey, PhysicsSystem::AddComponentInternal<PhysicsMaterialComponent>);
+	REMOVE_COMPONENT_MAP_INSERT(m_MaterialKey, PhysicsSystem::RemoveComponentInternal<PhysicsMaterialComponent>);
+
 	m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
 
 	if (!m_Foundation)
@@ -76,11 +85,35 @@ bool Lux::Physics::PhysicsSystem::Init(Core::SceneManager* a_SceneManager)
 
 void Lux::Physics::PhysicsSystem::AddComponent(void* a_Component, const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity)
 {
-
+	m_AddComponentFuncMap[a_CompType](a_Component, a_Entity);
 }
 
 void Lux::Physics::PhysicsSystem::RemoveComponent(const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity)
 {
+	bool entryExists = EntityEntryExists(a_Entity);
 
+	if (!entryExists)
+	{
+		return;
+	}
+
+	m_RemoveComponentProcessMap[a_CompType](a_Entity);
+
+	if (m_EntityMap[&a_Entity].IsNull())
+	{
+		m_EntityMap.erase(&a_Entity);
+	}
+}
+
+bool Lux::Physics::PhysicsSystem::EntityEntryExists(Core::ObjectHandle<Core::Entity>& a_Entity)
+{
+	int count = m_EntityMap.count(&a_Entity);
+
+	if (count > 0)
+	{
+		return true;
+	}
+
+	return false;
 }
 
