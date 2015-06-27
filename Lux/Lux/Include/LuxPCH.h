@@ -67,6 +67,7 @@
 
 // PhysX
 #include "PxPhysicsAPI.h"
+#include "extensions\PxDefaultSimulationFilterShader.h"
 
 // Engine specific include
 #include "LuxDefines.h"

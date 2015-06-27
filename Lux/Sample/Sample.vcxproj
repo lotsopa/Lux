@@ -53,6 +53,8 @@
       <AdditionalIncludeDirectories>Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\physfs\inc;..\Extern\FreeImage\inc;..\Extern\PhysX\inc;..\Lux\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(TargetDir)\Sample_Debug.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -71,6 +73,7 @@
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Extern\PhysX\inc;Include;..\Lux\Include;..\Extern\glfw-3.0.4\include;..\Extern\glm;..\Extern\Assimp-3.1.1\include;..\Extern\glew-1.10.0\include;..\Extern\FreeImage\inc;..\Extern\physfs\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(TargetDir)\Sample.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

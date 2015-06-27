@@ -10,6 +10,11 @@ namespace Lux
 		class Key;
 	}
 
+	namespace Utility
+	{
+		class Timer;
+	}
+
 	namespace Physics
 	{
 		class PhysicsSystem : public Core::System
@@ -29,6 +34,11 @@ namespace Lux
 			physx::PxDefaultAllocator m_Allocator;
 			physx::PxPhysics* m_Physics;
 			bool m_RecordAllocations;
+			unsigned int m_NumPhysicsThreads;
+			physx::PxScene* m_Scene;
+			physx::PxCpuDispatcher* m_CpuDispatcher;
+			Utility::Timer m_StepTimer;
+			float m_StepTimeSec;
 		};
 	}
 }
