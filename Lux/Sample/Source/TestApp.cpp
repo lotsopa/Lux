@@ -56,10 +56,6 @@ bool TestApp::LoadContent()
 	materialComp.GetRawPtr()->SetDiffuseTexture(diffuseTex);
 
 	// Add Physics
-	Lux::Core::ObjectHandle<Lux::Physics::PhysicsMaterial>& physMaterial = m_SceneManager->AttachNewComponent<Lux::Physics::PhysicsMaterial>(ent);
-	physMaterial.GetRawPtr()->SetRestitution(0.1f);
-	physMaterial.GetRawPtr()->SetStaticFriction(0.5f);
-	physMaterial.GetRawPtr()->SetDynamicFriction(0.5f);
 
 	Lux::Core::ObjectHandle<Lux::Physics::DynamicRigidBody>& rigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::DynamicRigidBody>(ent);
 

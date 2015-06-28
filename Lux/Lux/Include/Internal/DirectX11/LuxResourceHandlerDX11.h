@@ -12,6 +12,7 @@ namespace Lux
 		class Key;
 		class Texture;
 		class TextureSampler;
+		class PhysicsMaterial;
 		struct FileInfo;
 
 		namespace Internal
@@ -34,6 +35,7 @@ namespace Lux
 				virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
 				virtual MaterialResource* CreateMaterial(const String& a_Name);
 				virtual TextureSampler* CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
+				virtual PhysicsMaterial* CreatePhysicsMaterial(const String& a_Name, float a_Restitution = 0.0f, float a_DynamicFriction = 0.0f, float a_StaticFriction = 0.0f);
 
 				virtual Mesh* GetMesh(const String& a_Name);
 				virtual Shader* GetShader(const String& a_Name);
@@ -42,6 +44,7 @@ namespace Lux
 				virtual Texture1D* GetTexture1D(const String& a_Name);
 				virtual Texture3D* GetTexture3D(const String& a_Name);
 				virtual TextureSampler* GetTextureSampler(const String& a_Name);
+				virtual PhysicsMaterial* GetPhysicsMaterial(const String& a_Name);
 				virtual bool MaterialExists(const String& a_Name);
 				virtual bool MeshExists(const String& a_Name);
 				virtual bool ShaderExists(const String& a_Name);
@@ -49,10 +52,13 @@ namespace Lux
 				virtual bool Texture1DExists(const String& a_Name);
 				virtual bool Texture3DExists(const String& a_Name);
 				virtual bool TextureSamplerExists(const String& a_Name);
+				virtual bool PhysicsMaterialExists(const String& a_Name);
 				virtual bool DeleteTexture2D(const String& a_Name);
 				virtual bool DeleteTexture1D(const String& a_Name);
 				virtual bool DeleteTexture3D(const String& a_Name);
 				virtual bool DeleteTextureSampler(const String& a_Name);
+				virtual bool DeletePhysicsMaterial(const String& a_Name);
+
 			private:
 				ResourceHandlerDX11(ResourceHandlerDX11 const&);// Don't Implement
 				void operator=(ResourceHandlerDX11 const&);// Don't implement
@@ -69,6 +75,7 @@ namespace Lux
 				typedef std::map<Key, std::unique_ptr<Shader>> ShaderMap;
 				typedef std::map<Key, Microsoft::WRL::ComPtr<ID3D11InputLayout>> InputLayoutMap;
 				typedef std::map<Key, std::unique_ptr<TextureSampler>> SamplerMap;
+				typedef std::map<Key, std::unique_ptr<PhysicsMaterial>> PhysicsMaterialMap;
 				MeshMap m_MeshMap;
 				MeshMapSimple m_LoadedFilenameMeshes;
 				MaterialMap m_MaterialMap;
@@ -78,14 +85,8 @@ namespace Lux
 				ShaderMap m_ShaderMap;
 				InputLayoutMap m_InputLayouts;
 				SamplerMap m_SamplerMap;
+				PhysicsMaterialMap m_PhysicsMaterialMap;
 
-#if LUX_THREAD_SAFE == TRUE
-				std::mutex m_MeshMapMutex;
-				std::mutex m_MaterialMapMutex;
-				std::mutex m_TextureMapMutex;
-				std::mutex m_ShaderMapMutex;
-				std::mutex m_InputLayoutMutex;
-#endif
 				void AddSamplerToMap(const String& a_Str, TextureSampler* a_Sampler);
 				void AddMeshToMap(const String& a_Str, Mesh* a_Ent);
 				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
@@ -98,6 +99,58 @@ namespace Lux
 				void AddShaderToMap(const String& a_Str, Shader* a_Shader);
 				void AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout);
 				HRESULT CreateInputLayoutDescFromVertexShaderSignature(ID3DBlob* pShaderBlob, ID3D11Device* pD3DDevice, ID3D11InputLayout** pInputLayout);
+
+				template<class T>
+				void AddResourceToMap(const String& a_Str, T* a_Resource, std::map<Key, std::unique_ptr<T>>& a_Map)
+				{
+					a_Map.insert(std::make_pair(Key(a_Str), std::unique_ptr<T>(a_Resource)));
+				}
+
+				template<class T>
+				bool ResourceExists(const String& a_Str, std::map<Key, std::unique_ptr<T>>& a_Map)
+				{
+					Key k(a_Str);
+					unsigned int count = a_Map.count(k);
+
+					if (count > 0)
+					{
+						return true;
+					}
+
+					return false;
+				}
+
+				template<class T>
+				T* GetResource(const String& a_Name, std::map<Key, std::unique_ptr<T>>& a_Map)
+				{
+					return a_Map.at(Key(a_Name)).get();
+				}
+
+				template <class T>
+				bool DeleteResource(const String& a_Name, std::map<Key, std::unique_ptr<T>>& a_Map)
+				{
+					if (!ResourceExists(a_Name, a_Map))
+					{
+						LUX_LOG(Utility::logWARNING) << "Could not delete resource with name: " << a_Name << ". Resource doesn't exist.";
+						return false;
+					}
+					a_Map.at(Key(a_Name)).reset();
+					a_Map.erase(Key(a_Name));
+
+					return true;
+				}
+
+				template <class T>
+				void DeleteMap(std::map<Key, std::unique_ptr<T>>& a_Map)
+				{
+					std::map<Key, std::unique_ptr<T>>::iterator it;
+
+					for (it = a_Map.begin(); it != a_Map.end(); ++it)
+					{
+						it->second.reset();
+					}
+					a_Map.clear();
+				}
 			};
 		}
 	}

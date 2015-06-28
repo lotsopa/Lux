@@ -24,6 +24,7 @@
 #include "LuxErrorCheckOGL.h"
 #include "LuxTextureSampler.h"
 #include "LuxTextureSamplerOGL.h"
+#include "LuxPhysicsMaterial.h"
 
 #ifndef YY_NO_UNISTD_H
 #define YY_NO_UNISTD_H
@@ -35,63 +36,14 @@ extern "C"
 
 Lux::Core::Internal::ResourceHandlerOGL::~ResourceHandlerOGL()
 {
-	MeshMap::iterator it;
-
-	for (it = m_MeshMap.begin(); it != m_MeshMap.end(); ++it)
-	{
-		it->second.reset();
-	}
-	m_MeshMap.clear();
-	m_LoadedFilenameMeshes.clear();
-	
-	MaterialMap::iterator it2;
-
-	for (it2 = m_MaterialMap.begin(); it2 != m_MaterialMap.end(); ++it2)
-	{
-		it2->second.reset();
-	}
-	m_MaterialMap.clear();
-
-	Texture2DMap::iterator it3;
-
-	for (it3 = m_Texture2DMap.begin(); it3 != m_Texture2DMap.end(); ++it3)
-	{
-		it3->second.reset();
-	}
-	m_Texture2DMap.clear();
-
-
-	ShaderMap::iterator it4;
-
-	for (it4 = m_ShaderMap.begin(); it4 != m_ShaderMap.end(); ++it4)
-	{
-		it4->second.reset();
-	}
-	m_ShaderMap.clear();
-
-	Texture1DMap::iterator it5;
-
-	for (it5 = m_Texture1DMap.begin(); it5 != m_Texture1DMap.end(); ++it5)
-	{
-		it5->second.reset();
-	}
-	m_Texture1DMap.clear();
-
-	Texture3DMap::iterator it6;
-
-	for (it6 = m_Texture3DMap.begin(); it6 != m_Texture3DMap.end(); ++it6)
-	{
-		it6->second.reset();
-	}
-	m_Texture3DMap.clear();
-
-	SamplerMap::iterator it8;
-
-	for (it8 = m_SamplerMap.begin(); it8 != m_SamplerMap.end(); ++it8)
-	{
-		it8->second.reset();
-	}
-	m_SamplerMap.clear();
+	DeleteMap(m_MeshMap);
+	DeleteMap(m_MaterialMap);
+	DeleteMap(m_Texture1DMap);
+	DeleteMap(m_Texture2DMap);
+	DeleteMap(m_Texture3DMap);
+	DeleteMap(m_ShaderMap);
+	DeleteMap(m_SamplerMap);
+	DeleteMap(m_PhysicsMaterialMap);
 }
 
 Lux::Core::Internal::ResourceHandlerOGL::ResourceHandlerOGL()
@@ -133,7 +85,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(con
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
 		MaterialResource* myMat = new MaterialResource(*impMat);
-		AddMaterialToMap(matName, myMat);
+		AddResourceToMap(matName, myMat, m_MaterialMap);
 
 		// Load all textures from all the types. 
 		// If there are no textures from the specified type the function will just do nothing.
@@ -169,7 +121,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(con
 		}
 	}
 
-	AddMeshToMap(a_EntityName, retMesh);
+	AddResourceToMap(a_EntityName, (Mesh*)retMesh, m_MeshMap);
 	AddFileNameToMap(a_File, retMesh);
 	Utility::SafePtrDelete(file);
 	return retMesh;
@@ -205,7 +157,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(F
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
 		MaterialResource* myMat = new MaterialResource(*impMat);
-		AddMaterialToMap(matName, myMat);
+		AddResourceToMap(matName, myMat, m_MaterialMap);
 
 		// Load all textures from all the types. 
 		// If there are no textures from the specified type the function will just do nothing.
@@ -241,7 +193,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(F
 		}
 	}
 
-	AddMeshToMap(a_EntityName, retEntity);
+	AddResourceToMap(a_EntityName, (Mesh*)retEntity, m_MeshMap);
 	return retEntity;
 }
 
@@ -325,7 +277,7 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFr
 	Internal::Texture2DOGL* tex2d = new Internal::Texture2DOGL(imgWidth, imgHeight, bits);
 
 	// Put it in the map
-	AddTexture2DToMap(a_TexName, tex2d);
+	AddResourceToMap(a_TexName, (Texture2D*)tex2d, m_Texture2DMap);
 
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
@@ -389,7 +341,7 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFr
 	Internal::Texture2DOGL* tex2d = new Internal::Texture2DOGL(imgWidth, imgHeight, bits);
 
 	// Put it in the map
-	AddTexture2DToMap(a_TexName, tex2d);
+	AddResourceToMap(a_TexName, (Texture2D*)tex2d, m_Texture2DMap);
 
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
@@ -455,7 +407,7 @@ Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFr
 	Internal::Texture1DOGL* tex2d = new Internal::Texture1DOGL(imgWidth, bits);
 
 	// Put it in the map
-	AddTexture1DToMap(a_TexName, tex2d);
+	AddResourceToMap(a_TexName, (Texture1D*)tex2d, m_Texture1DMap);
 
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
@@ -516,24 +468,26 @@ Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFr
 		DeleteTexture1D(a_TexName);
 	}
 
-	Internal::Texture1DOGL* tex2d = new Internal::Texture1DOGL(imgWidth, bits);
+	Internal::Texture1DOGL* tex1d = new Internal::Texture1DOGL(imgWidth, bits);
 
 	// Put it in the map
-	AddTexture1DToMap(a_TexName, tex2d);
+	AddResourceToMap(a_TexName, (Texture1D*)tex1d, m_Texture1DMap);
 
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
 	Utility::SafePtrDelete(a_Info);
-	return tex2d;
+	return tex1d;
 }
 
 Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromFile(const String& a_File, const String& a_TexName)
 {
+	// TODO
 	return nullptr;
 }
 
 Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName)
 {
+	// TODO
 	return nullptr;
 }
 
@@ -594,7 +548,7 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile
 
 	// Create a Shader Object
 	ShaderOGL* shader = new ShaderOGL(loadedShaders);
-	AddShaderToMap(a_ShaderName, shader);
+	AddResourceToMap(a_ShaderName, (Shader*)shader, m_ShaderMap);
 	fileHandler.DestroyShaderParser(Key(a_File));
 	return shader;
 }
@@ -641,7 +595,7 @@ Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerOGL::CreateMate
 {
 	MaterialResource* mat = new MaterialResource();
 	mat->SetName(a_Name);
-	AddMaterialToMap(a_Name, mat);
+	AddResourceToMap(a_Name, mat, m_MaterialMap);
 	return mat;
 }
 
@@ -696,224 +650,41 @@ void Lux::Core::Internal::ResourceHandlerOGL::LoadImageData( FileInfo* a_File, u
 	Utility::SafePtrDelete(a_File);
 }
 
-#if LUX_THREAD_SAFE == TRUE
-void Lux::Core::Internal::ResourceHandlerOGL::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
-{
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	m_MeshMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Mesh>(a_Ent)));
-}
+
 Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& a_Name)
 {
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	return m_MeshMap.at(Key(a_Name)).get();
-}
-
-void Lux::Core::Internal::ResourceHandlerOGL::AddMaterialToMap(const String& a_Str, MaterialResource* a_Mat)
-{
-	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<MaterialResource>(a_Mat)));
+	return GetResource(a_Name, m_MeshMap);
 }
 
 Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
 {
-	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	return m_MaterialMap.at(Key(a_Name)).get();
+	return GetResource(a_Name, m_MaterialMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::MaterialExists(const String& a_Name)
 {
-	Key k(a_Name);
-	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	unsigned int count = m_MaterialMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
+	return ResourceExists(a_Name, m_MaterialMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::MeshExists(const String& a_Name)
 {
-	Key k(a_Name);
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	unsigned int count = m_MeshMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Lux::Core::Internal::ResourceHandlerOGL::TextureExists(const String& a_Name)
-{
-	Key k(a_Name);
-	std::unique_lock<std::mutex> lock(m_TextureMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	unsigned int count = m_Texture2DMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerOGL::GetTexture(const String& a_Name)
-{
-	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	return m_Texture2DMap.at(Key(a_Name)).get();
-}
-
-void Lux::Core::Internal::ResourceHandlerOGL::AddTextureToMap(const String& a_Str, Texture* a_Tex)
-{
-	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture>(a_Tex)));
-}
-
-bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture(const String& a_Name)
-{
-	if (!TextureExists(a_Name))
-	{
-		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
-		return false;
-	}
-	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	m_Texture2DMap.at(Key(a_Name)).reset();
-	m_Texture2DMap.erase(Key(a_Name));
-
-	return true;
-}
-
-void Lux::Core::Internal::ResourceHandlerOGL::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
-{
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
-	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), a_Ent));
-}
-
-Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetLoadedMesh(const String& a_FileStr)
-{
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
-	MeshMapSimple::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
-
-	if (it != m_LoadedFilenameMeshes.end())
-	{
-		return it->second;
-	}
-
-	return nullptr;
-}
-
-void Lux::Core::Internal::ResourceHandlerOGL::AddShaderToMap(const String& a_Str, Shader* a_Shader)
-{
-	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
-	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Shader>(a_Shader)));
-}
-
-bool Lux::Core::Internal::ResourceHandlerOGL::ShaderExists(const String& a_Name)
-{
-	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
-	Key k(a_Name);
-	unsigned int count = m_ShaderMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::GetShader(const String& a_Name)
-{
-	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
-	return m_ShaderMap.at(Key(a_Name)).get();
-}
-
-#else
-void Lux::Core::Internal::ResourceHandlerOGL::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
-{
-	m_MeshMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Mesh>(a_Ent)));
-}
-
-Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& a_Name)
-{
-	return m_MeshMap.at(Key(a_Name)).get();
-}
-
-void Lux::Core::Internal::ResourceHandlerOGL::AddMaterialToMap(const String& a_Str, MaterialResource* a_Mat)
-{
-	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<MaterialResource>(a_Mat)));
-}
-
-Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
-{
-	return m_MaterialMap.at(Key(a_Name)).get();
-}
-
-bool Lux::Core::Internal::ResourceHandlerOGL::MaterialExists(const String& a_Name)
-{
-	Key k(a_Name);
-	unsigned int count = m_MaterialMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Lux::Core::Internal::ResourceHandlerOGL::MeshExists(const String& a_Name)
-{
-	Key k(a_Name);
-	unsigned int count = m_MeshMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
+	return ResourceExists(a_Name, m_MeshMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::Texture2DExists(const String& a_Name)
 {
-	Key k(a_Name);
-	unsigned int count = m_Texture2DMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
+	return ResourceExists(a_Name, m_Texture2DMap);
 }
 
 Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::GetTexture2D(const String& a_Name)
 {
-	return m_Texture2DMap.at(Key(a_Name)).get();
+	return GetResource(a_Name, m_Texture2DMap);
 }
 
-void Lux::Core::Internal::ResourceHandlerOGL::AddTexture2DToMap(const String& a_Str, Texture2D* a_Tex)
-{
-	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture2D>(a_Tex)));
-}
 
 bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture2D(const String& a_Name)
 {
-	if (!Texture2DExists(a_Name))
-	{
-		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
-		return false;
-	}
-	m_Texture2DMap.at(Key(a_Name)).reset();
-	m_Texture2DMap.erase(Key(a_Name));
-
-	return true;
+	return DeleteResource(a_Name, m_Texture2DMap);
 }
 
 void Lux::Core::Internal::ResourceHandlerOGL::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
@@ -933,22 +704,9 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetLoadedMesh(const St
 	return nullptr;
 }
 
-void Lux::Core::Internal::ResourceHandlerOGL::AddShaderToMap(const String& a_Str, Shader* a_Shader)
-{
-	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Shader>(a_Shader)));
-}
-
 bool Lux::Core::Internal::ResourceHandlerOGL::ShaderExists(const String& a_Name)
 {
-	Key k(a_Name);
-	unsigned int count = m_ShaderMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
+	return ResourceExists(a_Name, m_ShaderMap);
 }
 
 Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::GetShader(const String& a_Name)
@@ -968,108 +726,65 @@ Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::GetTexture1D(cons
 
 bool Lux::Core::Internal::ResourceHandlerOGL::Texture1DExists(const String& a_Name)
 {
-	Key k(a_Name);
-	unsigned int count = m_Texture1DMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
+	return ResourceExists(a_Name, m_Texture1DMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::Texture3DExists(const String& a_Name)
 {
-	Key k(a_Name);
-	unsigned int count = m_Texture3DMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-void Lux::Core::Internal::ResourceHandlerOGL::AddTexture1DToMap(const String& a_Str, Texture1D* a_Tex)
-{
-	m_Texture1DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture1D>(a_Tex)));
-}
-
-void Lux::Core::Internal::ResourceHandlerOGL::AddTexture3DToMap(const String& a_Str, Texture3D* a_Tex)
-{
-	m_Texture3DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture3D>(a_Tex)));
+	return ResourceExists(a_Name, m_Texture3DMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture1D(const String& a_Name)
 {
-	if (!Texture1DExists(a_Name))
-	{
-		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
-		return false;
-	}
-	m_Texture1DMap.at(Key(a_Name)).reset();
-	m_Texture1DMap.erase(Key(a_Name));
-
-	return true;
+	return DeleteResource(a_Name, m_Texture1DMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture3D(const String& a_Name)
 {
-	if (!Texture3DExists(a_Name))
-	{
-		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
-		return false;
-	}
-	m_Texture3DMap.at(Key(a_Name)).reset();
-	m_Texture3DMap.erase(Key(a_Name));
-
-	return true;
+	return DeleteResource(a_Name, m_Texture3DMap);
 }
-
-#endif // LUX_THREAD_SAFE
 
 
 Lux::Core::TextureSampler* Lux::Core::Internal::ResourceHandlerOGL::CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions)
 {
 	TextureSamplerOGL* sampler = new TextureSamplerOGL(a_InitOptions);
-	AddSamplerToMap(a_Name, sampler);
+	AddResourceToMap(a_Name, (TextureSampler*)sampler, m_SamplerMap);
 	return sampler;
 }
 
 Lux::Core::TextureSampler* Lux::Core::Internal::ResourceHandlerOGL::GetTextureSampler(const String& a_Name)
 {
-	return m_SamplerMap.at(a_Name).get();
+	return GetResource(a_Name, m_SamplerMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTextureSampler(const String& a_Name)
 {
-	if (!TextureSamplerExists(a_Name))
-	{
-		LUX_LOG(Utility::logWARNING) << "Could not delete texture sampler with name " << a_Name << ". Texture Sampler doesn't exist.";
-		return false;
-	}
-	m_SamplerMap.at(Key(a_Name)).reset();
-	m_SamplerMap.erase(Key(a_Name));
-
-	return true;
-}
-
-void Lux::Core::Internal::ResourceHandlerOGL::AddSamplerToMap(const String& a_Str, TextureSampler* a_Sampler)
-{
-	m_SamplerMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<TextureSampler>(a_Sampler)));
+	return DeleteResource(a_Name, m_SamplerMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::TextureSamplerExists(const String& a_Name)
 {
-	Key k(a_Name);
-	unsigned int count = m_SamplerMap.count(k);
+	return ResourceExists(a_Name, m_SamplerMap);
+}
 
-	if (count > 0)
-	{
-		return true;
-	}
+Lux::Core::PhysicsMaterial* Lux::Core::Internal::ResourceHandlerOGL::CreatePhysicsMaterial(const String& a_Name, float a_Restitution /*= 0.0f*/, float a_DynamicFriction /*= 0.0f*/, float a_StaticFriction /*= 0.0f*/)
+{
+	PhysicsMaterial* material = new PhysicsMaterial(a_Restitution, a_DynamicFriction, a_StaticFriction);
+	AddResourceToMap(a_Name, material, m_PhysicsMaterialMap);
+	return material;
+}
 
-	return false;
+Lux::Core::PhysicsMaterial* Lux::Core::Internal::ResourceHandlerOGL::GetPhysicsMaterial(const String& a_Name)
+{
+	return GetResource(a_Name, m_PhysicsMaterialMap);
+}
+
+bool Lux::Core::Internal::ResourceHandlerOGL::PhysicsMaterialExists(const String& a_Name)
+{
+	return ResourceExists(a_Name, m_PhysicsMaterialMap);
+}
+
+bool Lux::Core::Internal::ResourceHandlerOGL::DeletePhysicsMaterial(const String& a_Name)
+{
+	return DeleteResource(a_Name, m_PhysicsMaterialMap);
 }

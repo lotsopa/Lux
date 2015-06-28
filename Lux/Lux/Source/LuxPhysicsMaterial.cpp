@@ -1,17 +1,25 @@
 #include "LuxPCH.h"
 #include "LuxPhysicsMaterial.h"
 
-Lux::Physics::PhysicsMaterial::PhysicsMaterial() : Component(), m_Properties(nullptr)
+Lux::Core::PhysicsMaterial::PhysicsMaterial() : 
+m_Properties(nullptr), 
+m_DynamicFriction(0.0f),
+m_StaticFriction(0.0f), 
+m_Restitution(0.0f)
 {
 
 }
 
-Lux::Physics::PhysicsMaterial::~PhysicsMaterial()
+Lux::Core::PhysicsMaterial::PhysicsMaterial(float a_Restitution, float a_DynamicFriction, float a_StaticFriction) : 
+m_Properties(nullptr), 
+m_Restitution(a_Restitution),
+m_DynamicFriction(a_DynamicFriction),
+m_StaticFriction(a_StaticFriction)
 {
-	Reset();
+
 }
 
-void Lux::Physics::PhysicsMaterial::Reset()
+Lux::Core::PhysicsMaterial::~PhysicsMaterial()
 {
 	if (m_Properties)
 	{

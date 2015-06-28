@@ -4,6 +4,7 @@
 #include "LuxSubMesh.h"
 #include "LuxMesh.h"
 #include "LuxMeshAnimation.h"
+#include "LuxPhysicsMaterial.h"
 #include "LuxResourceHandler.h"
 #include "LuxResourceHandlerDX11.h"
 #include "LuxTexture.h"
@@ -600,150 +601,6 @@ HRESULT Lux::Core::Internal::ResourceHandlerDX11::CreateInputLayoutDescFromVerte
 	return hr;
 }
 
-#if LUX_THREAD_SAFE == TRUE
-void Lux::Core::Internal::ResourceHandlerDX11::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
-{
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	m_MeshMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Mesh>(a_Ent)));
-}
-Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerDX11::GetMesh(const String& a_Name)
-{
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	return m_MeshMap.at(Key(a_Name)).get();
-}
-
-void Lux::Core::Internal::ResourceHandlerDX11::AddMaterialToMap(const String& a_Str, MaterialResource* a_Mat)
-{
-	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<MaterialResource>(a_Mat)));
-}
-
-Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerDX11::GetMaterial(const String& a_Name)
-{
-	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	return m_MaterialMap.at(Key(a_Name)).get();
-}
-
-bool Lux::Core::Internal::ResourceHandlerDX11::MaterialExists(const String& a_Name)
-{
-	Key k(a_Name);
-	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	unsigned int count = m_MaterialMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Lux::Core::Internal::ResourceHandlerDX11::MeshExists(const String& a_Name)
-{
-	Key k(a_Name);
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	unsigned int count = m_MeshMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Lux::Core::Internal::ResourceHandlerDX11::TextureExists(const String& a_Name)
-{
-	Key k(a_Name);
-	std::unique_lock<std::mutex> lock(m_TextureMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	unsigned int count = m_Texture2DMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-Lux::Core::Texture* Lux::Core::Internal::ResourceHandlerDX11::GetTexture(const String& a_Name)
-{
-	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	return m_Texture2DMap.at(Key(a_Name)).get();
-}
-
-void Lux::Core::Internal::ResourceHandlerDX11::AddTexture2DToMap(const String& a_Str, Texture* a_Tex)
-{
-	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	m_Texture2DMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Texture>(a_Tex)));
-}
-
-bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture(const String& a_Name)
-{
-	if (!TextureExists(a_Name))
-	{
-		LUX_LOG(Utility::logWARNING) << "Could not delete texture with name. " << a_Name << " Texture doesn't exist.";
-		return false;
-	}
-	std::unique_lock<std::mutex> lock(m_TextureMapMutex);
-	m_Texture2DMap.at(Key(a_Name)).reset();
-	m_Texture2DMap.erase(Key(a_Name));
-
-	return true;
-}
-
-void Lux::Core::Internal::ResourceHandlerDX11::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
-{
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
-	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), a_Ent));
-}
-
-Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerDX11::GetLoadedMesh(const String& a_FileStr)
-{
-	std::unique_lock<std::mutex> lock(m_MeshMapMutex);
-	MeshMapSimple::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
-
-	if (it != m_LoadedFilenameMeshes.end())
-	{
-		return it->second;
-	}
-
-	return nullptr;
-}
-
-void Lux::Core::Internal::ResourceHandlerDX11::AddShaderToMap(const String& a_Str, Shader* a_Shader)
-{
-	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
-	m_ShaderMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Shader>(a_Shader)));
-}
-
-bool Lux::Core::Internal::ResourceHandlerDX11::ShaderExists(const String& a_Name)
-{
-	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
-	Key k(a_Name);
-	unsigned int count = m_ShaderMap.count(k);
-
-	if (count > 0)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerDX11::GetShader(const String& a_Name)
-{
-	std::unique_lock<std::mutex> lock(m_ShaderMapMutex);
-	return m_ShaderMap.at(Key(a_Name)).get();
-}
-
-void Lux::Core::Internal::ResourceHandlerDX11::AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout)
-{
-	std::unique_lock<std::mutex> lock(m_InputLayoutMutex);
-	m_InputLayouts.insert(std::make_pair(Key(a_Str), Microsoft::WRL::ComPtr<ID3D11InputLayout>(a_Layout)));
-}
-
-#else
 void Lux::Core::Internal::ResourceHandlerDX11::AddMeshToMap(const String& a_Str, Mesh* a_Ent)
 {
 	m_MeshMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Mesh>(a_Ent)));
@@ -943,7 +800,6 @@ bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture3D(const String& a_N
 	return true;
 }
 
-#endif // LUX_THREAD_SAFE
 
 Lux::Core::Internal::ResourceHandlerDX11::ResourceHandlerDX11(RenderWindowDX11* a_RenderWindow) :
 m_RenderWindow(a_RenderWindow)
@@ -1133,5 +989,27 @@ bool Lux::Core::Internal::ResourceHandlerDX11::TextureSamplerExists(const String
 	}
 
 	return false;
+}
+
+Lux::Core::PhysicsMaterial* Lux::Core::Internal::ResourceHandlerDX11::CreatePhysicsMaterial(const String& a_Name, float a_Restitution /*= 0.0f*/, float a_DynamicFriction /*= 0.0f*/, float a_StaticFriction /*= 0.0f*/)
+{
+	PhysicsMaterial* material = new PhysicsMaterial(a_Restitution, a_DynamicFriction, a_StaticFriction);
+	AddResourceToMap(a_Name, material, m_PhysicsMaterialMap);
+	return material;
+}
+
+Lux::Core::PhysicsMaterial* Lux::Core::Internal::ResourceHandlerDX11::GetPhysicsMaterial(const String& a_Name)
+{
+	return GetResource(a_Name, m_PhysicsMaterialMap);
+}
+
+bool Lux::Core::Internal::ResourceHandlerDX11::PhysicsMaterialExists(const String& a_Name)
+{
+	return ResourceExists(a_Name, m_PhysicsMaterialMap);
+}
+
+bool Lux::Core::Internal::ResourceHandlerDX11::DeletePhysicsMaterial(const String& a_Name)
+{
+	return DeleteResource(a_Name, m_PhysicsMaterialMap);
 }
 

@@ -47,7 +47,7 @@ namespace Lux
 
 			struct EntityEntry
 			{
-				EntityEntry() : m_Material(nullptr), m_DynamicRigidBody(nullptr), 
+				EntityEntry() : m_DynamicRigidBody(nullptr), 
 					m_StaticRigidBody(nullptr), m_Transform(nullptr)
 				{
 
@@ -60,14 +60,8 @@ namespace Lux
 
 				bool IsNull()
 				{
-					if (!m_Material && !m_DynamicRigidBody && !m_StaticRigidBody && !m_Transform)
+					if (!m_DynamicRigidBody && !m_StaticRigidBody && !m_Transform)
 						return true;
-
-					if (m_Material)
-					{
-						if (m_Material->IsValid())
-							return false;
-					}
 
 					if (m_DynamicRigidBody)
 					{
@@ -90,7 +84,6 @@ namespace Lux
 					return true;
 				}
 
-				Core::ObjectHandle<PhysicsMaterial>* m_Material;
 				Core::ObjectHandle<DynamicRigidBody>* m_DynamicRigidBody;
 				Core::ObjectHandle<StaticRigidBody>* m_StaticRigidBody;
 				Core::ObjectHandle<Core::Transform>* m_Transform;
@@ -117,16 +110,6 @@ namespace Lux
 			}
 
 			//Specializations
-			template<> void AddComponentInternal<PhysicsMaterial>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
-			{
-				Core::ObjectHandle<PhysicsMaterial>* compPtr = (Core::ObjectHandle<PhysicsMaterial>*)(a_CompPtr);
-				compPtr->GetRawPtr()->m_Properties = m_Physics->createMaterial(0.0f, 0.0f, 0.0f);
-
-				if (!compPtr->GetRawPtr()->m_Properties)
-					Utility::ThrowError("Failed to create PxMaterial.");
-
-				m_EntityMap[&a_Owner].m_Material = compPtr;
-			}
 
 			template<> void AddComponentInternal<DynamicRigidBody>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
@@ -191,19 +174,12 @@ namespace Lux
 			}
 
 			// Specializations
-			template<> void RemoveComponentInternal<PhysicsMaterial>(Core::ObjectHandle<Core::Entity>& a_Owner)
-			{
-				m_EntityMap[&a_Owner].m_Material = nullptr;
-			}
-
-			// Specializations
 			template<> void RemoveComponentInternal<DynamicRigidBody>(Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
 				m_Scene->removeActor(*m_EntityMap[&a_Owner].m_DynamicRigidBody->GetRawPtr()->m_Properties);
 				m_EntityMap[&a_Owner].m_DynamicRigidBody = nullptr;
 			}
 
-			// Specializations
 			template<> void RemoveComponentInternal<StaticRigidBody>(Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
 				m_Scene->removeActor(*m_EntityMap[&a_Owner].m_StaticRigidBody->GetRawPtr()->m_Properties);
