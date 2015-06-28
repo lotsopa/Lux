@@ -146,9 +146,10 @@ bool Lux::Application::LoadSystemTypes()
 	m_SceneManager->RegisterComponentTypeWithSystem<Core::FreeLookCamera, Core::BehaviourSystem>();
 
 	m_SceneManager->RegisterNewSystemType<Physics::PhysicsSystem>();
-	m_SceneManager->RegisterComponentTypeWithSystem < Physics::PhysicsMaterial, Physics::PhysicsSystem>();
-	m_SceneManager->RegisterComponentTypeWithSystem < Physics::DynamicRigidBody, Physics::PhysicsSystem>();
-	m_SceneManager->RegisterComponentTypeWithSystem < Physics::StaticRigidBody, Physics::PhysicsSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Physics::PhysicsMaterial, Physics::PhysicsSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Physics::DynamicRigidBody, Physics::PhysicsSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Physics::StaticRigidBody, Physics::PhysicsSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Core::Transform, Physics::PhysicsSystem>();
 
 	return true;
 }

@@ -125,6 +125,25 @@ namespace Lux
 			return retVal;
 		}
 
+		static vec3 ConvertVec3PhysX(const PxVec3& a_Vec)
+		{
+			vec3 retVal;
+			retVal.x = a_Vec.x;
+			retVal.y = a_Vec.y;
+			retVal.z = a_Vec.z;
+			return retVal;
+		}
+
+		static quat ConvertQuatPhysX(const PxQuat& a_Quat)
+		{
+			quat retVal;
+			retVal.x = a_Quat.x;
+			retVal.y = a_Quat.y;
+			retVal.z = a_Quat.z;
+			retVal.w = a_Quat.w;
+			return retVal;
+		}
+
 		static quat RotationBetweenVectors(vec3 start, vec3 dest)
 		{
 			start = normalize(start);

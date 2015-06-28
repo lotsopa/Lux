@@ -14,6 +14,11 @@
 #define MEMBER_OFFSET(s,m) ((char*)NULL + (offsetof(s,m)))
 #define ID_TO_STRING(a) #a
 
+// Physics defines
+#define LUX_WORLD_GRAVITY vec3(0.0f, -9.81f, 0.0f)
+#define LUX_PHYSICS_TIMESTEP_SEC 0.01f
+#define LUX_NUM_PHYSICS_THREADS 1
+
 #ifdef WIN32
 #define LUX_ALIGNED_MALLOC(size, alignment) _aligned_malloc(size, alignment)
 #define LUX_ALIGNED_FREE(memoryPtr) _aligned_free(memoryPtr)
