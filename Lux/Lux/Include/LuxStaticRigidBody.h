@@ -19,10 +19,11 @@ namespace Lux
 			virtual ~StaticRigidBody();
 
 			inline Core::PhysicsMaterial* GetPhysicsMaterial() { return m_Material; }
-			inline void SetPhysicsMaterial(Core::PhysicsMaterial* a_Material) { m_Material = a_Material; }
+			inline void SetPhysicsMaterial(Core::PhysicsMaterial* a_Material) { m_Material = a_Material; m_Dirty = true; }
 		private:
 			PxRigidStatic* m_Properties;
 			Core::PhysicsMaterial* m_Material;
+			bool m_Dirty;
 			friend class PhysicsSystem;
 
 		protected:

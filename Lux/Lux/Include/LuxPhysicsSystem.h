@@ -101,6 +101,7 @@ namespace Lux
 
 			bool EntityEntryExists(Core::ObjectHandle<Core::Entity>& a_Entity);
 			void UpdateObjectPositions();
+			void ProcessComponents();
 
 			// Add Components
 			template<class ComponentType>
@@ -130,19 +131,6 @@ namespace Lux
 				DynamicRigidBody* rigidBody = compPtr->GetRawPtr();
 				rigidBody->m_Properties = m_Physics->createRigidDynamic(physTransform);
 
-				// Check if we need to create a material
-				if (rigidBody->m_Material)
-				{
-					Core::PhysicsMaterial* mat = rigidBody->m_Material;
-					if (!mat->m_Properties)
-					{
-						mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
-
-						if (!mat->m_Properties)
-							Utility::ThrowError("Failed to create Physics Material.");
-					}
-				}
-
 				if (!compPtr->GetRawPtr()->m_Properties)
 					Utility::ThrowError("Failed to create DynamicRigidBody.");
 
@@ -168,19 +156,6 @@ namespace Lux
 				Core::ObjectHandle<StaticRigidBody>* compPtr = (Core::ObjectHandle<StaticRigidBody>*)(a_CompPtr);
 				StaticRigidBody* rigidBody = compPtr->GetRawPtr();
 				rigidBody->m_Properties = m_Physics->createRigidStatic(physTransform);
-
-				// Check if we need to create a material
-				if (rigidBody->m_Material)
-				{
-					Core::PhysicsMaterial* mat = rigidBody->m_Material;
-					if (!mat->m_Properties)
-					{
-						mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
-
-						if (!mat->m_Properties)
-							Utility::ThrowError("Failed to create Physics Material.");
-					}
-				}
 
 				if (!compPtr->GetRawPtr()->m_Properties)
 					Utility::ThrowError("Failed to create StaticRigidBody.");

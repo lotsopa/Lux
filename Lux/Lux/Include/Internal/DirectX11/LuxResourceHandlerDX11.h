@@ -87,14 +87,8 @@ namespace Lux
 				SamplerMap m_SamplerMap;
 				PhysicsMaterialMap m_PhysicsMaterialMap;
 
-				void AddSamplerToMap(const String& a_Str, TextureSampler* a_Sampler);
-				void AddMeshToMap(const String& a_Str, Mesh* a_Ent);
 				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
 				Mesh* GetLoadedMesh(const String& a_FileStr);
-				void AddMaterialToMap(const String& a_Str, MaterialResource* a_Mat);
-				void AddTexture2DToMap(const String& a_Str, Texture2D* a_Tex);
-				void AddTexture1DToMap(const String& a_Str, Texture1D* a_Tex);
-				void AddTexture3DToMap(const String& a_Str, Texture3D* a_Tex);
 				void LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType);
 				void AddShaderToMap(const String& a_Str, Shader* a_Shader);
 				void AddInputLayoutToMap(const String& a_Str, ID3D11InputLayout* a_Layout);

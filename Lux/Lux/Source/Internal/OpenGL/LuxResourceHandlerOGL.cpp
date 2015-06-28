@@ -711,17 +711,17 @@ bool Lux::Core::Internal::ResourceHandlerOGL::ShaderExists(const String& a_Name)
 
 Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::GetShader(const String& a_Name)
 {
-	return m_ShaderMap.at(Key(a_Name)).get();
+	return GetResource(a_Name , m_ShaderMap);
 }
 
 Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerOGL::GetTexture3D(const String& a_Name)
 {
-	return m_Texture3DMap.at(a_Name).get();
+	return GetResource(a_Name, m_Texture3DMap);
 }
 
 Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::GetTexture1D(const String& a_Name)
 {
-	return m_Texture1DMap.at(a_Name).get();
+	return GetResource(a_Name, m_Texture1DMap);
 }
 
 bool Lux::Core::Internal::ResourceHandlerOGL::Texture1DExists(const String& a_Name)

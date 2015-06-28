@@ -40,8 +40,8 @@ m_Platform(nullptr), m_SceneManager(nullptr), m_ResourceHandler(nullptr)
 
 Lux::Application::~Application()
 {
-	Utility::SafePtrDelete(m_SceneManager);
 	Utility::SafePtrDelete(m_ResourceHandler);
+	Utility::SafePtrDelete(m_SceneManager);
 	Utility::SafePtrDelete(m_Platform);
 }
 

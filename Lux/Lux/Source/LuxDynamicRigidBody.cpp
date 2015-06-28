@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxDynamicRigidBody.h"
 
-Lux::Physics::DynamicRigidBody::DynamicRigidBody() : Component(), m_Properties(nullptr), m_Material(nullptr)
+Lux::Physics::DynamicRigidBody::DynamicRigidBody() : Component(), m_Properties(nullptr), m_Material(nullptr), m_Dirty(false)
 {
 
 }
@@ -19,4 +19,5 @@ void Lux::Physics::DynamicRigidBody::Reset()
 		m_Properties = nullptr;
 	}
 	m_Material = nullptr;
+	m_Dirty = false;
 }

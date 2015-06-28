@@ -80,6 +80,9 @@ Lux::Physics::PhysicsSystem::~PhysicsSystem()
 
 void Lux::Physics::PhysicsSystem::ProcessUpdate(const float a_DeltaTime)
 {
+	// Process and update components if necessary
+	ProcessComponents();
+
 	if (m_StepTimer.ElapsedSeconds(m_StepTimeSec))
 	{
 		m_Scene->simulate(m_StepTimeSec);
@@ -157,6 +160,50 @@ void Lux::Physics::PhysicsSystem::UpdateObjectPositions()
 
 		objTransform->SetPosition(Utility::ConvertVec3PhysX(bodyTransform.p));
 		objTransform->SetRotation(Utility::ConvertQuatPhysX(bodyTransform.q));
+	}
+}
+
+void Lux::Physics::PhysicsSystem::ProcessComponents()
+{
+	EntityMap::iterator it;
+
+	for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
+	{
+		if (it->second.IsNull())
+			continue;
+
+		if (it->second.m_DynamicRigidBody && it->second.m_DynamicRigidBody->IsValid())
+		{
+			DynamicRigidBody* rigidBody = it->second.m_DynamicRigidBody->GetRawPtr();
+			// Check if we need to create a material
+			if (rigidBody->m_Material)
+			{
+				Core::PhysicsMaterial* mat = rigidBody->m_Material;
+				if (!mat->m_Properties)
+				{
+					mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
+
+					if (!mat->m_Properties)
+						Utility::ThrowError("Failed to create Physics Material.");
+				}
+			}
+		}
+		else if (it->second.m_StaticRigidBody && it->second.m_StaticRigidBody->IsValid())
+		{
+			StaticRigidBody* rigidBody = it->second.m_StaticRigidBody->GetRawPtr();
+			// Check if we need to create a material
+			if (rigidBody->m_Material)
+			{
+				Core::PhysicsMaterial* mat = rigidBody->m_Material;
+				if (!mat->m_Properties)
+				{
+					mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
+
+					if (!mat->m_Properties)
+						Utility::ThrowError("Failed to create Physics Material.");
+				}
+			}
+		}
 	}
 }
 
