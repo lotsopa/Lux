@@ -4,6 +4,11 @@
 
 namespace Lux
 {
+	namespace Core
+	{
+		class PhysicsMaterial;
+	}
+
 	namespace Physics
 	{
 		class DynamicRigidBody : public Core::Component
@@ -12,8 +17,12 @@ namespace Lux
 			DynamicRigidBody();
 			virtual ~DynamicRigidBody();
 
+			inline Core::PhysicsMaterial* GetPhysicsMaterial() { return m_Material; }
+			inline void SetPhysicsMaterial(Core::PhysicsMaterial* a_Material) { m_Material = a_Material; }
+
 		private:
 			PxRigidDynamic* m_Properties;
+			Core::PhysicsMaterial* m_Material;
 			friend class PhysicsSystem;
 
 		protected:

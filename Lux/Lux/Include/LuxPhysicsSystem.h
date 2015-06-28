@@ -12,6 +12,7 @@ namespace Lux
 		class SceneManager;
 		class Transform;
 		class Key;
+		class PhysicsMaterial;
 	}
 
 	namespace Utility
@@ -21,7 +22,6 @@ namespace Lux
 
 	namespace Physics
 	{
-
 		class PhysicsSystem : public Core::System
 		{
 		public:
@@ -127,10 +127,24 @@ namespace Lux
 				physTransform.q = Utility::ConvertQuatToPhysX(transform->GetRotation());
 
 				Core::ObjectHandle<DynamicRigidBody>* compPtr = (Core::ObjectHandle<DynamicRigidBody>*)(a_CompPtr);
-				compPtr->GetRawPtr()->m_Properties = m_Physics->createRigidDynamic(physTransform);
+				DynamicRigidBody* rigidBody = compPtr->GetRawPtr();
+				rigidBody->m_Properties = m_Physics->createRigidDynamic(physTransform);
+
+				// Check if we need to create a material
+				if (rigidBody->m_Material)
+				{
+					Core::PhysicsMaterial* mat = rigidBody->m_Material;
+					if (!mat->m_Properties)
+					{
+						mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
+
+						if (!mat->m_Properties)
+							Utility::ThrowError("Failed to create Physics Material.");
+					}
+				}
 
 				if (!compPtr->GetRawPtr()->m_Properties)
-					Utility::ThrowError("Failed to create PxMaterial.");
+					Utility::ThrowError("Failed to create DynamicRigidBody.");
 
 				m_EntityMap[&a_Owner].m_DynamicRigidBody = compPtr;
 				m_Scene->addActor(*compPtr->GetRawPtr()->m_Properties);
@@ -152,10 +166,24 @@ namespace Lux
 				physTransform.q = Utility::ConvertQuatToPhysX(transform->GetRotation());
 
 				Core::ObjectHandle<StaticRigidBody>* compPtr = (Core::ObjectHandle<StaticRigidBody>*)(a_CompPtr);
-				compPtr->GetRawPtr()->m_Properties = m_Physics->createRigidStatic(physTransform);
+				StaticRigidBody* rigidBody = compPtr->GetRawPtr();
+				rigidBody->m_Properties = m_Physics->createRigidStatic(physTransform);
+
+				// Check if we need to create a material
+				if (rigidBody->m_Material)
+				{
+					Core::PhysicsMaterial* mat = rigidBody->m_Material;
+					if (!mat->m_Properties)
+					{
+						mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
+
+						if (!mat->m_Properties)
+							Utility::ThrowError("Failed to create Physics Material.");
+					}
+				}
 
 				if (!compPtr->GetRawPtr()->m_Properties)
-					Utility::ThrowError("Failed to create PxMaterial.");
+					Utility::ThrowError("Failed to create StaticRigidBody.");
 
 				m_EntityMap[&a_Owner].m_StaticRigidBody = compPtr;
 				m_Scene->addActor(*compPtr->GetRawPtr()->m_Properties);

@@ -3,6 +3,11 @@
 
 namespace Lux
 {
+	namespace Physics
+	{
+		class PhysicsSystem;
+	}
+
 	namespace Core
 	{
 		class PhysicsMaterial
@@ -12,18 +17,19 @@ namespace Lux
 			PhysicsMaterial(float a_Restitution, float a_DynamicFriction, float a_StaticFriction);
 			virtual ~PhysicsMaterial();
 
-			inline void SetRestitution(float a_Val) { m_Restitution = a_Val; }
-			inline float GetRestitution() { return m_Restitution; }
-			inline void SetDynamicFriction(float a_Val) { m_DynamicFriction = a_Val; }
-			inline float GetDynamicFriction() { return m_DynamicFriction; }
-			inline void SetStaticFriction(float a_Val) { m_StaticFriction = a_Val; }
-			inline float GetStaticFriction() { return m_StaticFriction; }
+			void SetRestitution(float a_Val);
+			float GetRestitution();
+			void SetDynamicFriction(float a_Val);
+			float GetDynamicFriction();
+			void SetStaticFriction(float a_Val);
+			float GetStaticFriction();
 
 		private:
 			float m_Restitution;
 			float m_DynamicFriction;
 			float m_StaticFriction;
 			PxMaterial* m_Properties;
+			friend class Physics::PhysicsSystem;
 		};
 	}
 }
