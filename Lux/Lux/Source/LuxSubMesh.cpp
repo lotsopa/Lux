@@ -1,5 +1,5 @@
 #include "LuxPCH.h"
-#include "LuxMaterial.h"
+#include "LuxMaterialResource.h"
 #include "LuxVertex.h"
 #include "LuxSubMesh.h"
 

@@ -61,7 +61,7 @@ namespace Lux
 			}
 		}
 
-		static mat4x4 ConvertMatrixAssimpToGLM(aiMatrix4x4 a_AssimpMat)
+		static mat4x4 ConvertMatrixAssimp(aiMatrix4x4 a_AssimpMat)
 		{
 			// GLM is column-major and Assimp uses Row-major matrices
 			a_AssimpMat = a_AssimpMat.Transpose(); // Make it column major
@@ -91,19 +91,38 @@ namespace Lux
 			return retMat;
 		}
 
-		static vec4 ConvertVec4AssimpToGLM(aiColor4D& a_Vec)
+		static vec4 ConvertVec4Assimp(aiColor4D& a_Vec)
 		{
 			return vec4(a_Vec.r, a_Vec.g, a_Vec.b, a_Vec.a);
 		}
 
-		static vec3 ConvertVec3AssimpToGLM(aiVector3D& a_Vec)
+		static vec3 ConvertVec3Assimp(aiVector3D& a_Vec)
 		{
 			return vec3(a_Vec.x, a_Vec.y, a_Vec.z);
 		}
 
-		static quat ConvertQuatAssimpToGLM(aiQuaternion& a_Quat)
+		static quat ConvertQuatAssimp(aiQuaternion& a_Quat)
 		{
 			return quat(a_Quat.x, a_Quat.y, a_Quat.z, a_Quat.w);
+		}
+
+		static PxVec3 ConvertVec3ToPhysX(const vec3& a_Vec)
+		{
+			PxVec3 retVal;
+			retVal.x = a_Vec.x;
+			retVal.y = a_Vec.y;
+			retVal.z = a_Vec.z;
+			return retVal;
+		}
+
+		static PxQuat ConvertQuatToPhysX(const quat& a_Quat)
+		{
+			PxQuat retVal;
+			retVal.x = a_Quat.x;
+			retVal.y = a_Quat.y;
+			retVal.z = a_Quat.z;
+			retVal.w = a_Quat.w;
+			return retVal;
 		}
 
 		static quat RotationBetweenVectors(vec3 start, vec3 dest)

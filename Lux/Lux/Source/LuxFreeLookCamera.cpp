@@ -6,10 +6,10 @@
 #include "LuxEventListener.h"
 #include "LuxKey.h"
 #include "LuxSceneManager.h"
-#include "LuxBehaviourComponent.h"
+#include "LuxBehaviour.h"
 #include "LuxFreeLookCamera.h"
 
-Lux::Core::FreeLookCamera::FreeLookCamera() : BehaviourComponent(), m_RotationMultiplier(0.1f), m_SpeedMultiplier(2.0f)
+Lux::Core::FreeLookCamera::FreeLookCamera() : Behaviour(), m_RotationMultiplier(0.1f), m_SpeedMultiplier(2.0f)
 {
 
 }

@@ -5,7 +5,7 @@ namespace Lux
 {
 	namespace Core
 	{
-		class Material;
+		class MaterialResource;
 		class Shader;
 		class SubMesh;
 		class Mesh;
@@ -35,12 +35,12 @@ namespace Lux
 			virtual Texture3D* CreateTexture3DFromFile(const String& a_File, const String& a_TexName) = 0;
 			virtual Texture3D* CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
 			virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName) = 0;
-			virtual Material* CreateMaterial(const String& a_Name) = 0;
+			virtual MaterialResource* CreateMaterial(const String& a_Name) = 0;
 			virtual TextureSampler* CreateTextureSampler(const String& a_Name,TextureSamplerOptions& a_InitOptions) = 0;
 
 			virtual Mesh* GetMesh(const String& a_Name) = 0;
 			virtual Shader* GetShader(const String& a_Name) = 0;
-			virtual Material* GetMaterial(const String& a_Name) = 0;
+			virtual MaterialResource* GetMaterial(const String& a_Name) = 0;
 			virtual Texture2D* GetTexture2D(const String& a_Name) = 0;
 			virtual Texture3D* GetTexture3D(const String& a_Name) = 0;
 			virtual Texture1D* GetTexture1D(const String& a_Name) = 0;

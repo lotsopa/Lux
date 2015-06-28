@@ -165,7 +165,7 @@ Lux::Core::MeshAnimation::MeshChannel::~MeshChannel()
 Lux::Core::MeshAnimation::VectorKey::VectorKey(aiVectorKey& a_Key)
 {
 	m_Time = a_Key.mTime;
-	m_Value = Utility::ConvertVec3AssimpToGLM(a_Key.mValue);
+	m_Value = Utility::ConvertVec3Assimp(a_Key.mValue);
 }
 
 Lux::Core::MeshAnimation::VectorKey::VectorKey() : m_Time(0.0), m_Value()
@@ -181,7 +181,7 @@ Lux::Core::MeshAnimation::VectorKey::~VectorKey()
 void Lux::Core::MeshAnimation::VectorKey::Set(aiVectorKey& a_Key)
 {
 	m_Time = a_Key.mTime;
-	m_Value = Utility::ConvertVec3AssimpToGLM(a_Key.mValue);
+	m_Value = Utility::ConvertVec3Assimp(a_Key.mValue);
 }
 
 void Lux::Core::MeshAnimation::VectorKey::Set(const VectorKey& a_Key)
@@ -193,7 +193,7 @@ void Lux::Core::MeshAnimation::VectorKey::Set(const VectorKey& a_Key)
 Lux::Core::MeshAnimation::QuaternionKey::QuaternionKey(aiQuatKey& a_Key)
 {
 	m_Time = a_Key.mTime;
-	m_Value = Utility::ConvertQuatAssimpToGLM(a_Key.mValue);
+	m_Value = Utility::ConvertQuatAssimp(a_Key.mValue);
 }
 
 Lux::Core::MeshAnimation::QuaternionKey::QuaternionKey() : m_Time(0.0), m_Value()
@@ -209,7 +209,7 @@ Lux::Core::MeshAnimation::QuaternionKey::~QuaternionKey()
 void Lux::Core::MeshAnimation::QuaternionKey::Set(aiQuatKey& a_Key)
 {
 	m_Time = a_Key.mTime;
-	m_Value = Utility::ConvertQuatAssimpToGLM(a_Key.mValue);
+	m_Value = Utility::ConvertQuatAssimp(a_Key.mValue);
 }
 
 void Lux::Core::MeshAnimation::QuaternionKey::Set(const QuaternionKey& a_Key)

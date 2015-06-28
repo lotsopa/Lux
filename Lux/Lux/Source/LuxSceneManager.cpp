@@ -4,8 +4,8 @@
 #include "LuxEntity.h"
 #include "LuxComponent.h"
 #include "LuxTransform.h"
+#include "LuxMaterialResource.h"
 #include "LuxMaterial.h"
-#include "LuxMaterialComponent.h"
 #include "LuxKey.h"
 #include "LuxMesh.h"
 #include "LuxLight.h"
@@ -19,7 +19,7 @@
 #include "LuxEventSystem.h"
 #include "LuxSystemFactory.h"
 #include "LuxSceneManager.h"
-#include "LuxBehaviourComponent.h"
+#include "LuxBehaviour.h"
 #include "LuxFreeLookCamera.h"
 
 Lux::Core::SceneManager::SceneManager(RenderWindow* a_RenderWindow) : 

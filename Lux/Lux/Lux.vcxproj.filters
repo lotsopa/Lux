@@ -153,9 +153,6 @@
     <ClInclude Include="Include\LuxMesh.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxMaterial.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxMeshAnimation.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -198,9 +195,6 @@
     <ClInclude Include="Include\LuxCamera.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxBehaviourComponent.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxFreeLookCamera.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -212,9 +206,6 @@
     </ClInclude>
     <ClInclude Include="Include\LuxMeshPostProcess.h">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\LuxMaterialComponent.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Include\LuxBehaviourSystem.h">
       <Filter>Header Files\Core</Filter>
@@ -300,8 +291,23 @@
     <ClInclude Include="Include\LuxPhysicsSystem.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxPhysicsMaterialComponent.h">
+    <ClInclude Include="Include\LuxDynamicRigidBody.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxStaticRigidBody.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxPhysicsMaterial.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxMaterialResource.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxBehaviour.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxMaterial.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -368,9 +374,6 @@
     <ClCompile Include="Source\LuxMesh.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxMaterial.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LuxMeshAnimation.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -416,16 +419,10 @@
     <ClCompile Include="Source\LuxBehaviourSystem.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxBehaviourComponent.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LuxFreeLookCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxLight.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LuxMaterialComponent.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Internal\OpenGL\LuxEventListenerOGL.cpp">
@@ -506,8 +503,23 @@
     <ClCompile Include="Source\LuxPhysicsSystem.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxPhysicsMaterialComponent.cpp">
+    <ClCompile Include="Source\LuxDynamicRigidBody.cpp">
       <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxStaticRigidBody.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxPhysicsMaterial.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxBehaviour.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxMaterialResource.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxMaterial.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

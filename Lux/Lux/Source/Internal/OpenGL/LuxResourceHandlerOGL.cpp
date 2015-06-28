@@ -1,6 +1,6 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
-#include "LuxMaterial.h"
+#include "LuxMaterialResource.h"
 #include "LuxBufferOGL.h"
 #include "LuxVertexArrayOGL.h"
 #include "LuxSubMesh.h"
@@ -132,7 +132,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(con
 		aiString str;
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
-		Material* myMat = new Material(*impMat);
+		MaterialResource* myMat = new MaterialResource(*impMat);
 		AddMaterialToMap(matName, myMat);
 
 		// Load all textures from all the types. 
@@ -204,7 +204,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(F
 		aiString str;
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
-		Material* myMat = new Material(*impMat);
+		MaterialResource* myMat = new MaterialResource(*impMat);
 		AddMaterialToMap(matName, myMat);
 
 		// Load all textures from all the types. 
@@ -637,9 +637,9 @@ unsigned int Lux::Core::Internal::ResourceHandlerOGL::LoadOGLShader(GLenum a_Sha
 	return shader;
 }
 
-Lux::Core::Material* Lux::Core::Internal::ResourceHandlerOGL::CreateMaterial(const String& a_Name)
+Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerOGL::CreateMaterial(const String& a_Name)
 {
-	Material* mat = new Material();
+	MaterialResource* mat = new MaterialResource();
 	mat->SetName(a_Name);
 	AddMaterialToMap(a_Name, mat);
 	return mat;
@@ -708,13 +708,13 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& 
 	return m_MeshMap.at(Key(a_Name)).get();
 }
 
-void Lux::Core::Internal::ResourceHandlerOGL::AddMaterialToMap(const String& a_Str, Material* a_Mat)
+void Lux::Core::Internal::ResourceHandlerOGL::AddMaterialToMap(const String& a_Str, MaterialResource* a_Mat)
 {
 	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
-	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Material>(a_Mat)));
+	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<MaterialResource>(a_Mat)));
 }
 
-Lux::Core::Material* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
+Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
 {
 	std::unique_lock<std::mutex> lock(m_MaterialMapMutex); // Upon construction of the lock the mutex will be immediately locked
 	return m_MaterialMap.at(Key(a_Name)).get();
@@ -844,12 +844,12 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& 
 	return m_MeshMap.at(Key(a_Name)).get();
 }
 
-void Lux::Core::Internal::ResourceHandlerOGL::AddMaterialToMap(const String& a_Str, Material* a_Mat)
+void Lux::Core::Internal::ResourceHandlerOGL::AddMaterialToMap(const String& a_Str, MaterialResource* a_Mat)
 {
-	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<Material>(a_Mat)));
+	m_MaterialMap.insert(std::make_pair(Key(a_Str), std::unique_ptr<MaterialResource>(a_Mat)));
 }
 
-Lux::Core::Material* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
+Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
 {
 	return m_MaterialMap.at(Key(a_Name)).get();
 }

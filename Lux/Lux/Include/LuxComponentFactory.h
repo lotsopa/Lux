@@ -27,7 +27,6 @@ namespace Lux
 			{
 				ObjectPool<T>* thisPool = (ObjectPool<T>*)m_ComponentPoolMap.at(Key(typeid(T).name()));
 				ObjectHandle<T>& objPtr = thisPool->CreateObject();
-				objPtr.GetRawPtr()->Reset();
 				return objPtr;
 			}
 
@@ -38,6 +37,12 @@ namespace Lux
 			template<class T>
 			bool DestroyComponent(ObjectHandle<T>& a_Component)
 			{
+				T* objPtr = a_Component.GetRawPtr();
+
+				if (objPtr)
+				{
+					objPtr->Reset();
+				}
 				ObjectPool<T>* thisPool = (ObjectPool<T>*)m_ComponentPoolMap.at(Key(typeid(T).name()));
 				return thisPool->DeleteObject(a_Component);
 			}

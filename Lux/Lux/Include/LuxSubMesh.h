@@ -64,7 +64,7 @@ namespace Lux
 					m_NumBoneWeights = a_Bone.mNumWeights;
 					m_Name = a_Bone.mName.C_Str();
 					m_BoneWeights = new VertexBoneWeight[m_NumBoneWeights];
-					m_OffsetMatrix = Utility::ConvertMatrixAssimpToGLM(a_Bone.mOffsetMatrix);
+					m_OffsetMatrix = Utility::ConvertMatrixAssimp(a_Bone.mOffsetMatrix);
 
 					for (unsigned int i = 0; i < m_NumBoneWeights; i++)
 					{

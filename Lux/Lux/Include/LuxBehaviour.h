@@ -1,5 +1,5 @@
-#ifndef LUX_BEHAVIOUR_COMPONENT_H
-#define LUX_BEHAVIOUR_COMPONENT_H
+#ifndef LUX_BEHAVIOUR_H
+#define LUX_BEHAVIOUR_H
 
 namespace Lux
 {
@@ -11,11 +11,11 @@ namespace Lux
 		class Key;
 		struct ComponentLayout;
 
-		class BehaviourComponent : public Component
+		class Behaviour : public Component
 		{
 		public:
-			BehaviourComponent();
-			virtual ~BehaviourComponent();
+			Behaviour();
+			virtual ~Behaviour();
 
 			virtual void Start() = 0;
 			virtual void Update(const float a_DeltaTime) = 0;

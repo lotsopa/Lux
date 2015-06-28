@@ -36,7 +36,7 @@
     <ClInclude Include="Include\Internal\OpenGL\LuxTexture3DOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxTextureSamplerOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxVertexArrayOGL.h" />
-    <ClInclude Include="Include\LuxBehaviourComponent.h" />
+    <ClInclude Include="Include\LuxBehaviour.h" />
     <ClInclude Include="Include\LuxBehaviourSystem.h" />
     <ClInclude Include="Include\LuxCamera.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
@@ -50,16 +50,18 @@
     <ClInclude Include="Include\LuxKey.h" />
     <ClInclude Include="Include\LuxKeyCodes.h" />
     <ClInclude Include="Include\LuxLight.h" />
+    <ClInclude Include="Include\LuxMaterialResource.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
-    <ClInclude Include="Include\LuxMaterialComponent.h" />
     <ClInclude Include="Include\LuxMeshPostProcess.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
     <ClInclude Include="Include\LuxPhysicsSystem.h" />
     <ClInclude Include="Include\LuxPlatform.h" />
     <ClInclude Include="Include\LuxRenderingSystem.h" />
+    <ClInclude Include="Include\LuxDynamicRigidBody.h" />
     <ClInclude Include="Include\LuxScannerToParser.h" />
     <ClInclude Include="Include\LuxShader.h" />
     <ClInclude Include="Include\LuxShaderFileParser.h" />
+    <ClInclude Include="Include\LuxStaticRigidBody.h" />
     <ClInclude Include="Include\LuxSubMesh.h" />
     <ClInclude Include="Include\LuxMesh.h" />
     <ClInclude Include="Include\LuxMeshAnimation.h" />
@@ -86,7 +88,7 @@
     <ClInclude Include="Include\LuxMeshRenderer.h" />
     <ClInclude Include="Include\LuxTexture1D.h" />
     <ClInclude Include="Include\LuxVertex.h" />
-    <ClInclude Include="Include\LuxPhysicsMaterialComponent.h" />
+    <ClInclude Include="Include\LuxPhysicsMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Internal\DirectX11\LuxEventListenerDX11.cpp" />
@@ -113,7 +115,7 @@
     <ClCompile Include="Source\Internal\OpenGL\LuxTexture3DOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxTextureSamplerOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxVertexArrayOGL.cpp" />
-    <ClCompile Include="Source\LuxBehaviourComponent.cpp" />
+    <ClCompile Include="Source\LuxBehaviour.cpp" />
     <ClCompile Include="Source\LuxBehaviourSystem.cpp" />
     <ClCompile Include="Source\LuxCamera.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
@@ -132,19 +134,21 @@
     <ClCompile Include="Source\LuxHelpers.cpp" />
     <ClCompile Include="Source\LuxKey.cpp" />
     <ClCompile Include="Source\LuxLight.cpp" />
+    <ClCompile Include="Source\LuxMaterialResource.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
-    <ClCompile Include="Source\LuxMaterialComponent.cpp" />
     <ClCompile Include="Source\LuxMeshRenderer.cpp" />
-    <ClCompile Include="Source\LuxPhysicsMaterialComponent.cpp" />
+    <ClCompile Include="Source\LuxPhysicsMaterial.cpp" />
     <ClCompile Include="Source\LuxPhysicsSystem.cpp" />
     <ClCompile Include="Source\LuxPlatform.cpp" />
     <ClCompile Include="Source\LuxRenderingSystem.cpp" />
+    <ClCompile Include="Source\LuxDynamicRigidBody.cpp" />
     <ClCompile Include="Source\LuxScannerToParser.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\LuxShader.cpp" />
     <ClCompile Include="Source\LuxShaderFileParser.cpp" />
+    <ClCompile Include="Source\LuxStaticRigidBody.cpp" />
     <ClCompile Include="Source\LuxSubMesh.cpp" />
     <ClCompile Include="Source\LuxMeshAnimation.cpp" />
     <ClCompile Include="Source\LuxPCH.cpp">

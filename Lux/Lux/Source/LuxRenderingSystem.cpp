@@ -1,8 +1,8 @@
 #include "LuxPCH.h"
 #include "LuxRenderWindow.h"
 #include "LuxComponent.h"
+#include "LuxMaterialResource.h"
 #include "LuxMaterial.h"
-#include "LuxMaterialComponent.h"
 #include "LuxEntity.h"
 #include "LuxTransform.h"
 #include "LuxKey.h"
@@ -34,21 +34,21 @@ m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
 m_ShaderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::ShaderComponent)),
 m_CameraKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Camera)),
 m_LightKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Light)),
-m_MaterialKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MaterialComponent))
+m_MaterialKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Material))
 {
 	ADD_COMPONENT_MAP_INSERT(m_MeshRendererKey, RenderingSystem::AddComponentInternal<MeshRenderer>);
 	ADD_COMPONENT_MAP_INSERT(m_TransformKey, RenderingSystem::AddComponentInternal<Core::Transform>);
 	ADD_COMPONENT_MAP_INSERT(m_ShaderKey, RenderingSystem::AddComponentInternal<ShaderComponent>);
 	ADD_COMPONENT_MAP_INSERT(m_CameraKey, RenderingSystem::AddComponentInternal<Camera>);
 	ADD_COMPONENT_MAP_INSERT(m_LightKey, RenderingSystem::AddComponentInternal<Light>);
-	ADD_COMPONENT_MAP_INSERT(m_MaterialKey, RenderingSystem::AddComponentInternal<MaterialComponent>);
+	ADD_COMPONENT_MAP_INSERT(m_MaterialKey, RenderingSystem::AddComponentInternal<Material>);
 
 	REMOVE_COMPONENT_MAP_INSERT(m_MeshRendererKey, RenderingSystem::RemoveComponentInternal<MeshRenderer>);
 	REMOVE_COMPONENT_MAP_INSERT(m_TransformKey, RenderingSystem::RemoveComponentInternal<Core::Transform>);
 	REMOVE_COMPONENT_MAP_INSERT(m_ShaderKey, RenderingSystem::RemoveComponentInternal<ShaderComponent>);
 	REMOVE_COMPONENT_MAP_INSERT(m_CameraKey, RenderingSystem::RemoveComponentInternal<Camera>);
 	REMOVE_COMPONENT_MAP_INSERT(m_LightKey, RenderingSystem::RemoveComponentInternal<Light>);
-	REMOVE_COMPONENT_MAP_INSERT(m_MaterialKey, RenderingSystem::RemoveComponentInternal<MaterialComponent>);
+	REMOVE_COMPONENT_MAP_INSERT(m_MaterialKey, RenderingSystem::RemoveComponentInternal<Material>);
 }
 
 Lux::Graphics::RenderingSystem::~RenderingSystem()

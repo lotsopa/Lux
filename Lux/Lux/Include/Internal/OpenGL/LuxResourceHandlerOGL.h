@@ -5,7 +5,7 @@ namespace Lux
 {
 	namespace Core
 	{
-		class Material;
+		class MaterialResource;
 		class SubMesh;
 		class Mesh;
 		class Key;
@@ -34,9 +34,9 @@ namespace Lux
 				Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
 				TextureSampler* CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
 
-				Material* CreateMaterial(const String& a_Name);
+				MaterialResource* CreateMaterial(const String& a_Name);
 				Mesh* GetMesh(const String& a_Name);
-				Material* GetMaterial(const String& a_Name);
+				MaterialResource* GetMaterial(const String& a_Name);
 				Texture2D* GetTexture2D(const String& a_Name);
 				Texture3D* GetTexture3D(const String& a_Name);
 				Texture1D* GetTexture1D(const String& a_Name);
@@ -65,7 +65,7 @@ namespace Lux
 				typedef std::map<Key, std::unique_ptr<Texture3D>> Texture3DMap;
 				typedef std::map<Key, std::unique_ptr<Mesh>> MeshMap;
 				typedef std::map<Key, Mesh*> MeshMapSimple;
-				typedef std::map<Key, std::unique_ptr<Material>> MaterialMap;
+				typedef std::map<Key, std::unique_ptr<MaterialResource>> MaterialMap;
 				typedef std::map<Key, std::unique_ptr<Shader>> ShaderMap;
 				typedef std::map<Key, std::unique_ptr<TextureSampler>> SamplerMap;
 				MeshMap m_MeshMap;
@@ -87,7 +87,7 @@ namespace Lux
 				void AddMeshToMap(const String& a_Str, Mesh* a_Ent);
 				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
 				Mesh* GetLoadedMesh(const String& a_FileStr);
-				void AddMaterialToMap(const String& a_Str, Material* a_Mat);
+				void AddMaterialToMap(const String& a_Str, MaterialResource* a_Mat);
 				void AddTexture2DToMap(const String& a_Str, Texture2D* a_Tex);
 				void AddTexture1DToMap(const String& a_Str, Texture1D* a_Tex);
 				void AddTexture3DToMap(const String& a_Str, Texture3D* a_Tex);

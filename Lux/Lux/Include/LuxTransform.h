@@ -23,7 +23,7 @@ namespace Lux
 			void ApplyTransform();
 
 			void SetPosition(const vec3& a_Pos);
-			vec3& GetPosition();
+			const vec3& GetPosition();
 
 			void Translate(const vec3& a_Amount);
 			void Rotate(const float a_Angle, const vec3& a_Axis, SpaceRelativeTo a_Space = WORLD);

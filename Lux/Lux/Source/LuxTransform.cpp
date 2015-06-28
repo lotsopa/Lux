@@ -62,7 +62,7 @@ void Lux::Core::Transform::SetPosition(const vec3& a_Pos)
 	m_TransformDirty = true;
 }
 
-Lux::vec3& Lux::Core::Transform::GetPosition()
+const Lux::vec3& Lux::Core::Transform::GetPosition()
 {
 	return m_Position;
 }

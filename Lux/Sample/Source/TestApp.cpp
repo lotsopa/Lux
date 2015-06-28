@@ -51,19 +51,27 @@ bool TestApp::LoadContent()
 	transf.GetRawPtr()->SetPosition(Lux::vec3(-4, 0, 0));
 	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& meshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(ent);
 	meshRenderer.GetRawPtr()->SetMesh(mesh);
-	Lux::Core::ObjectHandle<Lux::Graphics::MaterialComponent>& materialComp = m_SceneManager->AttachNewComponent<Lux::Graphics::MaterialComponent>(ent);
+	Lux::Core::ObjectHandle<Lux::Graphics::Material>& materialComp = m_SceneManager->AttachNewComponent<Lux::Graphics::Material>(ent);
 	materialComp.GetRawPtr()->SetShader(shader);
 	materialComp.GetRawPtr()->SetDiffuseTexture(diffuseTex);
 
-	Lux::Core::ObjectHandle<Lux::Core::Entity>& ent2 = m_SceneManager->CreateEntity();
-	Lux::Core::ObjectHandle<Lux::Core::Transform>& transf2 = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(ent2);
-	transf2.GetRawPtr()->SetScale(Lux::vec3(0.01f));
-	transf2.GetRawPtr()->SetPosition(Lux::vec3(4, 0, 0));
-	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& meshRenderer2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(ent2);
-	meshRenderer2.GetRawPtr()->SetMesh(mesh);
-	Lux::Core::ObjectHandle<Lux::Graphics::MaterialComponent>& materialComp2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MaterialComponent>(ent2);
-	materialComp2.GetRawPtr()->SetShader(shader);
-	materialComp2.GetRawPtr()->SetDiffuseTexture(diffuseTex);
+	// Add Physics
+	Lux::Core::ObjectHandle<Lux::Physics::PhysicsMaterial>& physMaterial = m_SceneManager->AttachNewComponent<Lux::Physics::PhysicsMaterial>(ent);
+	physMaterial.GetRawPtr()->SetRestitution(0.1f);
+	physMaterial.GetRawPtr()->SetStaticFriction(0.5f);
+	physMaterial.GetRawPtr()->SetDynamicFriction(0.5f);
+
+	Lux::Core::ObjectHandle<Lux::Physics::DynamicRigidBody>& rigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::DynamicRigidBody>(ent);
+
+	//Lux::Core::ObjectHandle<Lux::Core::Entity>& ent2 = m_SceneManager->CreateEntity();
+	//Lux::Core::ObjectHandle<Lux::Core::Transform>& transf2 = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(ent2);
+	//transf2.GetRawPtr()->SetScale(Lux::vec3(0.01f));
+	//transf2.GetRawPtr()->SetPosition(Lux::vec3(4, 0, 0));
+	//Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& meshRenderer2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(ent2);
+	//meshRenderer2.GetRawPtr()->SetMesh(mesh);
+	//Lux::Core::ObjectHandle<Lux::Graphics::MaterialComponent>& materialComp2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MaterialComponent>(ent2);
+	//materialComp2.GetRawPtr()->SetShader(shader);
+	//materialComp2.GetRawPtr()->SetDiffuseTexture(diffuseTex);
 
 	return true;
 }

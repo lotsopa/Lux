@@ -6,7 +6,7 @@ namespace Lux
 	namespace Core
 	{
 		class Entity;
-		class BehaviourComponent;
+		class Behaviour;
 
 		class BehaviourSystem : public System
 		{
@@ -20,7 +20,7 @@ namespace Lux
 			virtual bool Init(SceneManager* a_SceneManager);
 
 		private:
-			typedef std::map<ObjectHandle<Entity>*, ObjectHandle<BehaviourComponent>*> BehaviourMap;
+			typedef std::map<ObjectHandle<Entity>*, ObjectHandle<Behaviour>*> BehaviourMap;
 			BehaviourMap m_BehaviourMap;
 		};
 	}

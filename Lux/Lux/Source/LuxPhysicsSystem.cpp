@@ -12,17 +12,23 @@
 #include "LuxSystem.h"
 #include "LuxTimer.h"
 #include "LuxPhysicsSystem.h"
-#include "LuxPhysicsMaterialComponent.h"
 
 #define CONVERT_ID_TO_CLASS_STRING(a) "class " ID_TO_STRING(a)
 #define ADD_COMPONENT_MAP_INSERT(a, b) m_AddComponentFuncMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1, std::placeholders::_2)))
 #define REMOVE_COMPONENT_MAP_INSERT(a, b) m_RemoveComponentProcessMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1)))
 
 Lux::Physics::PhysicsSystem::PhysicsSystem() : System(), m_RecordAllocations(true), m_NumPhysicsThreads(1), m_StepTimeSec(0.1f),
-m_MaterialKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::PhysicsMaterialComponent))
+m_MaterialKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::PhysicsMaterial)),
+m_DynamicRigidBodyKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::DynamicRigidBody)),
+m_StaticRigidBodyKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::StaticRigidBody))
 {
-	ADD_COMPONENT_MAP_INSERT(m_MaterialKey, PhysicsSystem::AddComponentInternal<PhysicsMaterialComponent>);
-	REMOVE_COMPONENT_MAP_INSERT(m_MaterialKey, PhysicsSystem::RemoveComponentInternal<PhysicsMaterialComponent>);
+	ADD_COMPONENT_MAP_INSERT(m_MaterialKey, PhysicsSystem::AddComponentInternal<PhysicsMaterial>);
+	ADD_COMPONENT_MAP_INSERT(m_StaticRigidBodyKey, PhysicsSystem::AddComponentInternal<StaticRigidBody>);
+	ADD_COMPONENT_MAP_INSERT(m_DynamicRigidBodyKey, PhysicsSystem::AddComponentInternal<DynamicRigidBody>);
+
+	REMOVE_COMPONENT_MAP_INSERT(m_MaterialKey, PhysicsSystem::RemoveComponentInternal<PhysicsMaterial>);
+	REMOVE_COMPONENT_MAP_INSERT(m_StaticRigidBodyKey, PhysicsSystem::RemoveComponentInternal<StaticRigidBody>);
+	REMOVE_COMPONENT_MAP_INSERT(m_DynamicRigidBodyKey, PhysicsSystem::RemoveComponentInternal<DynamicRigidBody>);
 
 	m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
 

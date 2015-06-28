@@ -5,7 +5,7 @@
 #include "LuxMesh.h"
 #include "LuxObjectPool.h"
 #include "LuxSceneManager.h"
-#include "LuxBehaviourComponent.h"
+#include "LuxBehaviour.h"
 #include "LuxFreeLookCamera.h"
 #include "LuxComponentFactory.h"
 #include "LuxEntityFactory.h"
@@ -33,7 +33,7 @@ void Lux::Core::BehaviourSystem::ProcessUpdate(const float a_DeltaTime)
 
 	for (it = m_BehaviourMap.begin(); it != m_BehaviourMap.end(); ++it)
 	{
-		BehaviourComponent* behaviour = it->second->GetRawPtr();
+		Behaviour* behaviour = it->second->GetRawPtr();
 		
 		if (behaviour->IsEnabled())
 		{
@@ -45,8 +45,8 @@ void Lux::Core::BehaviourSystem::ProcessUpdate(const float a_DeltaTime)
 void Lux::Core::BehaviourSystem::AddComponent(void* a_Component, const Key& a_CompType, ObjectHandle<Entity>& a_Entity)
 {
 	Core::ObjectHandle<Core::Component>* comp = (Core::ObjectHandle<Core::Component>*)a_Component;
-	m_BehaviourMap[&a_Entity] = (Core::ObjectHandle<BehaviourComponent>*)(comp);
-	BehaviourComponent::InitOptions initOptions;
+	m_BehaviourMap[&a_Entity] = (Core::ObjectHandle<Behaviour>*)(comp);
+	Behaviour::InitOptions initOptions;
 	initOptions.m_EventListener = m_SceneManager->GetRenderWindow()->GetEventListener();
 
 	m_BehaviourMap[&a_Entity]->GetRawPtr()->m_ComponentLayout = &m_SceneManager->GetComponentLayout(a_Entity);

@@ -5,7 +5,7 @@ namespace Lux
 {
 	namespace Core
 	{
-		class FreeLookCamera : public BehaviourComponent
+		class FreeLookCamera : public Behaviour
 		{
 		public:
 			FreeLookCamera();

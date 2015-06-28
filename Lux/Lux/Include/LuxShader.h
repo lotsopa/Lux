@@ -25,18 +25,18 @@ namespace Lux
 
 			}
 
-			ShaderVariable(ShaderVariableType a_Type, void* a_VarPtr, const unsigned int a_DataSizeBytes) : 
+			ShaderVariable(ShaderVariableType a_Type, const void* a_VarPtr, const unsigned int a_DataSizeBytes) : 
 				m_Data(a_VarPtr), m_Type(a_Type), m_DataSizeBytes(a_DataSizeBytes)
 			{
 
 			}
 
-			void Set(void* a_Data, const unsigned int a_DataSizeBytes, ShaderVariableType a_Type) { m_Data = a_Data; m_Type = a_Type; m_DataSizeBytes = a_DataSizeBytes; }
+			void Set(const void* a_Data, const unsigned int a_DataSizeBytes, ShaderVariableType a_Type) { m_Data = a_Data; m_Type = a_Type; m_DataSizeBytes = a_DataSizeBytes; }
 			ShaderVariableType GetType() { return m_Type; }
-			void* GetData() { return m_Data; }
+			const void* GetData() { return m_Data; }
 			const unsigned int GetDataSizeBytes() { return m_DataSizeBytes; }
 		private:
-			void* m_Data;
+			const void* m_Data;
 			unsigned int m_DataSizeBytes;
 			ShaderVariableType m_Type;
 		};

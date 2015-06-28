@@ -236,7 +236,7 @@ namespace Lux
 			SystemsMap m_SystemsMap;
 			ComponentSystemMultiMap m_ComponentSystemMap;
 			RenderWindow* m_RenderWindow;
-			friend class BehaviourComponent;
+			friend class Behaviour;
 			friend class BehaviourSystem;
 			friend struct ComponentLayout;
 		};
