@@ -68,9 +68,17 @@ m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform))
 
 Lux::Physics::PhysicsSystem::~PhysicsSystem()
 {
-	m_Scene->release();
-	m_Physics->release();
-	m_Foundation->release();
+	if (m_CpuDispatcher)
+		delete m_CpuDispatcher;
+
+	if (m_Scene)
+		m_Scene->release();
+
+	if (m_Physics)
+		m_Physics->release();
+
+	if (m_Foundation)
+		m_Foundation->release();
 }
 
 void Lux::Physics::PhysicsSystem::ProcessUpdate(const float a_DeltaTime)
