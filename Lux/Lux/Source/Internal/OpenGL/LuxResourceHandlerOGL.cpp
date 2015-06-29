@@ -51,13 +51,13 @@ Lux::Core::Internal::ResourceHandlerOGL::ResourceHandlerOGL()
 	LUX_LOG(Utility::logINFO) << "Resource Handler created successfully.";
 }
 
-Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	// Have we already loaded this mesh before? If we have just return it.
 	Mesh* loadedMesh = GetLoadedMesh(a_File);
 	if (loadedMesh != nullptr)
 	{
-		return loadedMesh;
+		return ObserverPtr<Mesh>(loadedMesh);
 	}
 
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
@@ -124,10 +124,10 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromFile(con
 	AddResourceToMap(a_EntityName, (Mesh*)retMesh, m_MeshMap);
 	AddFileNameToMap(a_File, retMesh);
 	Utility::SafePtrDelete(file);
-	return retMesh;
+	return ObserverPtr<Mesh>(retMesh);
 }
 
-Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	if (a_Info == nullptr)
 	{
@@ -194,7 +194,7 @@ Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::CreateMeshFromMemory(F
 	}
 
 	AddResourceToMap(a_EntityName, (Mesh*)retEntity, m_MeshMap);
-	return retEntity;
+	return ObserverPtr<Mesh>(retEntity);
 }
 
 void Lux::Core::Internal::ResourceHandlerOGL::LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType)
@@ -219,7 +219,7 @@ void Lux::Core::Internal::ResourceHandlerOGL::LoadAllTexturesOfTypeFromMaterial(
 	}
 }
 
-Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFromFile(const String& a_File, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFromFile(const String& a_File, const String& a_TexName)
 {
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
 
@@ -282,10 +282,10 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFr
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
 	Utility::SafePtrDelete(file);
-	return tex2d;
+	return ObserverPtr<Texture2D>(tex2d);
 }
 
-Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName)
 {
 	FIMEMORY* freeImgMemoryPtr = nullptr;
 	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_Info->m_RawData, a_Info->m_DataLength);
@@ -346,10 +346,10 @@ Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFr
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
 	Utility::SafePtrDelete(a_Info);
-	return tex2d;
+	return ObserverPtr<Texture2D>(tex2d);
 }
 
-Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFromFile(const String& a_File, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFromFile(const String& a_File, const String& a_TexName)
 {
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
 
@@ -412,10 +412,10 @@ Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFr
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
 	Utility::SafePtrDelete(file);
-	return tex2d;
+	return ObserverPtr<Texture1D>(tex2d);
 }
 
-Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName)
 {
 	FIMEMORY* freeImgMemoryPtr = nullptr;
 	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_Info->m_RawData, a_Info->m_DataLength);
@@ -476,22 +476,22 @@ Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFr
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
 	Utility::SafePtrDelete(a_Info);
-	return tex1d;
+	return ObserverPtr<Texture1D>(tex1d);
 }
 
-Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromFile(const String& a_File, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture3D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromFile(const String& a_File, const String& a_TexName)
 {
 	// TODO
 	return nullptr;
 }
 
-Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture3D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName)
 {
 	// TODO
 	return nullptr;
 }
 
-Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile(const String& a_File, const String& a_ShaderName)
+Lux::Core::ObserverPtr<Lux::Core::Shader> Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile(const String& a_File, const String& a_ShaderName)
 {
 	FileHandler& fileHandler = FileHandler::GetInstance();
 	FileInfo* file = fileHandler.LoadFileInMemory(a_File);
@@ -550,7 +550,7 @@ Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::CreateShaderFromFile
 	ShaderOGL* shader = new ShaderOGL(loadedShaders);
 	AddResourceToMap(a_ShaderName, (Shader*)shader, m_ShaderMap);
 	fileHandler.DestroyShaderParser(Key(a_File));
-	return shader;
+	return ObserverPtr<Shader>(shader);
 }
 
 
@@ -591,12 +591,12 @@ unsigned int Lux::Core::Internal::ResourceHandlerOGL::LoadOGLShader(GLenum a_Sha
 	return shader;
 }
 
-Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerOGL::CreateMaterial(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::MaterialResource> Lux::Core::Internal::ResourceHandlerOGL::CreateMaterial(const String& a_Name)
 {
 	MaterialResource* mat = new MaterialResource();
 	mat->SetName(a_Name);
 	AddResourceToMap(a_Name, mat, m_MaterialMap);
-	return mat;
+	return ObserverPtr<MaterialResource>(mat);
 }
 
 void Lux::Core::Internal::ResourceHandlerOGL::LoadImageData(const String& a_Path, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData)
@@ -651,12 +651,12 @@ void Lux::Core::Internal::ResourceHandlerOGL::LoadImageData( FileInfo* a_File, u
 }
 
 
-Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL::GetMesh(const String& a_Name)
 {
 	return GetResource(a_Name, m_MeshMap);
 }
 
-Lux::Core::MaterialResource* Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::MaterialResource> Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
 {
 	return GetResource(a_Name, m_MaterialMap);
 }
@@ -676,7 +676,7 @@ bool Lux::Core::Internal::ResourceHandlerOGL::Texture2DExists(const String& a_Na
 	return ResourceExists(a_Name, m_Texture2DMap);
 }
 
-Lux::Core::Texture2D* Lux::Core::Internal::ResourceHandlerOGL::GetTexture2D(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandlerOGL::GetTexture2D(const String& a_Name)
 {
 	return GetResource(a_Name, m_Texture2DMap);
 }
@@ -709,17 +709,17 @@ bool Lux::Core::Internal::ResourceHandlerOGL::ShaderExists(const String& a_Name)
 	return ResourceExists(a_Name, m_ShaderMap);
 }
 
-Lux::Core::Shader* Lux::Core::Internal::ResourceHandlerOGL::GetShader(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Shader> Lux::Core::Internal::ResourceHandlerOGL::GetShader(const String& a_Name)
 {
 	return GetResource(a_Name , m_ShaderMap);
 }
 
-Lux::Core::Texture3D* Lux::Core::Internal::ResourceHandlerOGL::GetTexture3D(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Texture3D> Lux::Core::Internal::ResourceHandlerOGL::GetTexture3D(const String& a_Name)
 {
 	return GetResource(a_Name, m_Texture3DMap);
 }
 
-Lux::Core::Texture1D* Lux::Core::Internal::ResourceHandlerOGL::GetTexture1D(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandlerOGL::GetTexture1D(const String& a_Name)
 {
 	return GetResource(a_Name, m_Texture1DMap);
 }
@@ -745,14 +745,14 @@ bool Lux::Core::Internal::ResourceHandlerOGL::DeleteTexture3D(const String& a_Na
 }
 
 
-Lux::Core::TextureSampler* Lux::Core::Internal::ResourceHandlerOGL::CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions)
+Lux::Core::ObserverPtr<Lux::Core::TextureSampler> Lux::Core::Internal::ResourceHandlerOGL::CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions)
 {
 	TextureSamplerOGL* sampler = new TextureSamplerOGL(a_InitOptions);
 	AddResourceToMap(a_Name, (TextureSampler*)sampler, m_SamplerMap);
-	return sampler;
+	return ObserverPtr<TextureSampler>(sampler);
 }
 
-Lux::Core::TextureSampler* Lux::Core::Internal::ResourceHandlerOGL::GetTextureSampler(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::TextureSampler> Lux::Core::Internal::ResourceHandlerOGL::GetTextureSampler(const String& a_Name)
 {
 	return GetResource(a_Name, m_SamplerMap);
 }
@@ -767,14 +767,14 @@ bool Lux::Core::Internal::ResourceHandlerOGL::TextureSamplerExists(const String&
 	return ResourceExists(a_Name, m_SamplerMap);
 }
 
-Lux::Core::PhysicsMaterial* Lux::Core::Internal::ResourceHandlerOGL::CreatePhysicsMaterial(const String& a_Name, float a_Restitution /*= 0.0f*/, float a_DynamicFriction /*= 0.0f*/, float a_StaticFriction /*= 0.0f*/)
+Lux::Core::ObserverPtr<Lux::Core::PhysicsMaterial> Lux::Core::Internal::ResourceHandlerOGL::CreatePhysicsMaterial(const String& a_Name, float a_Restitution /*= 0.0f*/, float a_DynamicFriction /*= 0.0f*/, float a_StaticFriction /*= 0.0f*/)
 {
 	PhysicsMaterial* material = new PhysicsMaterial(a_Restitution, a_DynamicFriction, a_StaticFriction);
 	AddResourceToMap(a_Name, material, m_PhysicsMaterialMap);
-	return material;
+	return ObserverPtr<PhysicsMaterial>(material);
 }
 
-Lux::Core::PhysicsMaterial* Lux::Core::Internal::ResourceHandlerOGL::GetPhysicsMaterial(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::PhysicsMaterial> Lux::Core::Internal::ResourceHandlerOGL::GetPhysicsMaterial(const String& a_Name)
 {
 	return GetResource(a_Name, m_PhysicsMaterialMap);
 }

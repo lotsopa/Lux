@@ -4,11 +4,14 @@ Include this to enable all Lux functionality in your Application.
 */
 
 #include "LuxPCH.h"
+#include "LuxObserverPtr.h"
 #include "LuxPlatform.h"
 #include "LuxKeyCodes.h"
 #include "LuxKey.h"
 #include "LuxMaterialResource.h"
 #include "LuxMeshPostProcess.h"
+#include "LuxMesh.h"
+#include "LuxSubMesh.h"
 #include "LuxApplication.h"
 #include "LuxRenderWindow.h"
 #include "LuxEventListener.h"
@@ -36,8 +39,6 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxEventSystem.h"
 #include "LuxSystemFactory.h"
 #include "LuxMeshAnimation.h"
-#include "LuxMesh.h"
-#include "LuxSubMesh.h"
 #include "LuxSceneManager.h"
 #include "LuxFileHandler.h"
 #include "LuxResourceHandler.h"

@@ -154,12 +154,12 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		if (!it->second.m_MeshRenderer || !it->second.m_Material)
 			continue;
 
-		Core::Shader* shader = it->second.m_Material->GetRawPtr()->GetShader();
+		Core::Shader* shader = it->second.m_Material->GetRawPtr()->GetShader().get();
 		
 		if (!shader)
 			continue;
 
-		Core::Mesh* mesh = it->second.m_MeshRenderer->GetRawPtr()->GetMesh();
+		Core::Mesh* mesh = it->second.m_MeshRenderer->GetRawPtr()->GetMesh().get();
 		
 		if (!mesh)
 			continue;
@@ -190,12 +190,12 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		}
 
 		// Bind Samplers and Textures
-		Core::Texture2D* diffuseTex = it->second.m_Material->GetRawPtr()->GetDiffuseTexture();
+		Core::Texture2D* diffuseTex = it->second.m_Material->GetRawPtr()->GetDiffuseTexture().get();
 
 		if (!diffuseTex)
 			continue;
 
-		Core::TextureSampler* texSampler = diffuseTex->GetSampler();
+		Core::TextureSampler* texSampler = diffuseTex->GetSampler().get();
 
 		if (!texSampler)
 			continue;

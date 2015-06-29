@@ -24,40 +24,40 @@ namespace Lux
 			public:
 				virtual ~ResourceHandlerOGL();
 
-				Mesh* CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags);
-				Mesh* CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags);
-				Texture2D* CreateTexture2DFromFile(const String& a_File, const String& a_TexName);
-				Texture2D* CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName);
-				Texture1D* CreateTexture1DFromFile(const String& a_File, const String& a_TexName);
-				Texture1D* CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName);
-				Texture3D* CreateTexture3DFromFile(const String& a_File, const String& a_TexName);
-				Texture3D* CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName);
-				Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
-				TextureSampler* CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
-				PhysicsMaterial* CreatePhysicsMaterial(const String& a_Name, float a_Restitution = 0.0f, float a_DynamicFriction = 0.0f, float a_StaticFriction = 0.0f);
+				virtual ObserverPtr<Mesh> CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags);
+				virtual ObserverPtr<Mesh> CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags);
+				virtual ObserverPtr<Texture2D> CreateTexture2DFromFile(const String& a_File, const String& a_TexName);
+				virtual ObserverPtr<Texture2D> CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName);
+				virtual ObserverPtr<Texture1D> CreateTexture1DFromFile(const String& a_File, const String& a_TexName);
+				virtual ObserverPtr<Texture1D> CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName);
+				virtual ObserverPtr<Texture3D> CreateTexture3DFromFile(const String& a_File, const String& a_TexName);
+				virtual ObserverPtr<Texture3D> CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName);
+				virtual ObserverPtr<Shader> CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
+				virtual ObserverPtr<MaterialResource> CreateMaterial(const String& a_Name);
+				virtual ObserverPtr<TextureSampler> CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
+				virtual ObserverPtr<PhysicsMaterial> CreatePhysicsMaterial(const String& a_Name, float a_Restitution = 0.0f, float a_DynamicFriction = 0.0f, float a_StaticFriction = 0.0f);
 
-				MaterialResource* CreateMaterial(const String& a_Name);
-				Mesh* GetMesh(const String& a_Name);
-				MaterialResource* GetMaterial(const String& a_Name);
-				Texture2D* GetTexture2D(const String& a_Name);
-				Texture3D* GetTexture3D(const String& a_Name);
-				Texture1D* GetTexture1D(const String& a_Name);
-				TextureSampler* GetTextureSampler(const String& a_Name);
-				PhysicsMaterial* GetPhysicsMaterial(const String& a_Name);
-				bool MaterialExists(const String& a_Name);
-				bool MeshExists(const String& a_Name);
-				bool TextureSamplerExists(const String& a_Name);
-				bool Texture2DExists(const String& a_Name);
-				bool Texture1DExists(const String& a_Name);
-				bool Texture3DExists(const String& a_Name);
-				bool PhysicsMaterialExists(const String& a_Name);
-				bool DeleteTexture2D(const String& a_Name);
-				bool DeleteTexture1D(const String& a_Name);
-				bool DeleteTexture3D(const String& a_Name);
-				bool ShaderExists(const String& a_Name);
-				Shader* GetShader(const String& a_Name);
-				bool DeleteTextureSampler(const String& a_Name);
-				bool DeletePhysicsMaterial(const String& a_Name);
+				virtual ObserverPtr<Mesh> GetMesh(const String& a_Name);
+				virtual ObserverPtr<Shader> GetShader(const String& a_Name);
+				virtual ObserverPtr<MaterialResource> GetMaterial(const String& a_Name);
+				virtual ObserverPtr<Texture2D> GetTexture2D(const String& a_Name);
+				virtual ObserverPtr<Texture3D> GetTexture3D(const String& a_Name);
+				virtual ObserverPtr<Texture1D> GetTexture1D(const String& a_Name);
+				virtual ObserverPtr<TextureSampler> GetTextureSampler(const String& a_Name);
+				virtual ObserverPtr<PhysicsMaterial> GetPhysicsMaterial(const String& a_Name);
+				virtual bool MaterialExists(const String& a_Name);
+				virtual bool MeshExists(const String& a_Name);
+				virtual bool TextureSamplerExists(const String& a_Name);
+				virtual bool Texture2DExists(const String& a_Name);
+				virtual bool Texture1DExists(const String& a_Name);
+				virtual bool Texture3DExists(const String& a_Name);
+				virtual bool PhysicsMaterialExists(const String& a_Name);
+				virtual bool DeleteTexture2D(const String& a_Name);
+				virtual bool DeleteTexture1D(const String& a_Name);
+				virtual bool DeleteTexture3D(const String& a_Name);
+				virtual bool ShaderExists(const String& a_Name);
+				virtual bool DeleteTextureSampler(const String& a_Name);
+				virtual bool DeletePhysicsMaterial(const String& a_Name);
 
 			protected:
 				friend class ResourceHandler;
@@ -110,9 +110,9 @@ namespace Lux
 				}
 
 				template<class T>
-				T* GetResource(const String& a_Name, std::map<Key, std::unique_ptr<T>>& a_Map)
+				ObserverPtr<T> GetResource(const String& a_Name, std::map<Key, std::unique_ptr<T>>& a_Map)
 				{
-					return a_Map.at(Key(a_Name)).get();
+					return ObserverPtr<T>(a_Map.at(Key(a_Name)).get());
 				}
 
 				template <class T>

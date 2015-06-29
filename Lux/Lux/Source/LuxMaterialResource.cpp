@@ -136,6 +136,22 @@ Lux::Core::MaterialResource::MaterialResource(aiMaterial& a_Mat)
 	}
 }
 
+Lux::Core::MaterialResource::MaterialResource(const MaterialResource& a_Other)
+{
+	m_DiffuseColor = a_Other.m_DiffuseColor;
+	m_SpecularColor = a_Other.m_SpecularColor;
+	m_EmissiveColor = a_Other.m_EmissiveColor;
+	m_AmbientColor = a_Other.m_AmbientColor;
+	m_TransparentColor = a_Other.m_TransparentColor;
+	m_ReflectiveColor = a_Other.m_ReflectiveColor;
+	m_Shininess = a_Other.m_Shininess;
+	m_Reflectivity = a_Other.m_Reflectivity;
+	m_ShininessStrength = a_Other.m_ShininessStrength;
+	m_Opacity = a_Other.m_Opacity;
+	m_RefractionIndex = a_Other.m_RefractionIndex;
+	m_Name = a_Other.m_Name;
+}
+
 Lux::Core::MaterialResource::~MaterialResource()
 {
 
@@ -259,4 +275,21 @@ void Lux::Core::MaterialResource::SetRefraction(float a_Factor)
 void Lux::Core::MaterialResource::SetOpacity(float a_Factor)
 {
 	m_Opacity = a_Factor;
+}
+
+Lux::Core::MaterialResource & Lux::Core::MaterialResource::operator=(const MaterialResource& a_Other)
+{
+	m_DiffuseColor = a_Other.m_DiffuseColor;
+	m_SpecularColor = a_Other.m_SpecularColor;
+	m_EmissiveColor = a_Other.m_EmissiveColor;
+	m_AmbientColor = a_Other.m_AmbientColor;
+	m_TransparentColor = a_Other.m_TransparentColor;
+	m_ReflectiveColor = a_Other.m_ReflectiveColor;
+	m_Shininess = a_Other.m_Shininess;
+	m_Reflectivity = a_Other.m_Reflectivity;
+	m_ShininessStrength = a_Other.m_ShininessStrength;
+	m_Opacity = a_Other.m_Opacity;
+	m_RefractionIndex = a_Other.m_RefractionIndex;
+	m_Name = a_Other.m_Name;
+	return *this;
 }

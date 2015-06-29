@@ -1,6 +1,6 @@
 #ifndef LUX_RESOURCE_HANDLER_H
 #define LUX_RESOURCE_HANDLER_H
-
+#include "LuxObserverPtr.h"
 namespace Lux
 {
 	namespace Core
@@ -27,27 +27,27 @@ namespace Lux
 			static ResourceHandler* Create(Utility::PlatformType a_PlatformType, RenderWindow* a_RenderWindow);
 			virtual ~ResourceHandler();
 
-			virtual Mesh* CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
-			virtual Mesh* CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
-			virtual Texture2D* CreateTexture2DFromFile(const String& a_File, const String& a_TexName) = 0;
-			virtual Texture2D* CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
-			virtual Texture1D* CreateTexture1DFromFile(const String& a_File, const String& a_TexName) = 0;
-			virtual Texture1D* CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
-			virtual Texture3D* CreateTexture3DFromFile(const String& a_File, const String& a_TexName) = 0;
-			virtual Texture3D* CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
-			virtual Shader* CreateShaderFromFile(const String& a_File, const String& a_ShaderName) = 0;
-			virtual MaterialResource* CreateMaterial(const String& a_Name) = 0;
-			virtual TextureSampler* CreateTextureSampler(const String& a_Name,TextureSamplerOptions& a_InitOptions) = 0;
-			virtual PhysicsMaterial* CreatePhysicsMaterial(const String& a_Name, float a_Restitution = 0.0f, float a_DynamicFriction = 0.0f, float a_StaticFriction = 0.0f) = 0;
+			virtual ObserverPtr<Mesh> CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
+			virtual ObserverPtr<Mesh> CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
+			virtual ObserverPtr<Texture2D> CreateTexture2DFromFile(const String& a_File, const String& a_TexName) = 0;
+			virtual ObserverPtr<Texture2D> CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
+			virtual ObserverPtr<Texture1D> CreateTexture1DFromFile(const String& a_File, const String& a_TexName) = 0;
+			virtual ObserverPtr<Texture1D> CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
+			virtual ObserverPtr<Texture3D> CreateTexture3DFromFile(const String& a_File, const String& a_TexName) = 0;
+			virtual ObserverPtr<Texture3D> CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
+			virtual ObserverPtr<Shader> CreateShaderFromFile(const String& a_File, const String& a_ShaderName) = 0;
+			virtual ObserverPtr<MaterialResource> CreateMaterial(const String& a_Name) = 0;
+			virtual ObserverPtr<TextureSampler> CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions) = 0;
+			virtual ObserverPtr<PhysicsMaterial> CreatePhysicsMaterial(const String& a_Name, float a_Restitution = 0.0f, float a_DynamicFriction = 0.0f, float a_StaticFriction = 0.0f) = 0;
 
-			virtual Mesh* GetMesh(const String& a_Name) = 0;
-			virtual Shader* GetShader(const String& a_Name) = 0;
-			virtual MaterialResource* GetMaterial(const String& a_Name) = 0;
-			virtual Texture2D* GetTexture2D(const String& a_Name) = 0;
-			virtual Texture3D* GetTexture3D(const String& a_Name) = 0;
-			virtual Texture1D* GetTexture1D(const String& a_Name) = 0;
-			virtual TextureSampler* GetTextureSampler(const String& a_Name) = 0;
-			virtual PhysicsMaterial* GetPhysicsMaterial(const String& a_Name) = 0;
+			virtual ObserverPtr<Mesh> GetMesh(const String& a_Name) = 0;
+			virtual ObserverPtr<Shader> GetShader(const String& a_Name) = 0;
+			virtual ObserverPtr<MaterialResource> GetMaterial(const String& a_Name) = 0;
+			virtual ObserverPtr<Texture2D> GetTexture2D(const String& a_Name) = 0;
+			virtual ObserverPtr<Texture3D> GetTexture3D(const String& a_Name) = 0;
+			virtual ObserverPtr<Texture1D> GetTexture1D(const String& a_Name) = 0;
+			virtual ObserverPtr<TextureSampler> GetTextureSampler(const String& a_Name) = 0;
+			virtual ObserverPtr<PhysicsMaterial> GetPhysicsMaterial(const String& a_Name) = 0;
 			virtual bool MaterialExists(const String& a_Name) = 0;
 			virtual bool MeshExists(const String& a_Name) = 0;
 			virtual bool ShaderExists(const String& a_Name) = 0;

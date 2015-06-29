@@ -178,7 +178,7 @@ void Lux::Physics::PhysicsSystem::ProcessComponents()
 			// Check if we need to create a material
 			if (rigidBody->m_Material)
 			{
-				Core::PhysicsMaterial* mat = rigidBody->m_Material;
+				Core::PhysicsMaterial* mat = rigidBody->m_Material.get();
 				if (!mat->m_Properties)
 				{
 					mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
@@ -194,7 +194,7 @@ void Lux::Physics::PhysicsSystem::ProcessComponents()
 			// Check if we need to create a material
 			if (rigidBody->m_Material)
 			{
-				Core::PhysicsMaterial* mat = rigidBody->m_Material;
+				Core::PhysicsMaterial* mat = rigidBody->m_Material.get();
 				if (!mat->m_Properties)
 				{
 					mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);

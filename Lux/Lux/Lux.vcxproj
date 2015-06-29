@@ -54,6 +54,7 @@
     <ClInclude Include="Include\LuxMaterial.h" />
     <ClInclude Include="Include\LuxMeshPostProcess.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
+    <ClInclude Include="Include\LuxObserverPtr.h" />
     <ClInclude Include="Include\LuxPhysicsSystem.h" />
     <ClInclude Include="Include\LuxPlatform.h" />
     <ClInclude Include="Include\LuxRenderingSystem.h" />

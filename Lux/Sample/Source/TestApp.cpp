@@ -18,11 +18,11 @@ bool TestApp::LoadContent()
 	}
 
 	// Load resources
-	Lux::Core::Shader* shader = m_ResourceHandler->CreateShaderFromFile("Test.shader", "Test");
-	Lux::Core::Mesh* mesh = m_ResourceHandler->CreateMeshFromFile("jeep.obj", "Monkey", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
+	Lux::Core::ObserverPtr<Lux::Core::Shader> shader = m_ResourceHandler->CreateShaderFromFile("Test.shader", "Test");
+	Lux::Core::ObserverPtr<Lux::Core::Mesh> mesh = m_ResourceHandler->CreateMeshFromFile("jeep.obj", "Monkey", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
 
-	Lux::Core::Texture2D* diffuseTex = m_ResourceHandler->CreateTexture2DFromFile("jeep_army.png", "TestTexture");
-	Lux::Core::TextureSampler* defaultSampler = m_ResourceHandler->CreateTextureSampler("DefaultSampler", Lux::Core::TextureSamplerOptions());
+	Lux::Core::ObserverPtr<Lux::Core::Texture2D> diffuseTex = m_ResourceHandler->CreateTexture2DFromFile("jeep_army.png", "TestTexture");
+	Lux::Core::ObserverPtr<Lux::Core::TextureSampler> defaultSampler = m_ResourceHandler->CreateTextureSampler("DefaultSampler", Lux::Core::TextureSamplerOptions());
 	diffuseTex->SetSampler(defaultSampler);
 
 	// Camera setup
@@ -56,7 +56,7 @@ bool TestApp::LoadContent()
 	materialComp.GetRawPtr()->SetDiffuseTexture(diffuseTex);
 
 	// Add Physics
-	Lux::Core::PhysicsMaterial* physMat = m_ResourceHandler->CreatePhysicsMaterial("DefaultMat", 0.1f, 0.5f, 0.5f);
+	Lux::Core::ObserverPtr<Lux::Core::PhysicsMaterial> physMat = m_ResourceHandler->CreatePhysicsMaterial("DefaultMat", 0.1f, 0.5f, 0.5f);
 	Lux::Core::ObjectHandle<Lux::Physics::DynamicRigidBody>& rigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::DynamicRigidBody>(ent);
 	rigidBody.GetRawPtr()->SetPhysicsMaterial(physMat);
 

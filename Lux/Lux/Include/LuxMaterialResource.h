@@ -10,6 +10,8 @@ namespace Lux
 		public:
 			MaterialResource();
 			MaterialResource(aiMaterial& a_Mat);
+			MaterialResource(const MaterialResource& a_Other);
+			MaterialResource &MaterialResource::operator =(const MaterialResource& a_Other);
 			~MaterialResource();
 
 			const String& GetName() const;

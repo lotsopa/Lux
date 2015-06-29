@@ -1,11 +1,12 @@
 #include "LuxPCH.h"
 #include "LuxObjectPool.h"
+#include "LuxObserverPtr.h"
 #include "LuxRenderWindow.h"
 #include "LuxPlatform.h"
 #include "LuxKeyCodes.h"
-#include "LuxApplication.h"
 #include "LuxEntity.h"
 #include "LuxKey.h"
+#include "LuxMesh.h"
 #include "LuxMeshRenderer.h"
 #include "LuxTransform.h"
 #include "LuxComponent.h"
@@ -31,6 +32,7 @@
 #include "LuxPhysicsSystem.h"
 #include "LuxDynamicRigidBody.h"
 #include "LuxStaticRigidBody.h"
+#include "LuxApplication.h"
 
 Lux::Application::Application() :
 m_Platform(nullptr), m_SceneManager(nullptr), m_ResourceHandler(nullptr)

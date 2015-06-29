@@ -36,7 +36,7 @@ namespace Lux
 
 			}
 
-			__forceinline ObjectType* GetRawPtr() const
+			__forceinline ObjectType* const GetRawPtr() const
 			{
 				return m_RawPtr;
 			}
