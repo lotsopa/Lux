@@ -1,8 +1,7 @@
 #ifndef LUX_STATIC_RIGID_BODY_H
 #define LUX_STATIC_RIGID_BODY_H
 
-#include "LuxComponent.h"
-#include "LuxObserverPtr.h"
+#include "LuxRigidBody.h"
 
 namespace Lux
 {
@@ -13,7 +12,7 @@ namespace Lux
 
 	namespace Physics
 	{
-		class StaticRigidBody : public Core::Component
+		class StaticRigidBody : public RigidBody
 		{
 		public:
 			StaticRigidBody();
@@ -22,7 +21,7 @@ namespace Lux
 
 			inline void SetPhysicsMaterial(Core::ObserverPtr<Core::PhysicsMaterial>& a_Material)
 			{
-				m_Material.reset(a_Material.get()); m_Dirty = true;
+				m_Material.reset(a_Material.get());
 			}
 
 			inline Core::ObserverPtr<Core::PhysicsMaterial>& GetPhysicsMaterial()
@@ -31,9 +30,6 @@ namespace Lux
 			}
 
 		private:
-			PxRigidStatic* m_Properties;
-			Core::ObserverPtr<Core::PhysicsMaterial> m_Material;
-			bool m_Dirty;
 			friend class PhysicsSystem;
 
 		protected:

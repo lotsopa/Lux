@@ -37,12 +37,6 @@
     <Filter Include="Source Files\Core\Internal">
       <UniqueIdentifier>{410be00e-050d-49da-81b6-40ebc3a9f2eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Graphics\Internal">
-      <UniqueIdentifier>{66f6d847-eb32-47a8-94fa-506cde0d9778}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics\Internal">
-      <UniqueIdentifier>{f66c84b3-e37b-4152-a162-4436d8c13248}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Utility\Internal">
       <UniqueIdentifier>{95d03dba-f206-423f-a7b0-9b99b0f42b95}</UniqueIdentifier>
     </Filter>
@@ -312,6 +306,15 @@
     <ClInclude Include="Include\LuxObserverPtr.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxCollider.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxBoxCollider.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxRigidBody.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -523,6 +526,15 @@
     </ClCompile>
     <ClCompile Include="Source\LuxMaterial.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxCollider.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxBoxCollider.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxRigidBody.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -30,8 +30,10 @@
 #include "LuxFreeLookCamera.h"
 #include "LuxPhysicsMaterial.h"
 #include "LuxPhysicsSystem.h"
+#include "LuxRigidBody.h"
 #include "LuxDynamicRigidBody.h"
 #include "LuxStaticRigidBody.h"
+#include "LuxBoxCollider.h"
 #include "LuxApplication.h"
 
 Lux::Application::Application() :
@@ -129,6 +131,7 @@ bool Lux::Application::LoadComponentTypes()
 	// Physics
 	m_SceneManager->RegisterNewComponentType<Physics::DynamicRigidBody>();
 	m_SceneManager->RegisterNewComponentType<Physics::StaticRigidBody>();
+	m_SceneManager->RegisterNewComponentType<Physics::BoxCollider>();
 	return true;
 }
 
@@ -150,6 +153,7 @@ bool Lux::Application::LoadSystemTypes()
 	m_SceneManager->RegisterComponentTypeWithSystem<Physics::DynamicRigidBody, Physics::PhysicsSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Physics::StaticRigidBody, Physics::PhysicsSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Core::Transform, Physics::PhysicsSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Physics::BoxCollider, Physics::PhysicsSystem>();
 
 	return true;
 }

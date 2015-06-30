@@ -38,7 +38,9 @@
     <ClInclude Include="Include\Internal\OpenGL\LuxVertexArrayOGL.h" />
     <ClInclude Include="Include\LuxBehaviour.h" />
     <ClInclude Include="Include\LuxBehaviourSystem.h" />
+    <ClInclude Include="Include\LuxBoxCollider.h" />
     <ClInclude Include="Include\LuxCamera.h" />
+    <ClInclude Include="Include\LuxCollider.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
@@ -59,6 +61,7 @@
     <ClInclude Include="Include\LuxPlatform.h" />
     <ClInclude Include="Include\LuxRenderingSystem.h" />
     <ClInclude Include="Include\LuxDynamicRigidBody.h" />
+    <ClInclude Include="Include\LuxRigidBody.h" />
     <ClInclude Include="Include\LuxScannerToParser.h" />
     <ClInclude Include="Include\LuxShader.h" />
     <ClInclude Include="Include\LuxShaderFileParser.h" />
@@ -118,7 +121,9 @@
     <ClCompile Include="Source\Internal\OpenGL\LuxVertexArrayOGL.cpp" />
     <ClCompile Include="Source\LuxBehaviour.cpp" />
     <ClCompile Include="Source\LuxBehaviourSystem.cpp" />
+    <ClCompile Include="Source\LuxBoxCollider.cpp" />
     <ClCompile Include="Source\LuxCamera.cpp" />
+    <ClCompile Include="Source\LuxCollider.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
     <ClCompile Include="Source\LuxComponent.cpp" />
@@ -143,6 +148,7 @@
     <ClCompile Include="Source\LuxPlatform.cpp" />
     <ClCompile Include="Source\LuxRenderingSystem.cpp" />
     <ClCompile Include="Source\LuxDynamicRigidBody.cpp" />
+    <ClCompile Include="Source\LuxRigidBody.cpp" />
     <ClCompile Include="Source\LuxScannerToParser.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>

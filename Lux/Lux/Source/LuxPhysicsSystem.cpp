@@ -147,13 +147,22 @@ void Lux::Physics::PhysicsSystem::UpdateObjectPositions()
 		if (it->second.IsNull())
 			continue;
 
-		if (!it->second.m_Transform || !it->second.m_Transform->IsValid())
+		if (!it->second.m_Transform)
 			continue;
 
-		if (!it->second.m_DynamicRigidBody || !it->second.m_DynamicRigidBody->IsValid())
+		if (!it->second.m_Transform->IsValid())
 			continue;
 
-		PxRigidDynamic* dynamicRigidBody = it->second.m_DynamicRigidBody->GetRawPtr()->m_Properties;
+		if (!it->second.m_RigidBody)
+			continue;
+
+		if (!it->second.m_RigidBody->IsValid())
+			continue;
+
+		if (it->second.m_RigidBody->GetRawPtr()->m_Type == RigidBody::RIGID_BODY_STATIC)
+			continue;
+
+		PxRigidActor* dynamicRigidBody = it->second.m_RigidBody->GetRawPtr()->m_Properties;
 		PxTransform bodyTransform = dynamicRigidBody->getGlobalPose();
 
 		Core::Transform* objTransform = it->second.m_Transform->GetRawPtr();
@@ -172,35 +181,22 @@ void Lux::Physics::PhysicsSystem::ProcessComponents()
 		if (it->second.IsNull())
 			continue;
 
-		if (it->second.m_DynamicRigidBody && it->second.m_DynamicRigidBody->IsValid())
+		if (it->second.m_RigidBody)
 		{
-			DynamicRigidBody* rigidBody = it->second.m_DynamicRigidBody->GetRawPtr();
-			// Check if we need to create a material
-			if (rigidBody->m_Material)
+			if (it->second.m_RigidBody->IsValid())
 			{
-				Core::PhysicsMaterial* mat = rigidBody->m_Material.get();
-				if (!mat->m_Properties)
+				RigidBody* rigidBody = it->second.m_RigidBody->GetRawPtr();
+				// Check if we need to create a material
+				if (rigidBody->m_Material)
 				{
-					mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
-
+					Core::PhysicsMaterial* mat = rigidBody->m_Material.get();
 					if (!mat->m_Properties)
-						Utility::ThrowError("Failed to create Physics Material.");
-				}
-			}
-		}
-		else if (it->second.m_StaticRigidBody && it->second.m_StaticRigidBody->IsValid())
-		{
-			StaticRigidBody* rigidBody = it->second.m_StaticRigidBody->GetRawPtr();
-			// Check if we need to create a material
-			if (rigidBody->m_Material)
-			{
-				Core::PhysicsMaterial* mat = rigidBody->m_Material.get();
-				if (!mat->m_Properties)
-				{
-					mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
+					{
+						mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
 
-					if (!mat->m_Properties)
-						Utility::ThrowError("Failed to create Physics Material.");
+						if (!mat->m_Properties)
+							Utility::ThrowError("Failed to create Physics Material.");
+					}
 				}
 			}
 		}
