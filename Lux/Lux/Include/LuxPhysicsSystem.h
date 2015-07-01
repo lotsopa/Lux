@@ -96,6 +96,7 @@ namespace Lux
 			Core::Key m_DynamicRigidBodyKey;
 			Core::Key m_StaticRigidBodyKey;
 			Core::Key m_TransformKey;
+			Core::Key m_BoxColliderKey;
 			AddComponentProcessMap m_AddComponentFuncMap;
 			EntityMap m_EntityMap;
 			RemoveComponentProcessMap m_RemoveComponentProcessMap;
@@ -177,12 +178,25 @@ namespace Lux
 				if (m_EntityMap[&a_Owner].m_RigidBody != nullptr && m_EntityMap[&a_Owner].m_RigidBody->IsValid())
 				{
 					BoxCollider* colliderPtr = (BoxCollider*)colliderHandle->GetRawPtr();
-					RigidBody* staticBody = m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr();
+					RigidBody* rigidBody = m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr();
 					if (!colliderPtr->m_Shape)
 					{
-						if (staticBody->m_Material)
+						if (rigidBody->m_Material)
 						{
-							colliderPtr->m_Shape = m_Physics->createShape(PxBoxGeometry(Utility::ConvertVec3ToPhysX(colliderPtr->m_HalfExtents)), *staticBody->m_Material.get()->m_Properties);
+							// Create material
+							Core::PhysicsMaterial* mat = rigidBody->m_Material.get();
+							if (!mat->m_Properties)
+							{
+								mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
+
+								if (!mat->m_Properties)
+									Utility::ThrowError("Failed to create Physics Material.");
+							}
+
+							colliderPtr->m_Shape = m_Physics->createShape(PxBoxGeometry(Utility::ConvertVec3ToPhysX(colliderPtr->m_HalfExtents)), *mat->m_Properties);
+
+							if (!colliderPtr->m_Shape)
+								Utility::ThrowError("Unable to create Box Collider. Unable to create shape.");
 						}
 						else
 						{
@@ -191,11 +205,7 @@ namespace Lux
 					}
 
 					if (m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr()->m_Properties)
-						m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr()->m_Properties->attachShape(*colliderHandle->GetRawPtr()->m_Shape);
-				}
-				else if (m_EntityMap[&a_Owner].m_RigidBody != nullptr && m_EntityMap[&a_Owner].m_RigidBody->IsValid())
-				{
-					m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr()->m_Properties->attachShape(*colliderHandle->GetRawPtr()->m_Shape);
+						m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr()->m_Properties->attachShape(*colliderPtr->m_Shape);
 				}
 				m_EntityMap[&a_Owner].m_Collider = colliderHandle;
 			}

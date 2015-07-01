@@ -59,16 +59,21 @@ bool TestApp::LoadContent()
 	Lux::Core::ObserverPtr<Lux::Core::PhysicsMaterial> physMat = m_ResourceHandler->CreatePhysicsMaterial("DefaultMat", 0.1f, 0.5f, 0.5f);
 	Lux::Core::ObjectHandle<Lux::Physics::DynamicRigidBody>& rigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::DynamicRigidBody>(ent);
 	rigidBody.GetRawPtr()->SetPhysicsMaterial(physMat);
+	Lux::Core::ObjectHandle<Lux::Physics::BoxCollider>& collider = m_SceneManager->AttachNewComponent<Lux::Physics::BoxCollider>(ent);
 
-	//Lux::Core::ObjectHandle<Lux::Core::Entity>& ent2 = m_SceneManager->CreateEntity();
-	//Lux::Core::ObjectHandle<Lux::Core::Transform>& transf2 = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(ent2);
-	//transf2.GetRawPtr()->SetScale(Lux::vec3(0.01f));
-	//transf2.GetRawPtr()->SetPosition(Lux::vec3(4, 0, 0));
-	//Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& meshRenderer2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(ent2);
-	//meshRenderer2.GetRawPtr()->SetMesh(mesh);
-	//Lux::Core::ObjectHandle<Lux::Graphics::MaterialComponent>& materialComp2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MaterialComponent>(ent2);
-	//materialComp2.GetRawPtr()->SetShader(shader);
-	//materialComp2.GetRawPtr()->SetDiffuseTexture(diffuseTex);
+	Lux::Core::ObjectHandle<Lux::Core::Entity>& ent2 = m_SceneManager->CreateEntity();
+	Lux::Core::ObjectHandle<Lux::Core::Transform>& transf2 = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(ent2);
+	transf2.GetRawPtr()->SetScale(Lux::vec3(0.01f));
+	transf2.GetRawPtr()->SetPosition(Lux::vec3(-4, -5, 0));
+	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& meshRenderer2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(ent2);
+	meshRenderer2.GetRawPtr()->SetMesh(mesh);
+	Lux::Core::ObjectHandle<Lux::Graphics::Material>& materialComp2 = m_SceneManager->AttachNewComponent<Lux::Graphics::Material>(ent2);
+	materialComp2.GetRawPtr()->SetShader(shader);
+	materialComp2.GetRawPtr()->SetDiffuseTexture(diffuseTex);
+
+	Lux::Core::ObjectHandle<Lux::Physics::StaticRigidBody>& rigidBody2 = m_SceneManager->AttachNewComponent<Lux::Physics::StaticRigidBody>(ent2);
+	rigidBody2.GetRawPtr()->SetPhysicsMaterial(physMat);
+	Lux::Core::ObjectHandle<Lux::Physics::BoxCollider>& collider2 = m_SceneManager->AttachNewComponent<Lux::Physics::BoxCollider>(ent2);
 
 	return true;
 }

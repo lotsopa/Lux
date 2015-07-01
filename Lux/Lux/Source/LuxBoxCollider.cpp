@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxBoxCollider.h"
 
-Lux::Physics::BoxCollider::BoxCollider()
+Lux::Physics::BoxCollider::BoxCollider() : Collider(), m_HalfExtents(1.0f, 1.0f, 1.0f)
 {
 
 }

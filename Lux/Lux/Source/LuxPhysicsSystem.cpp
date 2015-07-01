@@ -20,15 +20,18 @@
 Lux::Physics::PhysicsSystem::PhysicsSystem() : System(), m_RecordAllocations(true), m_NumPhysicsThreads(LUX_NUM_PHYSICS_THREADS), m_StepTimeSec(LUX_PHYSICS_TIMESTEP_SEC),
 m_DynamicRigidBodyKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::DynamicRigidBody)),
 m_StaticRigidBodyKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::StaticRigidBody)),
-m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform))
+m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
+m_BoxColliderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::BoxCollider))
 {
 	ADD_COMPONENT_MAP_INSERT(m_StaticRigidBodyKey, PhysicsSystem::AddComponentInternal<StaticRigidBody>);
 	ADD_COMPONENT_MAP_INSERT(m_DynamicRigidBodyKey, PhysicsSystem::AddComponentInternal<DynamicRigidBody>);
 	ADD_COMPONENT_MAP_INSERT(m_TransformKey, PhysicsSystem::AddComponentInternal<Core::Transform>);
+	ADD_COMPONENT_MAP_INSERT(m_BoxColliderKey, PhysicsSystem::AddComponentInternal<BoxCollider>);
 
 	REMOVE_COMPONENT_MAP_INSERT(m_StaticRigidBodyKey, PhysicsSystem::RemoveComponentInternal<StaticRigidBody>);
 	REMOVE_COMPONENT_MAP_INSERT(m_DynamicRigidBodyKey, PhysicsSystem::RemoveComponentInternal<DynamicRigidBody>);
 	REMOVE_COMPONENT_MAP_INSERT(m_TransformKey, PhysicsSystem::RemoveComponentInternal<Core::Transform>);
+	REMOVE_COMPONENT_MAP_INSERT(m_BoxColliderKey, PhysicsSystem::RemoveComponentInternal<BoxCollider>);
 
 	m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
 
