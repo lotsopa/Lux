@@ -5,6 +5,7 @@
 #include "LuxStaticRigidBody.h"
 #include "LuxBoxCollider.h"
 #include "LuxTransform.h"
+#include "LuxMeshRenderer.h"
 
 namespace Lux
 {
@@ -173,11 +174,28 @@ namespace Lux
 
 			template<> void AddComponentInternal<BoxCollider>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
+				Core::ObjectHandle<Core::Transform>& transformHandle = m_SceneManager->GetComponent<Core::Transform>(a_Owner);
+
+				if (!transformHandle.IsValid())
+				{
+					Utility::ThrowError("Failed to create Dynamic Rigid Body. The entity must have a transform.");
+				}
+
 				Core::ObjectHandle<Collider>* colliderHandle = (Core::ObjectHandle<Collider>*)(a_CompPtr);
+				BoxCollider* colliderPtr = (BoxCollider*)colliderHandle->GetRawPtr();
+
+				// Set the bounding box, if the entity has one
+				Core::ObjectHandle<Graphics::MeshRenderer>& meshRenderer = m_SceneManager->GetComponent<Graphics::MeshRenderer>(a_Owner);
+
+				if (meshRenderer.IsValid())
+				{
+					Core::AABB& aabb = meshRenderer.GetRawPtr()->GetMesh().get()->GetAABB();
+					colliderPtr->m_HalfExtents = aabb.GetHalfExtents() * transformHandle.GetRawPtr()->GetScale();
+				}
+				
 				
 				if (m_EntityMap[&a_Owner].m_RigidBody != nullptr && m_EntityMap[&a_Owner].m_RigidBody->IsValid())
 				{
-					BoxCollider* colliderPtr = (BoxCollider*)colliderHandle->GetRawPtr();
 					RigidBody* rigidBody = m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr();
 					if (!colliderPtr->m_Shape)
 					{

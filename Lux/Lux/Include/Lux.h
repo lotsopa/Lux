@@ -24,6 +24,7 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxBehaviour.h"
 #include "LuxPhysicsMaterial.h"
 #include "LuxRigidBody.h"
+#include "LuxAABB.h"
 #include "LuxDynamicRigidBody.h"
 #include "LuxStaticRigidBody.h"
 #include "LuxBoxCollider.h"

@@ -36,6 +36,7 @@
     <ClInclude Include="Include\Internal\OpenGL\LuxTexture3DOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxTextureSamplerOGL.h" />
     <ClInclude Include="Include\Internal\OpenGL\LuxVertexArrayOGL.h" />
+    <ClInclude Include="Include\LuxAABB.h" />
     <ClInclude Include="Include\LuxBehaviour.h" />
     <ClInclude Include="Include\LuxBehaviourSystem.h" />
     <ClInclude Include="Include\LuxBoxCollider.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="Source\Internal\OpenGL\LuxTexture3DOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxTextureSamplerOGL.cpp" />
     <ClCompile Include="Source\Internal\OpenGL\LuxVertexArrayOGL.cpp" />
+    <ClCompile Include="Source\LuxAABB.cpp" />
     <ClCompile Include="Source\LuxBehaviour.cpp" />
     <ClCompile Include="Source\LuxBehaviourSystem.cpp" />
     <ClCompile Include="Source\LuxBoxCollider.cpp" />

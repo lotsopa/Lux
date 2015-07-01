@@ -121,6 +121,28 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 		}
 	}
 
+	// Setup Bounding Box
+	vec3 meshMin(1e34f);
+	vec3 meshMax(-1e33f);
+	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+	{
+		unsigned int vertexCount = scene->mMeshes[i]->mNumVertices;
+
+		for (unsigned int j = 0; j < vertexCount; j++)
+		{
+			meshMin.x = std::min(meshMin.x, scene->mMeshes[i]->mVertices[j].x);
+			meshMin.y = std::min(meshMin.y, scene->mMeshes[i]->mVertices[j].y);
+			meshMin.z = std::min(meshMin.z, scene->mMeshes[i]->mVertices[j].z);
+
+			meshMax.x = std::max(meshMax.x, scene->mMeshes[i]->mVertices[j].x);
+			meshMax.y = std::max(meshMax.y, scene->mMeshes[i]->mVertices[j].y);
+			meshMax.z = std::max(meshMax.z, scene->mMeshes[i]->mVertices[j].z);
+		}
+	}
+	AABB& aabb = retMesh->GetAABB();
+	aabb.SetMax(meshMax);
+	aabb.SetMin(meshMin);
+
 	AddResourceToMap(a_EntityName, (Mesh*)retMesh, m_MeshMap);
 	AddFileNameToMap(a_File, retMesh);
 	Utility::SafePtrDelete(file);
@@ -192,6 +214,28 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 			retEntity->AddAnimation(animData);
 		}
 	}
+
+	// Setup Bounding Box
+	vec3 meshMin(1e34f);
+	vec3 meshMax(-1e33f);
+	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+	{
+		unsigned int vertexCount = scene->mMeshes[i]->mNumVertices;
+
+		for (unsigned int j = 0; j < vertexCount; j++)
+		{
+			meshMin.x = std::min(meshMin.x, scene->mMeshes[i]->mVertices[j].x);
+			meshMin.y = std::min(meshMin.y, scene->mMeshes[i]->mVertices[j].y);
+			meshMin.z = std::min(meshMin.z, scene->mMeshes[i]->mVertices[j].z);
+
+			meshMax.x = std::max(meshMax.x, scene->mMeshes[i]->mVertices[j].x);
+			meshMax.y = std::max(meshMax.y, scene->mMeshes[i]->mVertices[j].y);
+			meshMax.z = std::max(meshMax.z, scene->mMeshes[i]->mVertices[j].z);
+		}
+	}
+	AABB& aabb = retEntity->GetAABB();
+	aabb.SetMax(meshMax);
+	aabb.SetMin(meshMin);
 
 	AddResourceToMap(a_EntityName, (Mesh*)retEntity, m_MeshMap);
 	return ObserverPtr<Mesh>(retEntity);

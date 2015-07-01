@@ -64,7 +64,7 @@ bool TestApp::LoadContent()
 	Lux::Core::ObjectHandle<Lux::Core::Entity>& ent2 = m_SceneManager->CreateEntity();
 	Lux::Core::ObjectHandle<Lux::Core::Transform>& transf2 = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(ent2);
 	transf2.GetRawPtr()->SetScale(Lux::vec3(0.01f));
-	transf2.GetRawPtr()->SetPosition(Lux::vec3(-4, -5, 0));
+	transf2.GetRawPtr()->SetPosition(Lux::vec3(0, -5, 0));
 	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& meshRenderer2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(ent2);
 	meshRenderer2.GetRawPtr()->SetMesh(mesh);
 	Lux::Core::ObjectHandle<Lux::Graphics::Material>& materialComp2 = m_SceneManager->AttachNewComponent<Lux::Graphics::Material>(ent2);

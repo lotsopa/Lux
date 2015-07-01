@@ -68,8 +68,7 @@ m_BoxColliderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::BoxCollider))
 
 Lux::Physics::PhysicsSystem::~PhysicsSystem()
 {
-	if (m_CpuDispatcher)
-		delete m_CpuDispatcher;
+	Utility::SafePtrDelete(m_CpuDispatcher);
 
 	if (m_Scene)
 		m_Scene->release();

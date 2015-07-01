@@ -1,5 +1,6 @@
 #ifndef LUX_MESH_H
 #define LUX_MESH_H
+#include "LuxAABB.h"
 
 namespace Lux
 {
@@ -24,6 +25,11 @@ namespace Lux
 
 			virtual const unsigned int GetNumSubMeshes() = 0;
 			virtual SubMesh* GetSubMesh(const unsigned int a_Index) = 0;
+
+			inline AABB& GetAABB() { return m_AABB; }
+
+		protected:
+			AABB m_AABB;
 		};
 	}
 }
