@@ -164,7 +164,7 @@ namespace Lux
 					Utility::ThrowError("Failed to create StaticRigidBody.");
 
 				m_EntityMap[&a_Owner].m_RigidBody = (Core::ObjectHandle<RigidBody>*)compPtr;
-				m_Scene->addActor(*compPtr->GetRawPtr()->m_Properties);
+				//m_Scene->addActor(*compPtr->GetRawPtr()->m_Properties);
 			}
 
 			template<> void AddComponentInternal<Core::Transform>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
@@ -222,8 +222,15 @@ namespace Lux
 						}
 					}
 
-					if (m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr()->m_Properties)
-						m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr()->m_Properties->attachShape(*colliderPtr->m_Shape);
+					RigidBody* rBody = m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr();
+					if (rBody->m_Properties)
+					{
+						rBody->m_Properties->attachShape(*colliderPtr->m_Shape);
+
+						if (rBody->m_Type == RigidBody::RIGID_BODY_STATIC)
+							m_Scene->addActor(*rBody->m_Properties);
+					}
+
 				}
 				m_EntityMap[&a_Owner].m_Collider = colliderHandle;
 			}

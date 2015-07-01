@@ -3,7 +3,7 @@
 
 Lux::Physics::StaticRigidBody::StaticRigidBody() : RigidBody()
 {
-
+	m_Type = RigidBodyType::RIGID_BODY_STATIC;
 }
 
 Lux::Physics::StaticRigidBody::StaticRigidBody(const StaticRigidBody& a_Other)

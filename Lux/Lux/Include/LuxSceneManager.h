@@ -207,19 +207,15 @@ namespace Lux
 				Key depKey(typeid(DependencyType).name());
 
 				// Make sure we don't add the same dependency twice
-				ComponentDependencyMap::iterator it1 = m_ComponentDependencyMap.lower_bound(compKey);
-				ComponentDependencyMap::iterator it2 = m_ComponentDependencyMap.upper_bound(compKey);
+				if (ComponentDependencyExists(compKey, depKey))
+					return;
 
-				while (it1 != it2)
-				{
-					if (it1->second == depKey)
-						return; // Already added, just return
-
-					++it1;
-				}
-
+				// Add this dependency to the map
 				m_ComponentDependencyMap.insert(std::make_pair(compKey, depKey));
 				m_CompDepCreateMap.insert(std::make_pair(depKey, std::bind(&SceneManager::AttachDependentComponent<DependencyType>, this, std::placeholders::_1)));
+
+				// Go recursive
+				AddDependenciesRecursive(compKey, depKey, 0);
 			}
 
 			void ProcessUpdate(const float a_Dt);
@@ -227,6 +223,52 @@ namespace Lux
 			inline RenderWindow* GetRenderWindow() { return m_RenderWindow; }
 
 		private:
+
+			void AddDependenciesRecursive(const Key& a_CurrCompKey, const Key& a_CheckKey, unsigned int a_Depth)
+			{
+				if (a_Depth > LUX_COMPONENT_DEPENDENCIES_MAX_RECURSION)
+				{
+					Utility::ThrowError("Component Dependency Max Recursion Reached.");
+				}
+
+				bool keyExists = m_ComponentDependencyMap.count(a_CheckKey) > 0;
+				if (!keyExists)
+					return;
+
+				ComponentDependencyMap::iterator iter1 = m_ComponentDependencyMap.lower_bound(a_CheckKey);
+				ComponentDependencyMap::iterator iter2 = m_ComponentDependencyMap.upper_bound(a_CheckKey);
+
+				while (iter1 != iter2)
+				{
+					// Make sure we don't add the same dependency twice
+					if (ComponentDependencyExists(a_CurrCompKey, iter1->second))
+					{
+						++iter1;
+						continue;
+					}
+
+					m_ComponentDependencyMap.insert(std::make_pair(a_CurrCompKey, iter1->second));
+
+					AddDependenciesRecursive(a_CurrCompKey, iter1->second, a_Depth++);
+
+					++iter1;
+				}
+			}
+
+			bool ComponentDependencyExists(const Key& a_Key, const Key& a_DepKey)
+			{
+				ComponentDependencyMap::iterator it1 = m_ComponentDependencyMap.lower_bound(a_Key);
+				ComponentDependencyMap::iterator it2 = m_ComponentDependencyMap.upper_bound(a_Key);
+
+				while (it1 != it2)
+				{
+					if (it1->second == a_DepKey)
+						return true; // Already added, just return
+
+					++it1;
+				}
+				return false;
+			}
 
 			template<class ComponentType>
 			void AttachDependentComponent(ObjectHandle<Entity>& a_Ent)

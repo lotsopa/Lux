@@ -3,7 +3,7 @@
 
 Lux::Physics::DynamicRigidBody::DynamicRigidBody() : RigidBody()
 {
-
+	m_Type = RigidBodyType::RIGID_BODY_DYNAMIC;
 }
 
 Lux::Physics::DynamicRigidBody::DynamicRigidBody(const DynamicRigidBody& a_Other)

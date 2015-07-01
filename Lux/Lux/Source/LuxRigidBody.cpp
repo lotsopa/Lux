@@ -3,7 +3,7 @@
 
 Lux::Physics::RigidBody::RigidBody() : Component(), m_Properties(nullptr)
 {
-
+	m_Type = RigidBodyType::RIGID_BODY_STATIC;
 }
 
 Lux::Physics::RigidBody::~RigidBody()

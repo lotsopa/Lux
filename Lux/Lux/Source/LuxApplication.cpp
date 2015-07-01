@@ -138,6 +138,9 @@ bool Lux::Application::LoadComponentTypes()
 	m_SceneManager->RegisterComponentTypeDependency<Core::FreeLookCamera, Graphics::Camera>();
 	m_SceneManager->RegisterComponentTypeDependency<Graphics::MeshRenderer, Core::Transform>();
 
+	m_SceneManager->RegisterComponentTypeDependency<Physics::DynamicRigidBody, Core::Transform>();
+	m_SceneManager->RegisterComponentTypeDependency<Physics::StaticRigidBody, Core::Transform>();
+
 	return true;
 }
 
