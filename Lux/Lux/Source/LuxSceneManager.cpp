@@ -36,6 +36,8 @@ Lux::Core::SceneManager::~SceneManager()
 	m_ComponentIndexMap.clear();
 	m_EntityComponentMap.clear();
 	m_DelFuncMap.clear();
+	m_CompDepCreateMap.clear();
+	m_ComponentDependencyMap.clear();
 	Utility::SafePtrDelete(m_ComponentFactory);
 	Utility::SafePtrDelete(m_EntityFactory);
 	Utility::SafePtrDelete(m_SystemFactory);

@@ -544,7 +544,6 @@ Lux::Core::ObserverPtr<Lux::Core::Shader> Lux::Core::Internal::ResourceHandlerOG
 
 	// Tokenize file
 	yyscan_t scanner;
-	LuxFileScannerlex_init(&scanner);
 	LuxFileScannerlex_init_extra(a_File.c_str(), &scanner);
 	LuxFileScanner_scan_string(str.c_str(), scanner);
 

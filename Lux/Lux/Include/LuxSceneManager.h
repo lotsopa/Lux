@@ -77,19 +77,31 @@ namespace Lux
 					Utility::ThrowError("A component of that type is already attached to the entity.");
 				}
 
+				Key compKey(typeid(ComponentType).name());
+
+				// Attach all dependent components first
+				ComponentDependencyMap::iterator it1 = m_ComponentDependencyMap.lower_bound(compKey);
+				ComponentDependencyMap::iterator it2 = m_ComponentDependencyMap.upper_bound(compKey);
+
+				while (it1 != it2)
+				{
+					// Call the appropriate function to create and attach the component
+					m_CompDepCreateMap.at(it1->second)(a_Ent);
+					++it1;
+				}
+
 				ObjectHandle<ComponentType>& comp = m_ComponentFactory->CreateComponent<ComponentType>();
 				ComponentLayout& layout = m_EntityComponentMap.at(&a_Ent);
-				Key k(typeid(ComponentType).name());
-				unsigned int idx = m_ComponentIndexMap.at(k);
+				unsigned int idx = m_ComponentIndexMap.at(compKey);
 				layout.m_Components[idx].m_Data = &comp;
 
 				// Notify all Systems that are registered for this component type
 				std::pair<ComponentSystemMultiMap::iterator, ComponentSystemMultiMap::iterator> ret;
-				ret = m_ComponentSystemMap.equal_range(k);
+				ret = m_ComponentSystemMap.equal_range(compKey);
 				ComponentSystemMultiMap::iterator iter;
 				for (iter = ret.first; iter != ret.second; ++iter)
 				{
-					iter->second->AddComponent(&comp, k, a_Ent);
+					iter->second->AddComponent(&comp, compKey, a_Ent);
 				}
 
 				return comp;
@@ -182,11 +194,65 @@ namespace Lux
 				m_ComponentSystemMap.insert(std::make_pair(compKey, system));
 			}
 
+			/*
+			Adds a dependency between two component types. 
+			This ensures that when a component of 'ComponentType' is attached to an entity,
+			'DependencyType' will automatically be attached to that entity as well.
+			If the dependency has already been registered, the function does nothing.
+			*/
+			template<class ComponentType, class DependencyType>
+			void RegisterComponentTypeDependency()
+			{
+				Key compKey(typeid(ComponentType).name());
+				Key depKey(typeid(DependencyType).name());
+
+				// Make sure we don't add the same dependency twice
+				ComponentDependencyMap::iterator it1 = m_ComponentDependencyMap.lower_bound(compKey);
+				ComponentDependencyMap::iterator it2 = m_ComponentDependencyMap.upper_bound(compKey);
+
+				while (it1 != it2)
+				{
+					if (it1->second == depKey)
+						return; // Already added, just return
+
+					++it1;
+				}
+
+				m_ComponentDependencyMap.insert(std::make_pair(compKey, depKey));
+				m_CompDepCreateMap.insert(std::make_pair(depKey, std::bind(&SceneManager::AttachDependentComponent<DependencyType>, this, std::placeholders::_1)));
+			}
+
 			void ProcessUpdate(const float a_Dt);
 
 			inline RenderWindow* GetRenderWindow() { return m_RenderWindow; }
 
 		private:
+
+			template<class ComponentType>
+			void AttachDependentComponent(ObjectHandle<Entity>& a_Ent)
+			{
+				bool hasComponent = HasComponent<ComponentType>(a_Ent);
+
+				if (hasComponent)
+				{
+					return;
+				}
+
+				ObjectHandle<ComponentType>& comp = m_ComponentFactory->CreateComponent<ComponentType>();
+				ComponentLayout& layout = m_EntityComponentMap.at(&a_Ent);
+				Key k(typeid(ComponentType).name());
+				unsigned int idx = m_ComponentIndexMap.at(k);
+				layout.m_Components[idx].m_Data = &comp;
+
+				// Notify all Systems that are registered for this component type
+				std::pair<ComponentSystemMultiMap::iterator, ComponentSystemMultiMap::iterator> ret;
+				ret = m_ComponentSystemMap.equal_range(k);
+				ComponentSystemMultiMap::iterator iter;
+				for (iter = ret.first; iter != ret.second; ++iter)
+				{
+					iter->second->AddComponent(&comp, k, a_Ent);
+				}
+			}
 
 			template<class ComponentType>
 			void DestroyComponent(void* a_Comp, ObjectHandle<Entity>& a_Entity)
@@ -229,9 +295,13 @@ namespace Lux
 			typedef std::map<unsigned int, std::function<void(void*, ObjectHandle<Entity>&)>> ComponentDelFuncMap;
 			typedef std::map<Key, System*> SystemsMap;
 			typedef std::multimap<Key, System*> ComponentSystemMultiMap;
+			typedef std::multimap<Key, Key> ComponentDependencyMap;
+			typedef std::map<Key, std::function<void(ObjectHandle<Entity>&)>> CompDepCreateMap; // Component Dependency Creation Function Map
 			EntityComponentMap m_EntityComponentMap;
 			ComponentIndexMap m_ComponentIndexMap;
 			ComponentDelFuncMap m_DelFuncMap;
+			ComponentDependencyMap m_ComponentDependencyMap;
+			CompDepCreateMap m_CompDepCreateMap;
 			unsigned int m_NumComponentTypes;
 			SystemsMap m_SystemsMap;
 			ComponentSystemMultiMap m_ComponentSystemMap;

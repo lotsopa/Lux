@@ -132,6 +132,12 @@ bool Lux::Application::LoadComponentTypes()
 	m_SceneManager->RegisterNewComponentType<Physics::DynamicRigidBody>();
 	m_SceneManager->RegisterNewComponentType<Physics::StaticRigidBody>();
 	m_SceneManager->RegisterNewComponentType<Physics::BoxCollider>();
+
+	//Setup Component Dependencies
+	m_SceneManager->RegisterComponentTypeDependency<Graphics::Camera, Core::Transform>();
+	m_SceneManager->RegisterComponentTypeDependency<Core::FreeLookCamera, Graphics::Camera>();
+	m_SceneManager->RegisterComponentTypeDependency<Graphics::MeshRenderer, Core::Transform>();
+
 	return true;
 }
 
