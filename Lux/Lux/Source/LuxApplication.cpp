@@ -34,6 +34,7 @@
 #include "LuxDynamicRigidBody.h"
 #include "LuxStaticRigidBody.h"
 #include "LuxBoxCollider.h"
+#include "LuxSphereCollider.h"
 #include "LuxApplication.h"
 
 Lux::Application::Application() :
@@ -132,6 +133,7 @@ bool Lux::Application::LoadComponentTypes()
 	m_SceneManager->RegisterNewComponentType<Physics::DynamicRigidBody>();
 	m_SceneManager->RegisterNewComponentType<Physics::StaticRigidBody>();
 	m_SceneManager->RegisterNewComponentType<Physics::BoxCollider>();
+	m_SceneManager->RegisterNewComponentType<Physics::SphereCollider>();
 
 	//Setup Component Dependencies
 	m_SceneManager->RegisterComponentTypeDependency<Graphics::Camera, Core::Transform>();
@@ -163,6 +165,7 @@ bool Lux::Application::LoadSystemTypes()
 	m_SceneManager->RegisterComponentTypeWithSystem<Physics::StaticRigidBody, Physics::PhysicsSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Core::Transform, Physics::PhysicsSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Physics::BoxCollider, Physics::PhysicsSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Physics::SphereCollider, Physics::PhysicsSystem>();
 
 	return true;
 }

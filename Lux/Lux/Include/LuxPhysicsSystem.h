@@ -4,6 +4,7 @@
 #include "LuxDynamicRigidBody.h"
 #include "LuxStaticRigidBody.h"
 #include "LuxBoxCollider.h"
+#include "LuxSphereCollider.h"
 #include "LuxTransform.h"
 #include "LuxMeshRenderer.h"
 
@@ -98,6 +99,7 @@ namespace Lux
 			Core::Key m_StaticRigidBodyKey;
 			Core::Key m_TransformKey;
 			Core::Key m_BoxColliderKey;
+			Core::Key m_SphereColliderKey;
 			AddComponentProcessMap m_AddComponentFuncMap;
 			EntityMap m_EntityMap;
 			RemoveComponentProcessMap m_RemoveComponentProcessMap;
@@ -174,11 +176,16 @@ namespace Lux
 
 			template<> void AddComponentInternal<BoxCollider>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
+				if (m_EntityMap[&a_Owner].m_Collider)
+				{
+					Utility::ThrowError("Failed to create Box Collider. The entity already has a Collider attached.");
+				}
+
 				Core::ObjectHandle<Core::Transform>& transformHandle = m_SceneManager->GetComponent<Core::Transform>(a_Owner);
 
 				if (!transformHandle.IsValid())
 				{
-					Utility::ThrowError("Failed to create Dynamic Rigid Body. The entity must have a transform.");
+					Utility::ThrowError("Failed to create Box Collider. The entity must have a transform.");
 				}
 
 				Core::ObjectHandle<Collider>* colliderHandle = (Core::ObjectHandle<Collider>*)(a_CompPtr);
@@ -235,6 +242,78 @@ namespace Lux
 				m_EntityMap[&a_Owner].m_Collider = colliderHandle;
 			}
 
+			template<> void AddComponentInternal<SphereCollider>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				if (m_EntityMap[&a_Owner].m_Collider)
+				{
+					Utility::ThrowError("Failed to create Sphere Collider. The entity already has a Collider attached.");
+				}
+
+				Core::ObjectHandle<Core::Transform>& transformHandle = m_SceneManager->GetComponent<Core::Transform>(a_Owner);
+
+				if (!transformHandle.IsValid())
+				{
+					Utility::ThrowError("Failed to create Sphere Collider. The entity must have a transform.");
+				}
+
+				Core::ObjectHandle<Collider>* colliderHandle = (Core::ObjectHandle<Collider>*)(a_CompPtr);
+				SphereCollider* colliderPtr = (SphereCollider*)colliderHandle->GetRawPtr();
+
+				// Set the bounding box, if the entity has one
+				Core::ObjectHandle<Graphics::MeshRenderer>& meshRenderer = m_SceneManager->GetComponent<Graphics::MeshRenderer>(a_Owner);
+
+				if (meshRenderer.IsValid())
+				{
+					Core::AABB& aabb = meshRenderer.GetRawPtr()->GetMesh().get()->GetAABB();
+
+					// Pick longest axis
+					vec3 halfExtents = aabb.GetHalfExtents() * transformHandle.GetRawPtr()->GetScale();
+					float longestAxis = std::max(halfExtents.x, std::max(halfExtents.y, halfExtents.z));
+					colliderPtr->SetRadius(longestAxis);
+				}
+
+
+				if (m_EntityMap[&a_Owner].m_RigidBody != nullptr && m_EntityMap[&a_Owner].m_RigidBody->IsValid())
+				{
+					RigidBody* rigidBody = m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr();
+					if (!colliderPtr->m_Shape)
+					{
+						if (rigidBody->m_Material)
+						{
+							// Create material
+							Core::PhysicsMaterial* mat = rigidBody->m_Material.get();
+							if (!mat->m_Properties)
+							{
+								mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
+
+								if (!mat->m_Properties)
+									Utility::ThrowError("Failed to create Physics Material.");
+							}
+
+							colliderPtr->m_Shape = m_Physics->createShape(PxSphereGeometry(colliderPtr->m_Radius), *mat->m_Properties);
+
+							if (!colliderPtr->m_Shape)
+								Utility::ThrowError("Unable to create Box Collider. Unable to create shape.");
+						}
+						else
+						{
+							Utility::ThrowError("Unable to create Box Collider. The RigidBody must have a material.");
+						}
+					}
+
+					RigidBody* rBody = m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr();
+					if (rBody->m_Properties)
+					{
+						rBody->m_Properties->attachShape(*colliderPtr->m_Shape);
+
+						if (rBody->m_Type == RigidBody::RIGID_BODY_STATIC)
+							m_Scene->addActor(*rBody->m_Properties);
+					}
+
+				}
+				m_EntityMap[&a_Owner].m_Collider = colliderHandle;
+			}
+
 			// Remove Components
 			template<class ComponentType>
 			void RemoveComponentInternal(Core::ObjectHandle<Core::Entity>& a_Owner)
@@ -262,7 +341,17 @@ namespace Lux
 				m_EntityMap[&a_Owner].m_Transform = nullptr;
 			}
 
-			template<> void RemoveComponentInternal<Collider>(Core::ObjectHandle<Core::Entity>& a_Owner)
+			template<> void RemoveComponentInternal<BoxCollider>(Core::ObjectHandle<Core::Entity>& a_Owner)
+			{
+				if (m_EntityMap[&a_Owner].m_RigidBody != nullptr && m_EntityMap[&a_Owner].m_RigidBody->IsValid())
+				{
+					m_EntityMap[&a_Owner].m_RigidBody->GetRawPtr()->m_Properties->detachShape(*m_EntityMap[&a_Owner].m_Collider->GetRawPtr()->m_Shape);
+				}
+
+				m_EntityMap[&a_Owner].m_Collider = nullptr;
+			}
+
+			template<> void RemoveComponentInternal<SphereCollider>(Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
 				if (m_EntityMap[&a_Owner].m_RigidBody != nullptr && m_EntityMap[&a_Owner].m_RigidBody->IsValid())
 				{

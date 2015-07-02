@@ -66,6 +66,7 @@
     <ClInclude Include="Include\LuxScannerToParser.h" />
     <ClInclude Include="Include\LuxShader.h" />
     <ClInclude Include="Include\LuxShaderFileParser.h" />
+    <ClInclude Include="Include\LuxSphereCollider.h" />
     <ClInclude Include="Include\LuxStaticRigidBody.h" />
     <ClInclude Include="Include\LuxSubMesh.h" />
     <ClInclude Include="Include\LuxMesh.h" />
@@ -157,6 +158,7 @@
     </ClCompile>
     <ClCompile Include="Source\LuxShader.cpp" />
     <ClCompile Include="Source\LuxShaderFileParser.cpp" />
+    <ClCompile Include="Source\LuxSphereCollider.cpp" />
     <ClCompile Include="Source\LuxStaticRigidBody.cpp" />
     <ClCompile Include="Source\LuxSubMesh.cpp" />
     <ClCompile Include="Source\LuxMeshAnimation.cpp" />
