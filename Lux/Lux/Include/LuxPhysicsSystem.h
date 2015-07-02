@@ -360,7 +360,6 @@ namespace Lux
 
 				m_EntityMap[&a_Owner].m_Collider = nullptr;
 			}
-
 		};
 	}
 }
