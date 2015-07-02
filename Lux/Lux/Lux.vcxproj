@@ -41,6 +41,7 @@
     <ClInclude Include="Include\LuxBehaviourSystem.h" />
     <ClInclude Include="Include\LuxBoxCollider.h" />
     <ClInclude Include="Include\LuxCamera.h" />
+    <ClInclude Include="Include\LuxCapsuleCollider.h" />
     <ClInclude Include="Include\LuxCollider.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
@@ -126,6 +127,7 @@
     <ClCompile Include="Source\LuxBehaviourSystem.cpp" />
     <ClCompile Include="Source\LuxBoxCollider.cpp" />
     <ClCompile Include="Source\LuxCamera.cpp" />
+    <ClCompile Include="Source\LuxCapsuleCollider.cpp" />
     <ClCompile Include="Source\LuxCollider.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
@@ -238,7 +240,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>..\Extern\PhysX\lib;..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Debug\Win32;..\Extern\physfs\lib\Debug;..\Extern\Assimp-3.1.1\lib\Debug;%(AdditionalLibraryDirectories);..\Extern\FreeImage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32sd.lib;opengl32.lib;glfw3.lib;physfs.lib;assimpd.lib;FreeImage.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3VehicleDEBUG.lib;PhysX3ExtensionsDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32sd.lib;opengl32.lib;glfw3.lib;physfs.lib;assimpd.lib;FreeImage.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3VehicleDEBUG.lib;PhysX3ExtensionsDEBUG.lib;PhysX3CookingDEBUG_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4006 /ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <ProjectReference>
@@ -268,7 +270,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>..\Extern\PhysX\lib;..\Extern\glfw-3.0.4\lib;..\Extern\glew-1.10.0\lib\Release\Win32;..\Extern\physfs\lib\Release;..\Extern\Assimp-3.1.1\lib\Release;%(AdditionalLibraryDirectories);..\Extern\FreeImage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;physfs.lib;assimp.lib;FreeImage.lib;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Vehicle.lib;PhysX3Extensions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;physfs.lib;assimp.lib;FreeImage.lib;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Vehicle.lib;PhysX3Extensions.lib;PhysX3Cooking_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
   </ItemDefinitionGroup>

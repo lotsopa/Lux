@@ -29,6 +29,7 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxStaticRigidBody.h"
 #include "LuxBoxCollider.h"
 #include "LuxSphereCollider.h"
+#include "LuxCapsuleCollider.h"
 #include "LuxFreeLookCamera.h"
 #include "LuxMeshRenderer.h"
 #include "LuxMaterial.h"

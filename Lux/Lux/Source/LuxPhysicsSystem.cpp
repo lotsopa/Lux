@@ -22,19 +22,22 @@ m_DynamicRigidBodyKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::DynamicRigidBody)
 m_StaticRigidBodyKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::StaticRigidBody)),
 m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
 m_BoxColliderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::BoxCollider)),
-m_SphereColliderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::SphereCollider))
+m_SphereColliderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::SphereCollider)),
+m_CapsuleColliderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Physics::CapsuleCollider))
 {
 	ADD_COMPONENT_MAP_INSERT(m_StaticRigidBodyKey, PhysicsSystem::AddComponentInternal<StaticRigidBody>);
 	ADD_COMPONENT_MAP_INSERT(m_DynamicRigidBodyKey, PhysicsSystem::AddComponentInternal<DynamicRigidBody>);
 	ADD_COMPONENT_MAP_INSERT(m_TransformKey, PhysicsSystem::AddComponentInternal<Core::Transform>);
 	ADD_COMPONENT_MAP_INSERT(m_BoxColliderKey, PhysicsSystem::AddComponentInternal<BoxCollider>);
 	ADD_COMPONENT_MAP_INSERT(m_SphereColliderKey, PhysicsSystem::AddComponentInternal<SphereCollider>);
+	ADD_COMPONENT_MAP_INSERT(m_CapsuleColliderKey, PhysicsSystem::AddComponentInternal<CapsuleCollider>);
 
 	REMOVE_COMPONENT_MAP_INSERT(m_StaticRigidBodyKey, PhysicsSystem::RemoveComponentInternal<StaticRigidBody>);
 	REMOVE_COMPONENT_MAP_INSERT(m_DynamicRigidBodyKey, PhysicsSystem::RemoveComponentInternal<DynamicRigidBody>);
 	REMOVE_COMPONENT_MAP_INSERT(m_TransformKey, PhysicsSystem::RemoveComponentInternal<Core::Transform>);
 	REMOVE_COMPONENT_MAP_INSERT(m_BoxColliderKey, PhysicsSystem::RemoveComponentInternal<BoxCollider>);
 	REMOVE_COMPONENT_MAP_INSERT(m_SphereColliderKey, PhysicsSystem::RemoveComponentInternal<SphereCollider>);
+	REMOVE_COMPONENT_MAP_INSERT(m_CapsuleColliderKey, PhysicsSystem::RemoveComponentInternal<CapsuleCollider>);
 
 	m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
 

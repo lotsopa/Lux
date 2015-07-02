@@ -59,7 +59,7 @@ bool TestApp::LoadContent()
 	Lux::Core::ObserverPtr<Lux::Core::PhysicsMaterial> physMat = m_ResourceHandler->CreatePhysicsMaterial("DefaultMat", 0.1f, 0.5f, 0.5f);
 	Lux::Core::ObjectHandle<Lux::Physics::DynamicRigidBody>& rigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::DynamicRigidBody>(ent);
 	rigidBody.GetRawPtr()->SetPhysicsMaterial(physMat);
-	Lux::Core::ObjectHandle<Lux::Physics::SphereCollider>& collider = m_SceneManager->AttachNewComponent<Lux::Physics::SphereCollider>(ent);
+	Lux::Core::ObjectHandle<Lux::Physics::CapsuleCollider>& collider = m_SceneManager->AttachNewComponent<Lux::Physics::CapsuleCollider>(ent);
 
 	Lux::Core::ObjectHandle<Lux::Core::Entity>& ent2 = m_SceneManager->CreateEntity();
 	Lux::Core::ObjectHandle<Lux::Core::Transform>& transf2 = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(ent2);
@@ -73,7 +73,7 @@ bool TestApp::LoadContent()
 
 	Lux::Core::ObjectHandle<Lux::Physics::StaticRigidBody>& rigidBody2 = m_SceneManager->AttachNewComponent<Lux::Physics::StaticRigidBody>(ent2);
 	rigidBody2.GetRawPtr()->SetPhysicsMaterial(physMat);
-	Lux::Core::ObjectHandle<Lux::Physics::SphereCollider>& collider2 = m_SceneManager->AttachNewComponent<Lux::Physics::SphereCollider>(ent2);
+	Lux::Core::ObjectHandle<Lux::Physics::CapsuleCollider>& collider2 = m_SceneManager->AttachNewComponent<Lux::Physics::CapsuleCollider>(ent2);
 
 	return true;
 }

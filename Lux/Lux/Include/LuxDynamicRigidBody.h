@@ -18,7 +18,10 @@ namespace Lux
 			DynamicRigidBody(const DynamicRigidBody& a_Other);
 			virtual ~DynamicRigidBody();
 
+			void SetIsKinematic(bool a_Kinematic);
+			inline bool GetIsKinematic() { return m_IsKinematic; }
 		private:
+			bool m_IsKinematic;
 			friend class PhysicsSystem;
 
 		protected:
