@@ -118,9 +118,12 @@ namespace Lux
 			Core::ObjectHandle<Camera>* m_MainCamera;
 			EntityEntry* m_LightEntry;
 			Core::ObjectHandle<Core::Transform>* m_MainCameraTransform;
-			Core::ShaderUniformBuffer m_UniformBuffer;
+			Core::ShaderUniformBuffer m_ObjUniformBuffer;
+			Core::ShaderUniformBuffer m_LightUniformBuffer;
+			Core::ShaderUniformBuffer m_MatUniformBuffer;
 			AddComponentProcessMap m_AddComponentFuncMap;
 			RemoveComponentProcessMap m_RemoveComponentProcessMap;
+			int m_LightType;
 
 			template<class ComponentType>
 			void AddComponentInternal(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)

@@ -14,7 +14,8 @@ namespace Lux
 			VALUE_VEC3,
 			VALUE_VEC4,
 			VALUE_MAT4X4,
-			VALUE_MAT3X3
+			VALUE_MAT3X3,
+			VALUE_STRUCT
 		};
 
 		class ShaderVariable
@@ -102,6 +103,14 @@ namespace Lux
 					ShaderVariableType type = m_Variables[i].GetType();
 					switch (type)
 					{
+
+					case VALUE_STRUCT:
+					{
+						currByteBoundary += m_Variables[i].GetDataSizeBytes();
+						memcpy(&m_RawData[currindex], m_Variables[i].GetData(), m_Variables[i].GetDataSizeBytes());
+						currindex += m_Variables[i].GetDataSizeBytes() / sizeof(float);
+					}
+						break;
 					case VALUE_FLOAT:
 					{
 						currByteBoundary += sizeof(float);

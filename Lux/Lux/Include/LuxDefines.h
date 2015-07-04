@@ -10,6 +10,8 @@
 #define LUX_COMPONENT_MEMORY_POOL_INITIAL_SIZE 100
 #define LUX_COMPONENT_MEMORY_POOL_GROW_AMOUNT 20
 #define LUX_COMPONENT_DEPENDENCIES_MAX_RECURSION 50
+#define LUX_ALIGN_BYTES(size) __declspec(align(size))
+#define LUX_ALIGN_16_BYTES LUX_ALIGN_BYTES(16)
 
 #define BUFFER_OFFSET(offset) ((void*)(offset))
 #define MEMBER_OFFSET(s,m) ((char*)NULL + (offsetof(s,m)))

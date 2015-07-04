@@ -23,12 +23,14 @@
 #include "LuxTexture1D.h"
 #include "LuxTexture2D.h"
 #include "LuxTexture3D.h"
+#include "LuxMaterialShaderResource.h"
+#include "LuxLightShaderResource.h"
 
 #define CONVERT_ID_TO_CLASS_STRING(a) "class " ID_TO_STRING(a)
 #define ADD_COMPONENT_MAP_INSERT(a, b) m_AddComponentFuncMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1, std::placeholders::_2)))
 #define REMOVE_COMPONENT_MAP_INSERT(a, b) m_RemoveComponentProcessMap.insert(std::make_pair(a, std::bind(&b, this, std::placeholders::_1)))
 Lux::Graphics::RenderingSystem::RenderingSystem() :
-System(), m_RenderWindow(nullptr), m_MainCamera(nullptr), m_MainCameraTransform(nullptr), m_LightEntry(nullptr), m_UniformBuffer(5),
+System(), m_RenderWindow(nullptr), m_MainCamera(nullptr), m_MainCameraTransform(nullptr), m_LightEntry(nullptr), m_ObjUniformBuffer(3), m_LightUniformBuffer(2), m_MatUniformBuffer(1),
 m_MeshRendererKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MeshRenderer)),
 m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
 m_ShaderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::ShaderComponent)),
@@ -174,18 +176,35 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
 		Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetInverseTranslationMatrix()), sizeof(mat4));
 		Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
-		Core::ShaderVariable lightVal(Core::VALUE_VEC3, glm::value_ptr(m_LightEntry->m_Transform->GetRawPtr()->GetPosition()), sizeof(vec3));
-		Core::ShaderVariable lightCol(Core::VALUE_VEC4, glm::value_ptr(m_LightEntry->m_Light->GetRawPtr()->GetColor()), sizeof(vec4));
-		m_UniformBuffer.SetVariable(0, viewMatVal);
-		m_UniformBuffer.SetVariable(1, projMatVal);
-		m_UniformBuffer.SetVariable(2, worldMatVal);
-		m_UniformBuffer.SetVariable(3, lightVal);
-		m_UniformBuffer.SetVariable(4, lightCol);
+		m_ObjUniformBuffer.SetVariable(0, viewMatVal);
+		m_ObjUniformBuffer.SetVariable(1, projMatVal);
+		m_ObjUniformBuffer.SetVariable(2, worldMatVal);
+
+		// Light Buffer
+		LightShaderResource lightShaderRes;
+		lightShaderRes.m_Position = m_LightEntry->m_Transform->GetRawPtr()->GetPosition();
+		lightShaderRes.m_Color = m_LightEntry->m_Light->GetRawPtr()->GetColor();
+		lightShaderRes.m_Direction = m_LightEntry->m_Light->GetRawPtr()->GetDirection();
+		lightShaderRes.m_Intensity = m_LightEntry->m_Light->GetRawPtr()->GetIntensity();
+		//lightShaderRes.m_Type = (int)m_LightEntry->m_Light->GetRawPtr()->GetType();
+		Core::ShaderVariable lightShaderVar(Core::VALUE_STRUCT, &lightShaderRes, sizeof(LightShaderResource));
+		Core::ShaderVariable eyePos(Core::VALUE_VEC3, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetPosition()), sizeof(vec3));
+
+		m_LightUniformBuffer.SetVariable(0, lightShaderVar);
+		m_LightUniformBuffer.SetVariable(1, eyePos);
+
+		// Material Buffer
+		Core::MaterialResource* matRes = it->second.m_Material->GetRawPtr()->GetMaterialProperties().get();
+		MaterialShaderResource matShaderRes(*matRes);
+		Core::ShaderVariable matShader(Core::VALUE_STRUCT, &matShaderRes, sizeof(MaterialShaderResource));
+		m_MatUniformBuffer.SetVariable(0, matShader);
 
 		if (!it->second.m_Init)
 		{
 			mesh->ConnectWithShader(shader);
-			shader->InitializeUniformBuffer("UniformBuffer0", m_UniformBuffer, VERTEX_PROGRAM);
+			shader->InitializeUniformBuffer("ObjectBuffer", m_ObjUniformBuffer, VERTEX_PROGRAM);
+			shader->InitializeUniformBuffer("LightBuffer", m_LightUniformBuffer, FRAGMENT_PROGRAM);
+			shader->InitializeUniformBuffer("MaterialBuffer", m_MatUniformBuffer, FRAGMENT_PROGRAM);
 			it->second.m_Init = true;
 		}
 

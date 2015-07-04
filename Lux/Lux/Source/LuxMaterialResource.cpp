@@ -5,13 +5,13 @@
 Lux::Core::MaterialResource::MaterialResource() :
 m_Opacity(1.0f),
 m_Reflectivity(0.0f),
-m_Shininess(0.0f),
+m_Shininess(30.0f),
 m_ShininessStrength(0.0f),
 m_RefractionIndex(0.0f),
-m_DiffuseColor(1.0f, 1.0f, 1.0f, 1.0f),
+m_DiffuseColor(0.5f, 0.5f, 0.5f, 1.0f),
 m_AmbientColor(0.1f, 0.1f, 0.1f, 1.0f),
 m_EmissiveColor(0.0f, 0.0f, 0.0f, 1.0f),
-m_SpecularColor(1.0f, 1.0f, 1.0f, 1.0f),
+m_SpecularColor(0.5f, 0.5f, 0.5f, 1.0f),
 m_TransparentColor(0.0f, 0.0f, 0.0f, 0.0f)
 {
 
@@ -21,17 +21,6 @@ Lux::Core::MaterialResource::MaterialResource(aiMaterial& a_Mat)
 {
 	aiString str;
 	aiReturn retval;
-
-	// Name
-	retval = a_Mat.Get(AI_MATKEY_NAME, str);
-	if (retval != aiReturn_SUCCESS)
-	{
-		LUX_LOG(Utility::logWARNING) << "Failed to retrieve the material name from file. The field will have its default value.";
-	}
-	else
-	{
-		m_Name = str.C_Str();
-	}
 
 	// Diffuse
 	aiColor4D col;
@@ -149,17 +138,11 @@ Lux::Core::MaterialResource::MaterialResource(const MaterialResource& a_Other)
 	m_ShininessStrength = a_Other.m_ShininessStrength;
 	m_Opacity = a_Other.m_Opacity;
 	m_RefractionIndex = a_Other.m_RefractionIndex;
-	m_Name = a_Other.m_Name;
 }
 
 Lux::Core::MaterialResource::~MaterialResource()
 {
 
-}
-
-const Lux::String& Lux::Core::MaterialResource::GetName() const
-{
-	return m_Name;
 }
 
 const Lux::vec4& Lux::Core::MaterialResource::GetDiffuseColor() const
@@ -215,11 +198,6 @@ const float Lux::Core::MaterialResource::GetRefraction() const
 const float Lux::Core::MaterialResource::GetOpacity() const
 {
 	return m_Opacity;
-}
-
-void Lux::Core::MaterialResource::SetName(const String a_Name)
-{
-	m_Name = a_Name;
 }
 
 void Lux::Core::MaterialResource::SetDiffuseColor(const vec4& a_Col)
@@ -290,6 +268,5 @@ Lux::Core::MaterialResource & Lux::Core::MaterialResource::operator=(const Mater
 	m_ShininessStrength = a_Other.m_ShininessStrength;
 	m_Opacity = a_Other.m_Opacity;
 	m_RefractionIndex = a_Other.m_RefractionIndex;
-	m_Name = a_Other.m_Name;
 	return *this;
 }

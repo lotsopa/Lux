@@ -54,8 +54,10 @@
     <ClInclude Include="Include\LuxKey.h" />
     <ClInclude Include="Include\LuxKeyCodes.h" />
     <ClInclude Include="Include\LuxLight.h" />
+    <ClInclude Include="Include\LuxLightShaderResource.h" />
     <ClInclude Include="Include\LuxMaterialResource.h" />
     <ClInclude Include="Include\LuxMaterial.h" />
+    <ClInclude Include="Include\LuxMaterialShaderResource.h" />
     <ClInclude Include="Include\LuxMeshPostProcess.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
     <ClInclude Include="Include\LuxObserverPtr.h" />
@@ -147,6 +149,7 @@
     <ClCompile Include="Source\LuxLight.cpp" />
     <ClCompile Include="Source\LuxMaterialResource.cpp" />
     <ClCompile Include="Source\LuxMaterial.cpp" />
+    <ClCompile Include="Source\LuxMaterialShaderResource.cpp" />
     <ClCompile Include="Source\LuxMeshRenderer.cpp" />
     <ClCompile Include="Source\LuxPhysicsMaterial.cpp" />
     <ClCompile Include="Source\LuxPhysicsSystem.cpp" />
@@ -183,6 +186,7 @@
     <ClCompile Include="Source\LuxTransform.cpp" />
     <ClCompile Include="Source\LuxTexture1D.cpp" />
     <ClCompile Include="Source\LuxVertex.cpp" />
+    <ClCompile Include="Source\LuxLightShaderResource.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2E2A77E1-3762-466F-9C23-5704EF8E16E1}</ProjectGuid>

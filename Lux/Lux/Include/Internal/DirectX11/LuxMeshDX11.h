@@ -30,6 +30,8 @@ namespace Lux
 				MeshAnimation** m_AnimationData;
 				unsigned int m_NumSubMeshes;
 				unsigned int m_NumAnimations;
+				unsigned int m_SubMeshCtr;
+				unsigned int m_AnimCtr;
 			};
 		}
 	}

@@ -12,18 +12,32 @@ TestApp::~TestApp()
 
 bool TestApp::LoadContent()
 {
-	if (!Lux::Core::FileHandler::GetInstance().AddResourcePath("..\\Assets"))
-	{
+	if (!Lux::Core::FileHandler::GetInstance().AddResourcePath("../Assets"))
 		return false;
-	}
+
+	if (!Lux::Core::FileHandler::GetInstance().AddResourcePath("../Assets/models"))
+		return false;
+
+	if (!Lux::Core::FileHandler::GetInstance().AddResourcePath("../Assets/textures"))
+		return false;
+
+	if (!Lux::Core::FileHandler::GetInstance().AddResourcePath("../Assets/shaders"))
+		return false;
+
+	if (!Lux::Core::FileHandler::GetInstance().AddResourcePath("../Assets/models/California"))
+		return false;
 
 	// Load resources
-	Lux::Core::ObserverPtr<Lux::Core::Shader> shader = m_ResourceHandler->CreateShaderFromFile("Test.shader", "Test");
-	Lux::Core::ObserverPtr<Lux::Core::Mesh> mesh = m_ResourceHandler->CreateMeshFromFile("jeep.obj", "Monkey", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
+	Lux::Core::ObserverPtr<Lux::Core::Shader> defaultShader = m_ResourceHandler->CreateShaderFromFile("Default.shader", "Default");
+	Lux::Core::ObserverPtr<Lux::Core::Mesh> carMesh = m_ResourceHandler->CreateMeshFromFile("california.3ds", "Car", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
+	Lux::Core::ObserverPtr<Lux::Core::Mesh> cubeMesh = m_ResourceHandler->CreateMeshFromFile("cube.obj", "Cube", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
 
-	Lux::Core::ObserverPtr<Lux::Core::Texture2D> diffuseTex = m_ResourceHandler->CreateTexture2DFromFile("jeep_army.png", "TestTexture");
+	Lux::Core::ObserverPtr<Lux::Core::Texture2D> carDiffuseTex = m_ResourceHandler->CreateTexture2DFromFile("UV_mapper.png", "CarTexture");
+	Lux::Core::ObserverPtr<Lux::Core::Texture2D> groundDiffuseTex = m_ResourceHandler->CreateTexture2DFromFile("UV_mapper.png", "GroundTexture");
 	Lux::Core::ObserverPtr<Lux::Core::TextureSampler> defaultSampler = m_ResourceHandler->CreateTextureSampler("DefaultSampler", Lux::Core::TextureSamplerOptions());
-	diffuseTex->SetSampler(defaultSampler);
+	Lux::Core::ObserverPtr<Lux::Core::MaterialResource>& defaultMaterial = m_ResourceHandler->CreateMaterial("TestMat");
+	carDiffuseTex->SetSampler(defaultSampler);
+	groundDiffuseTex->SetSampler(defaultSampler);
 
 	// Camera setup
 	Lux::Core::ObjectHandle<Lux::Core::Entity>& cameraObj = m_SceneManager->CreateEntity();
@@ -40,40 +54,44 @@ bool TestApp::LoadContent()
 	Lux::Core::ObjectHandle<Lux::Core::Entity>& lightEntity = m_SceneManager->CreateEntity();
 	Lux::Core::ObjectHandle<Lux::Core::Transform>& lightTransform = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(lightEntity);
 	Lux::Core::ObjectHandle<Lux::Graphics::Light>& dirLight = m_SceneManager->AttachNewComponent<Lux::Graphics::Light>(lightEntity);
-	lightTransform.GetRawPtr()->SetPosition(Lux::vec3(0, 0, 5));
+	lightTransform.GetRawPtr()->SetPosition(Lux::vec3(0, 100, 0));
+	dirLight.GetRawPtr()->SetDirection(Lux::normalize(Lux::vec3(0.0, -1.0, 0)));
 
 	// Test object setup
-	Lux::Core::ObjectHandle<Lux::Core::Entity>& ent = m_SceneManager->CreateEntity();
-	Lux::Core::ObjectHandle<Lux::Core::Transform>& transf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(ent);
+	Lux::Core::ObjectHandle<Lux::Core::Entity>& carEntity = m_SceneManager->CreateEntity();
+	Lux::Core::ObjectHandle<Lux::Core::Transform>& carTransf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(carEntity);
 	//transf.GetRawPtr()->Rotate(180.0f, Lux::vec3(0, 1, 0));
-	//transf.GetRawPtr()->Rotate(90.0f, Lux::vec3(1, 0, 0));
-	transf.GetRawPtr()->SetScale(Lux::vec3(0.01f));
-	transf.GetRawPtr()->SetPosition(Lux::vec3(-4, 0, 0));
-	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& meshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(ent);
-	meshRenderer.GetRawPtr()->SetMesh(mesh);
-	Lux::Core::ObjectHandle<Lux::Graphics::Material>& materialComp = m_SceneManager->AttachNewComponent<Lux::Graphics::Material>(ent);
-	materialComp.GetRawPtr()->SetShader(shader);
-	materialComp.GetRawPtr()->SetDiffuseTexture(diffuseTex);
+	carTransf.GetRawPtr()->Rotate(90.0f, Lux::vec3(1, 0, 0));
+	carTransf.GetRawPtr()->Rotate(180.0f, Lux::vec3(0, 0, 1));
+	//carTransf.GetRawPtr()->SetScale(Lux::vec3(0.01f));
+	carTransf.GetRawPtr()->SetPosition(Lux::vec3(0, 0, 0));
+	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& carMeshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(carEntity);
+	carMeshRenderer.GetRawPtr()->SetMesh(carMesh);
+	Lux::Core::ObjectHandle<Lux::Graphics::Material>& carMaterialComp = m_SceneManager->AttachNewComponent<Lux::Graphics::Material>(carEntity);
+	carMaterialComp.GetRawPtr()->SetShader(defaultShader);
+	carMaterialComp.GetRawPtr()->SetDiffuseTexture(carDiffuseTex);
+	carMaterialComp.GetRawPtr()->SetMaterialProperties(defaultMaterial);
 
 	// Add Physics
-	Lux::Core::ObserverPtr<Lux::Core::PhysicsMaterial> physMat = m_ResourceHandler->CreatePhysicsMaterial("DefaultMat", 0.1f, 0.5f, 0.5f);
-	Lux::Core::ObjectHandle<Lux::Physics::DynamicRigidBody>& rigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::DynamicRigidBody>(ent);
-	rigidBody.GetRawPtr()->SetPhysicsMaterial(physMat);
-	Lux::Core::ObjectHandle<Lux::Physics::CapsuleCollider>& collider = m_SceneManager->AttachNewComponent<Lux::Physics::CapsuleCollider>(ent);
+	Lux::Core::ObserverPtr<Lux::Core::PhysicsMaterial> defaultPhysMat = m_ResourceHandler->CreatePhysicsMaterial("DefaultMat", 0.1f, 0.5f, 0.5f);
+	Lux::Core::ObjectHandle<Lux::Physics::DynamicRigidBody>& carRigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::DynamicRigidBody>(carEntity);
+	carRigidBody.GetRawPtr()->SetPhysicsMaterial(defaultPhysMat);
+	Lux::Core::ObjectHandle<Lux::Physics::BoxCollider>& carCollider = m_SceneManager->AttachNewComponent<Lux::Physics::BoxCollider>(carEntity);
 
-	Lux::Core::ObjectHandle<Lux::Core::Entity>& ent2 = m_SceneManager->CreateEntity();
-	Lux::Core::ObjectHandle<Lux::Core::Transform>& transf2 = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(ent2);
-	transf2.GetRawPtr()->SetScale(Lux::vec3(0.01f));
-	transf2.GetRawPtr()->SetPosition(Lux::vec3(0, -5, 0));
-	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& meshRenderer2 = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(ent2);
-	meshRenderer2.GetRawPtr()->SetMesh(mesh);
-	Lux::Core::ObjectHandle<Lux::Graphics::Material>& materialComp2 = m_SceneManager->AttachNewComponent<Lux::Graphics::Material>(ent2);
-	materialComp2.GetRawPtr()->SetShader(shader);
-	materialComp2.GetRawPtr()->SetDiffuseTexture(diffuseTex);
+	Lux::Core::ObjectHandle<Lux::Core::Entity>& groundEntity = m_SceneManager->CreateEntity();
+	Lux::Core::ObjectHandle<Lux::Core::Transform>& groundTranf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(groundEntity);
+	groundTranf.GetRawPtr()->SetScale(Lux::vec3(100.0f, 1.0f, 100.0f));
+	groundTranf.GetRawPtr()->SetPosition(Lux::vec3(0, -5, 0));
+	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& groundMeshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(groundEntity);
+	groundMeshRenderer.GetRawPtr()->SetMesh(cubeMesh);
+	Lux::Core::ObjectHandle<Lux::Graphics::Material>& groundMaterial = m_SceneManager->AttachNewComponent<Lux::Graphics::Material>(groundEntity);
+	groundMaterial.GetRawPtr()->SetShader(defaultShader);
+	groundMaterial.GetRawPtr()->SetDiffuseTexture(groundDiffuseTex);
+	groundMaterial.GetRawPtr()->SetMaterialProperties(defaultMaterial);
 
-	Lux::Core::ObjectHandle<Lux::Physics::StaticRigidBody>& rigidBody2 = m_SceneManager->AttachNewComponent<Lux::Physics::StaticRigidBody>(ent2);
-	rigidBody2.GetRawPtr()->SetPhysicsMaterial(physMat);
-	Lux::Core::ObjectHandle<Lux::Physics::CapsuleCollider>& collider2 = m_SceneManager->AttachNewComponent<Lux::Physics::CapsuleCollider>(ent2);
+	Lux::Core::ObjectHandle<Lux::Physics::StaticRigidBody>& groundRigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::StaticRigidBody>(groundEntity);
+	groundRigidBody.GetRawPtr()->SetPhysicsMaterial(defaultPhysMat);
+	Lux::Core::ObjectHandle<Lux::Physics::BoxCollider>& groundCollider = m_SceneManager->AttachNewComponent<Lux::Physics::BoxCollider>(groundEntity);
 
 	return true;
 }

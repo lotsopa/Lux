@@ -11,7 +11,9 @@ Lux::Core::Internal::MeshDX11::MeshDX11() :
 m_NumSubMeshes(0),
 m_AnimationData(nullptr),
 m_SubMeshes(nullptr),
-m_NumAnimations(0)
+m_NumAnimations(0),
+m_AnimCtr(0),
+m_SubMeshCtr(0)
 {
 
 }
@@ -19,7 +21,9 @@ m_NumAnimations(0)
 Lux::Core::Internal::MeshDX11::MeshDX11(unsigned int a_NumMeshes, unsigned int a_NumAnims) :
 m_NumSubMeshes(a_NumMeshes),
 m_AnimationData(nullptr),
-m_NumAnimations(a_NumAnims)
+m_NumAnimations(a_NumAnims),
+m_AnimCtr(0),
+m_SubMeshCtr(0)
 {
 	if (m_NumSubMeshes)
 	{
@@ -53,29 +57,27 @@ Lux::Core::Internal::MeshDX11::~MeshDX11()
 void Lux::Core::Internal::MeshDX11::AddSubMesh(SubMesh* a_Mesh)
 {
 	LuxAssert(a_Mesh);
-	static unsigned int ctr = 0;
 
-	if (ctr >= m_NumSubMeshes)
+	if (m_SubMeshCtr >= m_NumSubMeshes)
 	{
 		Utility::ThrowError("Could not insert mesh in entity. Mesh index too high.");
 	}
 
-	m_SubMeshes[ctr] = (SubMeshDX11*)a_Mesh;
-	ctr++;
+	m_SubMeshes[m_SubMeshCtr] = (SubMeshDX11*)a_Mesh;
+	m_SubMeshCtr++;
 }
 
 void Lux::Core::Internal::MeshDX11::AddAnimation(MeshAnimation* a_Anim)
 {
 	LuxAssert(a_Anim);
-	static unsigned int ctr = 0;
 
-	if (ctr >= m_NumSubMeshes)
+	if (m_AnimCtr >= m_NumSubMeshes)
 	{
 		Utility::ThrowError("Could not insert animation in entity. Animation index too high.");
 	}
 
-	m_AnimationData[ctr] = a_Anim;
-	ctr++;
+	m_AnimationData[m_AnimCtr] = a_Anim;
+	m_AnimCtr++;
 }
 
 void Lux::Core::Internal::MeshDX11::ConnectWithShader(Shader* a_Shader)

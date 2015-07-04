@@ -92,7 +92,10 @@ namespace Lux
 				template<class T>
 				void AddResourceToMap(const String& a_Str, T* a_Resource, std::map<Key, std::unique_ptr<T>>& a_Map)
 				{
-					a_Map.insert(std::make_pair(Key(a_Str), std::unique_ptr<T>(a_Resource)));
+					if (!ResourceExists(a_Str, a_Map))
+					{
+						a_Map.insert(std::make_pair(Key(a_Str), std::unique_ptr<T>(a_Resource)));
+					}
 				}
 
 				template<class T>

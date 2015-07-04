@@ -14,7 +14,6 @@ namespace Lux
 			MaterialResource &MaterialResource::operator =(const MaterialResource& a_Other);
 			~MaterialResource();
 
-			const String& GetName() const;
 			const vec4& GetDiffuseColor() const;
 			const vec4& GetSpecularColor() const;
 			const vec4& GetEmissiveColor() const;
@@ -27,7 +26,6 @@ namespace Lux
 			const float GetRefraction() const;
 			const float GetOpacity() const;
 
-			void SetName(const String a_Name);
 			void SetDiffuseColor(const vec4& a_Col);
 			void SetSpecularColor(const vec4& a_Col);
 			void SetEmissiveColor(const vec4& a_Col);
@@ -52,7 +50,6 @@ namespace Lux
 			float m_ShininessStrength;
 			float m_Opacity;
 			float m_RefractionIndex;
-			String m_Name;
 		};
 	}
 	}

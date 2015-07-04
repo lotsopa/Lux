@@ -105,21 +105,6 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 
 	// Creating a mesh and adding sub meshes
 	MeshOGL* retMesh = new MeshOGL(scene->mNumMeshes, scene->mNumAnimations);
-	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
-	{
-		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
-		retMesh->AddSubMesh(mesh);
-	}
-
-	// Animation data (if it exists)
-	if (scene->HasAnimations())
-	{
-		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
-		{
-			MeshAnimation* animData = new MeshAnimation(*scene->mAnimations[i]);
-			retMesh->AddAnimation(animData);
-		}
-	}
 
 	// Setup Bounding Box
 	vec3 meshMin(1e34f);
@@ -139,9 +124,69 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 			meshMax.z = std::max(meshMax.z, scene->mMeshes[i]->mVertices[j].z);
 		}
 	}
+
+	// Make sure we center the mesh at the origin to compute a proper bounding box
+	vec3 difference;
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		float absMeshMin = fabs(meshMin[i]);
+		float absMeshMax = fabs(meshMax[i]);
+		if (absMeshMin > absMeshMax)
+		{
+			difference[i] = (absMeshMin - absMeshMax) / 2;
+			meshMin[i] = 1e34f;
+			meshMax[i] = -1e33f;
+			for (unsigned int k = 0; k < scene->mNumMeshes; k++)
+			{
+				unsigned int vertexCount = scene->mMeshes[k]->mNumVertices;
+
+				for (unsigned int j = 0; j < vertexCount; j++)
+				{
+					scene->mMeshes[k]->mVertices[j][i] += difference[i];
+					meshMin[i] = std::min(meshMin[i], scene->mMeshes[k]->mVertices[j][i]);
+					meshMax[i] = std::max(meshMax[i], scene->mMeshes[k]->mVertices[j][i]);
+				}
+			}
+		}
+		else if (absMeshMin < absMeshMax)
+		{
+			difference[i] = (absMeshMax - absMeshMin) / 2;
+
+			meshMin[i] = 1e34f;
+			meshMax[i] = -1e33f;
+			for (unsigned int k = 0; k < scene->mNumMeshes; k++)
+			{
+				unsigned int vertexCount = scene->mMeshes[k]->mNumVertices;
+
+				for (unsigned int j = 0; j < vertexCount; j++)
+				{
+					scene->mMeshes[k]->mVertices[j][i] -= difference[i];
+					meshMin[i] = std::min(meshMin[i], scene->mMeshes[k]->mVertices[j][i]);
+					meshMax[i] = std::max(meshMax[i], scene->mMeshes[k]->mVertices[j][i]);
+				}
+			}
+		}
+	}
+
 	AABB& aabb = retMesh->GetAABB();
 	aabb.SetMax(meshMax);
 	aabb.SetMin(meshMin);
+
+	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+	{
+		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
+		retMesh->AddSubMesh(mesh);
+	}
+
+	// Animation data (if it exists)
+	if (scene->HasAnimations())
+	{
+		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
+		{
+			MeshAnimation* animData = new MeshAnimation(*scene->mAnimations[i]);
+			retMesh->AddAnimation(animData);
+		}
+	}
 
 	AddResourceToMap(a_EntityName, (Mesh*)retMesh, m_MeshMap);
 	AddFileNameToMap(a_File, retMesh);
@@ -199,21 +244,6 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 
 	// Creating an entity and adding meshes
 	MeshOGL* retEntity = new MeshOGL(scene->mNumMeshes, scene->mNumAnimations);
-	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
-	{
-		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
-		retEntity->AddSubMesh(mesh);
-	}
-
-	// Animation data (if it exists)
-	if (scene->HasAnimations())
-	{
-		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
-		{
-			MeshAnimation* animData = new MeshAnimation(*scene->mAnimations[i]);
-			retEntity->AddAnimation(animData);
-		}
-	}
 
 	// Setup Bounding Box
 	vec3 meshMin(1e34f);
@@ -233,9 +263,69 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 			meshMax.z = std::max(meshMax.z, scene->mMeshes[i]->mVertices[j].z);
 		}
 	}
+
+	// Make sure we center the mesh at the origin to compute a proper bounding box
+	vec3 difference;
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		float absMeshMin = fabs(meshMin[i]);
+		float absMeshMax = fabs(meshMax[i]);
+		if (absMeshMin > absMeshMax)
+		{
+			difference[i] = (absMeshMin - absMeshMax) / 2;
+			meshMin[i] = 1e34f;
+			meshMax[i] = -1e33f;
+			for (unsigned int k = 0; k < scene->mNumMeshes; k++)
+			{
+				unsigned int vertexCount = scene->mMeshes[k]->mNumVertices;
+
+				for (unsigned int j = 0; j < vertexCount; j++)
+				{
+					scene->mMeshes[k]->mVertices[j][i] += difference[i];
+					meshMin[i] = std::min(meshMin[i], scene->mMeshes[k]->mVertices[j][i]);
+					meshMax[i] = std::max(meshMax[i], scene->mMeshes[k]->mVertices[j][i]);
+				}
+			}
+		}
+		else if (absMeshMin < absMeshMax)
+		{
+			difference[i] = (absMeshMax - absMeshMin) / 2;
+
+			meshMin[i] = 1e34f;
+			meshMax[i] = -1e33f;
+			for (unsigned int k = 0; k < scene->mNumMeshes; k++)
+			{
+				unsigned int vertexCount = scene->mMeshes[k]->mNumVertices;
+
+				for (unsigned int j = 0; j < vertexCount; j++)
+				{
+					scene->mMeshes[k]->mVertices[j][i] -= difference[i];
+					meshMin[i] = std::min(meshMin[i], scene->mMeshes[k]->mVertices[j][i]);
+					meshMax[i] = std::max(meshMax[i], scene->mMeshes[k]->mVertices[j][i]);
+				}
+			}
+		}
+	}
+
 	AABB& aabb = retEntity->GetAABB();
 	aabb.SetMax(meshMax);
 	aabb.SetMin(meshMin);
+
+	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+	{
+		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
+		retEntity->AddSubMesh(mesh);
+	}
+
+	// Animation data (if it exists)
+	if (scene->HasAnimations())
+	{
+		for (unsigned int i = 0; i < scene->mNumAnimations; i++)
+		{
+			MeshAnimation* animData = new MeshAnimation(*scene->mAnimations[i]);
+			retEntity->AddAnimation(animData);
+		}
+	}
 
 	AddResourceToMap(a_EntityName, (Mesh*)retEntity, m_MeshMap);
 	return ObserverPtr<Mesh>(retEntity);
@@ -637,7 +727,6 @@ unsigned int Lux::Core::Internal::ResourceHandlerOGL::LoadOGLShader(GLenum a_Sha
 Lux::Core::ObserverPtr<Lux::Core::MaterialResource> Lux::Core::Internal::ResourceHandlerOGL::CreateMaterial(const String& a_Name)
 {
 	MaterialResource* mat = new MaterialResource();
-	mat->SetName(a_Name);
 	AddResourceToMap(a_Name, mat, m_MaterialMap);
 	return ObserverPtr<MaterialResource>(mat);
 }

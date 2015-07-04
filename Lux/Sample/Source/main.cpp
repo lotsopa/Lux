@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	initOptions.m_WindowCaption = "Sample";
 	initOptions.m_AntiAliasing = 4;
 	initOptions.m_ScreenSwapInterval = 1;
-	initOptions.m_PlatformType = Lux::Utility::OPEN_GL;
+	initOptions.m_PlatformType = Lux::Utility::DIRECTX_11;
 	bool res = app.Initialize(initOptions);
 	CheckResult(res);
 	res = app.LoadContent();
