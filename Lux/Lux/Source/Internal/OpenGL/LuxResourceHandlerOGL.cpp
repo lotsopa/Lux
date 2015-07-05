@@ -87,6 +87,13 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 		Material* myMat = new Material(*impMat);
 		AddResourceToMap(matName, myMat, m_MaterialMap);
 
+		if (ResourceExists(matName, m_MaterialMap))
+		{
+			static int ctr = 0;
+			matName.append(std::to_string(ctr));
+			ctr++;
+		}
+
 		// Load all textures from all the types. 
 		// If there are no textures from the specified type the function will just do nothing.
 		LoadAllTexturesOfTypeFromMaterial(impMat, aiTextureType_DIFFUSE);
@@ -175,6 +182,14 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
+
+		// Set mesh material and textures
+		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
+		aiString str;
+		impMat->Get(AI_MATKEY_NAME, str);
+		String matName = str.C_Str();
+		mesh->SetMaterialProperties(GetResource(matName, m_MaterialMap));
+		AssignLoadedTexturesToSubMesh(mesh, impMat);
 		retMesh->AddSubMesh(mesh);
 	}
 
@@ -224,6 +239,14 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
 		Material* myMat = new Material(*impMat);
+
+		if (ResourceExists(matName, m_MaterialMap))
+		{
+			static int ctr = 0;
+			matName.append(std::to_string(ctr));
+			ctr++;
+		}
+
 		AddResourceToMap(matName, myMat, m_MaterialMap);
 
 		// Load all textures from all the types. 
@@ -314,6 +337,14 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		SubMeshOGL* mesh = new SubMeshOGL(*scene->mMeshes[i]);
+
+		// Set mesh material and textures
+		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
+		aiString str;
+		impMat->Get(AI_MATKEY_NAME, str);
+		String matName = str.C_Str();
+		mesh->SetMaterialProperties(GetResource(matName, m_MaterialMap));
+		AssignLoadedTexturesToSubMesh(mesh, impMat);
 		retEntity->AddSubMesh(mesh);
 	}
 
@@ -353,7 +384,7 @@ void Lux::Core::Internal::ResourceHandlerOGL::LoadAllTexturesOfTypeFromMaterial(
 	}
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFromFile(const String& a_File, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName /*= String("LuxDefaultSampler")*/)
 {
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
 
@@ -411,6 +442,7 @@ Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandle
 	Internal::Texture2DOGL* tex2d = new Internal::Texture2DOGL(imgWidth, imgHeight, bits);
 
 	// Put it in the map
+	tex2d->SetSampler(GetTextureSampler(a_SamplerName));
 	AddResourceToMap(a_TexName, (Texture2D*)tex2d, m_Texture2DMap);
 
 	//Free FreeImage's copy of the data
@@ -419,7 +451,7 @@ Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandle
 	return ObserverPtr<Texture2D>(tex2d);
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName /*= String("LuxDefaultSampler")*/)
 {
 	FIMEMORY* freeImgMemoryPtr = nullptr;
 	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_Info->m_RawData, a_Info->m_DataLength);
@@ -475,6 +507,7 @@ Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandle
 	Internal::Texture2DOGL* tex2d = new Internal::Texture2DOGL(imgWidth, imgHeight, bits);
 
 	// Put it in the map
+	tex2d->SetSampler(GetTextureSampler(a_SamplerName));
 	AddResourceToMap(a_TexName, (Texture2D*)tex2d, m_Texture2DMap);
 
 	//Free FreeImage's copy of the data
@@ -483,7 +516,7 @@ Lux::Core::ObserverPtr<Lux::Core::Texture2D> Lux::Core::Internal::ResourceHandle
 	return ObserverPtr<Texture2D>(tex2d);
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFromFile(const String& a_File, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName /*= String("LuxDefaultSampler")*/)
 {
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
 
@@ -538,18 +571,19 @@ Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandle
 		DeleteTexture1D(a_TexName);
 	}
 
-	Internal::Texture1DOGL* tex2d = new Internal::Texture1DOGL(imgWidth, bits);
+	Internal::Texture1DOGL* tex1d = new Internal::Texture1DOGL(imgWidth, bits);
 
 	// Put it in the map
-	AddResourceToMap(a_TexName, (Texture1D*)tex2d, m_Texture1DMap);
+	tex1d->SetSampler(GetTextureSampler(a_SamplerName));
+	AddResourceToMap(a_TexName, (Texture1D*)tex1d, m_Texture1DMap);
 
 	//Free FreeImage's copy of the data
 	FreeImage_Unload(convertedBitmap);
 	Utility::SafePtrDelete(file);
-	return ObserverPtr<Texture1D>(tex2d);
+	return ObserverPtr<Texture1D>(tex1d);
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName /*= String("LuxDefaultSampler")*/)
 {
 	FIMEMORY* freeImgMemoryPtr = nullptr;
 	freeImgMemoryPtr = FreeImage_OpenMemory((unsigned char*)a_Info->m_RawData, a_Info->m_DataLength);
@@ -605,6 +639,7 @@ Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandle
 	Internal::Texture1DOGL* tex1d = new Internal::Texture1DOGL(imgWidth, bits);
 
 	// Put it in the map
+	tex1d->SetSampler(GetTextureSampler(a_SamplerName));
 	AddResourceToMap(a_TexName, (Texture1D*)tex1d, m_Texture1DMap);
 
 	//Free FreeImage's copy of the data
@@ -613,13 +648,13 @@ Lux::Core::ObserverPtr<Lux::Core::Texture1D> Lux::Core::Internal::ResourceHandle
 	return ObserverPtr<Texture1D>(tex1d);
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Texture3D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromFile(const String& a_File, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture3D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName /*= String("LuxDefaultSampler")*/)
 {
 	// TODO
 	return nullptr;
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Texture3D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName)
+Lux::Core::ObserverPtr<Lux::Core::Texture3D> Lux::Core::Internal::ResourceHandlerOGL::CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName /*= String("LuxDefaultSampler")*/)
 {
 	// TODO
 	return nullptr;
@@ -919,4 +954,19 @@ bool Lux::Core::Internal::ResourceHandlerOGL::PhysicsMaterialExists(const String
 bool Lux::Core::Internal::ResourceHandlerOGL::DeletePhysicsMaterial(const String& a_Name)
 {
 	return DeleteResource(a_Name, m_PhysicsMaterialMap);
+}
+
+void Lux::Core::Internal::ResourceHandlerOGL::AssignLoadedTexturesToSubMesh(SubMesh* a_SubMesh, aiMaterial* a_Mat)
+{
+	for (unsigned int i = 0; i < LUX_TEXTURES_PER_MESH; i++)
+	{
+		aiString texName;
+		aiReturn texFound = a_Mat->GetTexture((aiTextureType)(i + 1), 0, &texName);
+		if (texFound == AI_SUCCESS)
+		{
+			a_SubMesh->SetTexture((TextureIndex)(i), GetResource(String(texName.C_Str()), m_Texture2DMap));
+		}
+		else
+			a_SubMesh->SetTexture((TextureIndex)(i), GetResource(LUX_DEFAULT_TEX, m_Texture2DMap));
+	}
 }

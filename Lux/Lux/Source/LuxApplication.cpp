@@ -35,6 +35,8 @@
 #include "LuxBoxCollider.h"
 #include "LuxSphereCollider.h"
 #include "LuxCapsuleCollider.h"
+#include "LuxTextureSampler.h"
+#include "LuxFileHandler.h"
 #include "LuxApplication.h"
 
 Lux::Application::Application() :
@@ -71,8 +73,19 @@ bool Lux::Application::Initialize(Utility::AppInitOptions& a_AppInitOptions)
 
 	// Init Resource Handler
 	m_ResourceHandler = Core::ResourceHandler::Create(a_AppInitOptions.m_PlatformType, m_Platform->GetRenderWindow());
+
+	if (!Lux::Core::FileHandler::GetInstance().AddResourcePath("../EngineAssets"))
+		return false;
+
+	if (!Lux::Core::FileHandler::GetInstance().AddResourcePath("../EngineAssets/textures"))
+		return false;
+
+	LoadDefaultResources();
+
+	// Init Components
 	LoadComponentTypes();
 	LoadSystemTypes();
+
 	return true;
 }
 
@@ -168,4 +181,10 @@ bool Lux::Application::LoadSystemTypes()
 	m_SceneManager->RegisterComponentTypeWithSystem<Physics::CapsuleCollider, Physics::PhysicsSystem>();
 
 	return true;
+}
+
+void Lux::Application::LoadDefaultResources()
+{
+	m_ResourceHandler->CreateTextureSampler(LUX_DEFAULT_TEX_SAMPLER_NAME, Lux::Core::TextureSamplerOptions());
+	m_ResourceHandler->CreateTexture2DFromFile(LUX_DEFAULT_TEX, LUX_DEFAULT_TEX);
 }

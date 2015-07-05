@@ -29,12 +29,12 @@ namespace Lux
 
 			virtual ObserverPtr<Mesh> CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
 			virtual ObserverPtr<Mesh> CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
-			virtual ObserverPtr<Texture2D> CreateTexture2DFromFile(const String& a_File, const String& a_TexName) = 0;
-			virtual ObserverPtr<Texture2D> CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
-			virtual ObserverPtr<Texture1D> CreateTexture1DFromFile(const String& a_File, const String& a_TexName) = 0;
-			virtual ObserverPtr<Texture1D> CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
-			virtual ObserverPtr<Texture3D> CreateTexture3DFromFile(const String& a_File, const String& a_TexName) = 0;
-			virtual ObserverPtr<Texture3D> CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName) = 0;
+			virtual ObserverPtr<Texture2D> CreateTexture2DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
+			virtual ObserverPtr<Texture2D> CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
+			virtual ObserverPtr<Texture1D> CreateTexture1DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
+			virtual ObserverPtr<Texture1D> CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
+			virtual ObserverPtr<Texture3D> CreateTexture3DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
+			virtual ObserverPtr<Texture3D> CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
 			virtual ObserverPtr<Shader> CreateShaderFromFile(const String& a_File, const String& a_ShaderName) = 0;
 			virtual ObserverPtr<Material> CreateMaterial(const String& a_Name) = 0;
 			virtual ObserverPtr<TextureSampler> CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions) = 0;

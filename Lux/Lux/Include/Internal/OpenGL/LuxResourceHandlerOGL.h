@@ -26,12 +26,12 @@ namespace Lux
 
 				virtual ObserverPtr<Mesh> CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags);
 				virtual ObserverPtr<Mesh> CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags);
-				virtual ObserverPtr<Texture2D> CreateTexture2DFromFile(const String& a_File, const String& a_TexName);
-				virtual ObserverPtr<Texture2D> CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName);
-				virtual ObserverPtr<Texture1D> CreateTexture1DFromFile(const String& a_File, const String& a_TexName);
-				virtual ObserverPtr<Texture1D> CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName);
-				virtual ObserverPtr<Texture3D> CreateTexture3DFromFile(const String& a_File, const String& a_TexName);
-				virtual ObserverPtr<Texture3D> CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName);
+				virtual ObserverPtr<Texture2D> CreateTexture2DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
+				virtual ObserverPtr<Texture2D> CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
+				virtual ObserverPtr<Texture1D> CreateTexture1DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
+				virtual ObserverPtr<Texture1D> CreateTexture1DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
+				virtual ObserverPtr<Texture3D> CreateTexture3DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
+				virtual ObserverPtr<Texture3D> CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
 				virtual ObserverPtr<Shader> CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
 				virtual ObserverPtr<Material> CreateMaterial(const String& a_Name);
 				virtual ObserverPtr<TextureSampler> CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
@@ -87,6 +87,7 @@ namespace Lux
 				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
 				Mesh* GetLoadedMesh(const String& a_FileStr);
 				void LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType);
+				void AssignLoadedTexturesToSubMesh(SubMesh* a_SubMesh, aiMaterial* a_MatName);
 				unsigned int LoadOGLShader(GLenum a_ShaderType, FileInfo* a_FileInfo);
 
 				template<class T>
@@ -96,6 +97,8 @@ namespace Lux
 					{
 						a_Map.insert(std::make_pair(Key(a_Str), std::unique_ptr<T>(a_Resource)));
 					}
+					else
+						Utility::ThrowError("Could not add resource to map. Resource already exists.");
 				}
 
 				template<class T>

@@ -19,9 +19,8 @@ namespace Lux
 
 				virtual void PreRender();
 				virtual void PostRender();
-
-				void ConnectWithShader(ShaderOGL* a_Shader);
 			protected:
+				virtual void ConnectWithShader(Shader* a_Shader);
 				BufferOGL m_VertexBuffer;
 				BufferOGL m_IndexBuffer;
 				VertexArrayOGL m_VertexArray;

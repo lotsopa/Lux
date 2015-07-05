@@ -199,22 +199,20 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 
 			if (!it->second.m_Init)
 			{
-				mesh->ConnectWithShader(shader);
 				shader->InitializeUniformBuffer("ObjectBuffer", m_ObjUniformBuffer, VERTEX_PROGRAM);
 				shader->InitializeUniformBuffer("LightBuffer", m_LightUniformBuffer, FRAGMENT_PROGRAM);
 				shader->InitializeUniformBuffer("MaterialBuffer", m_MatUniformBuffer, FRAGMENT_PROGRAM);
-				it->second.m_Init = true;
 			}
 			
 			// Bind Samplers and Textures
-			Core::Texture2D* diffuseTex = subMesh->GetDiffuseTexture().get();
+			Core::Texture2D* diffuseTex = subMesh->GetTexture(Core::DIFFUSE_MAP_IDX).get();
 			LuxAssert(diffuseTex);
 
 			Core::TextureSampler* texSampler = diffuseTex->GetSampler().get();
 			LuxAssert(texSampler);
 
-			texSampler->Activate(0, FRAGMENT_PROGRAM); // 0 is the diffuse texture
-			diffuseTex->Bind(0, "DiffuseTexture", shader, FRAGMENT_PROGRAM);
+			texSampler->Activate(Core::DIFFUSE_MAP_IDX, FRAGMENT_PROGRAM);
+			diffuseTex->Bind(Core::DIFFUSE_MAP_IDX, "DiffuseTexture", shader, FRAGMENT_PROGRAM);
 
 			shader->Update();
 
@@ -224,8 +222,8 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 
 			diffuseTex->Unbind();
 			texSampler->Deactivate();
-
 			shader->Deactivate();
 		}
+		it->second.m_Init = true;
 	}
 }

@@ -6,6 +6,7 @@
 #include "LuxTexture2D.h"
 #include "LuxShader.h"
 #include "LuxMaterial.h"
+#include "LuxSubMesh.h"
 
 namespace Lux
 {
@@ -26,8 +27,6 @@ namespace Lux
 
 			virtual void AddSubMesh(SubMesh* a_Mesh) = 0;
 			virtual void AddAnimation(MeshAnimation* a_Anim) = 0;
-			virtual void ConnectWithShader(Shader* a_Shader) = 0;
-
 			virtual const unsigned int GetNumSubMeshes() = 0;
 			virtual SubMesh* GetSubMesh(const unsigned int a_Index) = 0;
 
@@ -37,7 +36,7 @@ namespace Lux
 			virtual void SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat) = 0;
 
 			// Sets the diffuse texture for all the sub meshes
-			virtual void SetDiffuseTexture(Core::ObserverPtr<Texture2D>& a_Tex) = 0;
+			virtual void SetTexture(TextureIndex a_Idx, Core::ObserverPtr<Texture2D>& a_Tex) = 0;
 
 			// Sets the shader for all the sub meshes
 			virtual void SetShader(ObserverPtr<Shader>& a_Shader) = 0;

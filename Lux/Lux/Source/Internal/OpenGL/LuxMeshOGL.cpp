@@ -84,14 +84,6 @@ void Lux::Core::Internal::MeshOGL::AddAnimation(MeshAnimation* a_Anim)
 	m_AnimCtr++;
 }
 
-void Lux::Core::Internal::MeshOGL::ConnectWithShader(Shader* a_Shader)
-{
-	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-	{
-		m_SubMeshes[i]->ConnectWithShader((ShaderOGL*)a_Shader);
-	}
-}
-
 const unsigned int Lux::Core::Internal::MeshOGL::GetNumSubMeshes()
 {
 	return m_NumSubMeshes;
@@ -110,18 +102,18 @@ void Lux::Core::Internal::MeshOGL::SetMaterialProperties(Core::ObserverPtr<Mater
 	}
 }
 
-void Lux::Core::Internal::MeshOGL::SetDiffuseTexture(Core::ObserverPtr<Texture2D>& a_Tex)
-{
-	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-	{
-		m_SubMeshes[i]->SetDiffuseTexture(a_Tex);
-	}
-}
-
 void Lux::Core::Internal::MeshOGL::SetShader(ObserverPtr<Shader>& a_Shader)
 {
 	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
 	{
 		m_SubMeshes[i]->SetShader(a_Shader);
+	}
+}
+
+void Lux::Core::Internal::MeshOGL::SetTexture(TextureIndex a_Idx, Core::ObserverPtr<Texture2D>& a_Tex)
+{
+	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
+	{
+		m_SubMeshes[i]->SetTexture(a_Idx, a_Tex);
 	}
 }

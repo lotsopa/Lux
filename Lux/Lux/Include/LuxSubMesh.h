@@ -10,6 +10,22 @@ namespace Lux
 {
 	namespace Core
 	{
+		enum TextureIndex
+		{
+			DIFFUSE_MAP_IDX = 0,
+			SPECULAR_MAP_IDX,
+			AMBIENT_MAP_IDX,
+			EMISSIVE_MAP_IDX,
+			HEIGHT_MAP_IDX,
+			NORMALS_MAP_IDX,
+			SHININESS_MAP_IDX,
+			OPACITY_MAP_IDX,
+			DISPLACEMENT_MAP_IDX,
+			LIGHTMAP_MAP_IDX,
+			REFLECTION_MAP_IDX,
+			CUSTOM_MAP_IDX
+		};
+
 		class Vertex;
 		class SubMesh
 		{
@@ -60,12 +76,14 @@ namespace Lux
 
 			inline ObserverPtr<Material>& GetMaterialProperties() { return m_MaterialProperties; }
 			inline void SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat) { m_MaterialProperties.reset(a_Mat.get()); }
-			inline void SetDiffuseTexture(Core::ObserverPtr<Texture2D>& a_Tex) { m_DiffuseTexture.reset(a_Tex.get()); }
-			inline Core::ObserverPtr<Texture2D>& GetDiffuseTexture() { return m_DiffuseTexture; }
+			inline void SetTexture(TextureIndex a_Idx, Core::ObserverPtr<Texture2D>& a_Tex) { m_Textures[a_Idx].reset(a_Tex.get()); }
+			inline Core::ObserverPtr<Texture2D>& GetTexture(TextureIndex a_Idx) { return m_Textures[a_Idx]; }
 			inline Core::ObserverPtr<Shader>& GetShader() { return m_Shader; }
-			inline void SetShader(ObserverPtr<Shader>& a_Shader) { m_Shader.reset(a_Shader.get()); }
+			void SetShader(ObserverPtr<Shader>& a_Shader);
 
 		protected:
+
+			virtual void ConnectWithShader(Shader* a_Shader) = 0;
 			unsigned int m_NumVertices;
 			unsigned int m_NumIndices;
 			unsigned int m_NumBones;
@@ -78,7 +96,7 @@ namespace Lux
 			Bone** m_Bones;
 
 			ObserverPtr<Material> m_MaterialProperties;
-			ObserverPtr<Texture2D> m_DiffuseTexture;
+			ObserverPtr<Texture2D> m_Textures[LUX_TEXTURES_PER_MESH];
 			ObserverPtr<Shader> m_Shader;
 
 			void SafeDeleteAttributes();

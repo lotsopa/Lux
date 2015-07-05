@@ -220,6 +220,16 @@ void Lux::Core::SubMesh::SafeDeleteAttributes()
 	}
 }
 
+void Lux::Core::SubMesh::SetShader(ObserverPtr<Shader>& a_Shader)
+{
+	m_Shader.reset(a_Shader.get());
+
+	if (m_Shader)
+	{
+		ConnectWithShader(a_Shader.get());
+	}
+}
+
 Lux::Core::SubMesh::Bone::~Bone()
 {
 	Utility::SafeArrayDelete(m_BoneWeights);

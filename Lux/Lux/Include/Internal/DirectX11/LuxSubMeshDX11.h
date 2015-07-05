@@ -19,6 +19,7 @@ namespace Lux
 				virtual void PostRender();
 
 			private:
+				virtual void ConnectWithShader(Shader* a_Shader);
 				ID3D11DeviceContext* m_DeviceContext;
 				Microsoft::WRL::ComPtr<ID3D11Buffer> m_VertexBuffer;
 				Microsoft::WRL::ComPtr<ID3D11Buffer> m_IndexBuffer;

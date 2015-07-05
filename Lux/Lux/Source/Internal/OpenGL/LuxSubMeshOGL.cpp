@@ -75,25 +75,27 @@ void Lux::Core::Internal::SubMeshOGL::PostRender()
 	m_VertexArray.Unbind();
 }
 
-void Lux::Core::Internal::SubMeshOGL::ConnectWithShader(ShaderOGL* a_Shader)
+void Lux::Core::Internal::SubMeshOGL::ConnectWithShader(Shader* a_Shader)
 {
+	a_Shader->Activate();
+	ShaderOGL* shader = (ShaderOGL*)a_Shader;
 	m_VertexArray.Bind();
-	unsigned int posLoc = a_Shader->GetAttribLocation("in_Position");
+	unsigned int posLoc = shader->GetAttribLocation("in_Position");
 	glEnableVertexAttribArray(posLoc);
 	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Position));
 	Utility::Internal::CheckOGLError();
 
-	unsigned int normalLoc = a_Shader->GetAttribLocation("in_Normal");
+	unsigned int normalLoc = shader->GetAttribLocation("in_Normal");
 	glEnableVertexAttribArray(normalLoc);
 	glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Normal));
 	Utility::Internal::CheckOGLError();
 
-	unsigned int colorLoc = a_Shader->GetAttribLocation("in_Color");
+	unsigned int colorLoc = shader->GetAttribLocation("in_Color");
 	glEnableVertexAttribArray(colorLoc);
 	glVertexAttribPointer(colorLoc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), MEMBER_OFFSET(Vertex, m_Color));
 	Utility::Internal::CheckOGLError();
 
-	unsigned int texLoc = a_Shader->GetAttribLocation("in_TexCoord");
+	unsigned int texLoc = shader->GetAttribLocation("in_TexCoord");
 
 	if (texLoc != UINT_MAX)
 	{
@@ -102,7 +104,7 @@ void Lux::Core::Internal::SubMeshOGL::ConnectWithShader(ShaderOGL* a_Shader)
 		Utility::Internal::CheckOGLError();
 	}
 
-	unsigned int tangentLoc = a_Shader->GetAttribLocation("in_Tangent");
+	unsigned int tangentLoc = shader->GetAttribLocation("in_Tangent");
 
 	if (tangentLoc != UINT_MAX)
 	{
@@ -111,7 +113,7 @@ void Lux::Core::Internal::SubMeshOGL::ConnectWithShader(ShaderOGL* a_Shader)
 		Utility::Internal::CheckOGLError();
 	}
 
-	unsigned int bitangentLoc = a_Shader->GetAttribLocation("in_Bitangent");
+	unsigned int bitangentLoc = shader->GetAttribLocation("in_Bitangent");
 	if (bitangentLoc != UINT_MAX)
 	{
 		glEnableVertexAttribArray(bitangentLoc);
@@ -120,4 +122,5 @@ void Lux::Core::Internal::SubMeshOGL::ConnectWithShader(ShaderOGL* a_Shader)
 	}
 
 	m_VertexArray.Unbind();
+	a_Shader->Deactivate();
 }

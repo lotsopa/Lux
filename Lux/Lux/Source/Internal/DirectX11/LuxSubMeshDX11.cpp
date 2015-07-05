@@ -74,3 +74,8 @@ void Lux::Core::Internal::SubMeshDX11::PostRender()
 {
 
 }
+
+void Lux::Core::Internal::SubMeshDX11::ConnectWithShader(Shader* a_Shader)
+{
+
+}

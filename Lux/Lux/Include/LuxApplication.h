@@ -35,7 +35,7 @@ namespace Lux
 	private:
 		void InternalUpdate(const float a_DeltaTime);
 		void CheckResult(bool res);
-
+		void LoadDefaultResources();
 	protected:
 		Core::Platform* m_Platform;
 		Core::SceneManager* m_SceneManager;
