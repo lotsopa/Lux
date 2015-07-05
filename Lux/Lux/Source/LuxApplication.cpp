@@ -28,6 +28,7 @@
 #include "LuxBehaviour.h"
 #include "LuxFreeLookCamera.h"
 #include "LuxPhysicsMaterial.h"
+#include "LuxConvexMeshCollider.h"
 #include "LuxPhysicsSystem.h"
 #include "LuxRigidBody.h"
 #include "LuxDynamicRigidBody.h"
@@ -147,6 +148,7 @@ bool Lux::Application::LoadComponentTypes()
 	m_SceneManager->RegisterNewComponentType<Physics::BoxCollider>();
 	m_SceneManager->RegisterNewComponentType<Physics::SphereCollider>();
 	m_SceneManager->RegisterNewComponentType<Physics::CapsuleCollider>();
+	m_SceneManager->RegisterNewComponentType<Physics::ConvexMeshCollider>();
 
 	//Setup Component Dependencies
 	m_SceneManager->RegisterComponentTypeDependency<Graphics::Camera, Core::Transform>();
@@ -179,6 +181,7 @@ bool Lux::Application::LoadSystemTypes()
 	m_SceneManager->RegisterComponentTypeWithSystem<Physics::BoxCollider, Physics::PhysicsSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Physics::SphereCollider, Physics::PhysicsSystem>();
 	m_SceneManager->RegisterComponentTypeWithSystem<Physics::CapsuleCollider, Physics::PhysicsSystem>();
+	m_SceneManager->RegisterComponentTypeWithSystem<Physics::ConvexMeshCollider, Physics::PhysicsSystem>();
 
 	return true;
 }

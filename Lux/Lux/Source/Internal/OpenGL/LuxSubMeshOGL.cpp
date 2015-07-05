@@ -23,7 +23,7 @@ m_VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW)
 	m_IndexBuffer.SetData(m_Indices, sizeof(unsigned int) * m_NumIndices);
 
 	m_VertexArray.Unbind();
-	SafeDeleteAttributes();
+	//SafeDeleteAttributes();
 }
 
 Lux::Core::Internal::SubMeshOGL::SubMeshOGL(const SubMeshOGL& a_SubMesh) : SubMesh(a_SubMesh),
@@ -40,7 +40,7 @@ m_VertexBuffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW)
 	m_IndexBuffer.SetData(m_Indices, sizeof(unsigned int) * m_NumIndices);
 
 	m_VertexArray.Unbind();
-	SafeDeleteAttributes();
+	//SafeDeleteAttributes();
 }
 
 Lux::Core::Internal::SubMeshOGL::SubMeshOGL(aiMesh& a_Mesh) : SubMesh(a_Mesh),
@@ -57,7 +57,7 @@ m_IndexBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW)
 	m_IndexBuffer.SetData(m_Indices, sizeof(unsigned int) * m_NumIndices);
 
 	m_VertexArray.Unbind();
-	SafeDeleteAttributes();
+	//SafeDeleteAttributes();
 }
 
 Lux::Core::Internal::SubMeshOGL::~SubMeshOGL()

@@ -25,6 +25,7 @@ namespace Lux
 			const float GetReflectivity() const;
 			const float GetRefraction() const;
 			const float GetOpacity() const;
+			const String GetName() const;
 
 			void SetDiffuseColor(const vec4& a_Col);
 			void SetSpecularColor(const vec4& a_Col);
@@ -37,6 +38,7 @@ namespace Lux
 			void SetReflectivity(float a_Factor);
 			void SetRefraction(float a_Factor);
 			void SetOpacity(float a_Factor);
+			void SetName(const String& a_Name);
 
 		private:
 			vec4 m_DiffuseColor;
@@ -50,6 +52,7 @@ namespace Lux
 			float m_ShininessStrength;
 			float m_Opacity;
 			float m_RefractionIndex;
+			String m_Name;
 		};
 	}
 	}

@@ -79,10 +79,10 @@ namespace Lux
 			inline void SetTexture(TextureIndex a_Idx, Core::ObserverPtr<Texture2D>& a_Tex) { m_Textures[a_Idx].reset(a_Tex.get()); }
 			inline Core::ObserverPtr<Texture2D>& GetTexture(TextureIndex a_Idx) { return m_Textures[a_Idx]; }
 			inline Core::ObserverPtr<Shader>& GetShader() { return m_Shader; }
+			inline String GetName() { return m_Name; }
 			void SetShader(ObserverPtr<Shader>& a_Shader);
 
 		protected:
-
 			virtual void ConnectWithShader(Shader* a_Shader) = 0;
 			unsigned int m_NumVertices;
 			unsigned int m_NumIndices;
@@ -90,13 +90,14 @@ namespace Lux
 			unsigned int m_NumComponentsPerTexCoordSet[AI_MAX_NUMBER_OF_TEXTURECOORDS];
 
 			Vertex* m_Vertices;
+			String m_Name;
 			unsigned int* m_Indices;
 			vec3* m_TextureCoordSets[AI_MAX_NUMBER_OF_TEXTURECOORDS];
 			vec4* m_VertexColorSets[AI_MAX_NUMBER_OF_COLOR_SETS];
 			Bone** m_Bones;
 
 			ObserverPtr<Material> m_MaterialProperties;
-			ObserverPtr<Texture2D> m_Textures[LUX_TEXTURES_PER_MESH];
+			ObserverPtr<Texture2D> m_Textures[LUX_NUM_TEXTURES_PER_MESH];
 			ObserverPtr<Shader> m_Shader;
 
 			void SafeDeleteAttributes();

@@ -126,6 +126,8 @@ SubMesh()
 			m_Bones[i] = new Bone(*a_Mesh.mBones[i]);
 		}
 	}
+
+	m_Name = a_Mesh.mName.C_Str();
 }
 
 Lux::Core::SubMesh::SubMesh(const SubMesh& a_SubMesh)
@@ -187,11 +189,21 @@ Lux::Core::SubMesh::SubMesh(const SubMesh& a_SubMesh)
 			m_Bones[i] = new Bone(*a_SubMesh.m_Bones[i]);
 		}
 	}
+
+	m_MaterialProperties.reset(a_SubMesh.m_MaterialProperties.get());
+	m_Shader.reset(a_SubMesh.m_Shader.get());
+	
+
+	for (unsigned int i = 0; i < LUX_NUM_TEXTURES_PER_MESH; i++)
+	{
+		m_Textures[i].reset(a_SubMesh.m_Textures[i].get());
+	}
+	m_Name = a_SubMesh.m_Name;
 }
 
 Lux::Core::SubMesh::~SubMesh()
 {
-	//SafeDeleteAttributes();
+	SafeDeleteAttributes();
 }
 
 void Lux::Core::SubMesh::SafeDeleteAttributes()

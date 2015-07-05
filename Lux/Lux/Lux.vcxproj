@@ -44,6 +44,7 @@
     <ClInclude Include="Include\LuxCapsuleCollider.h" />
     <ClInclude Include="Include\LuxCollider.h" />
     <ClInclude Include="Include\LuxComponentFactory.h" />
+    <ClInclude Include="Include\LuxConvexMeshCollider.h" />
     <ClInclude Include="Include\LuxEntityFactory.h" />
     <ClInclude Include="Include\LuxComponent.h" />
     <ClInclude Include="Include\LuxEntity.h" />
@@ -131,6 +132,7 @@
     <ClCompile Include="Source\LuxCapsuleCollider.cpp" />
     <ClCompile Include="Source\LuxCollider.cpp" />
     <ClCompile Include="Source\LuxComponentFactory.cpp" />
+    <ClCompile Include="Source\LuxConvexMeshCollider.cpp" />
     <ClCompile Include="Source\LuxEntityFactory.cpp" />
     <ClCompile Include="Source\LuxComponent.cpp" />
     <ClCompile Include="Source\LuxEntity.cpp" />

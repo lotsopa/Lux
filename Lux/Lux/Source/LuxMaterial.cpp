@@ -22,6 +22,18 @@ Lux::Core::Material::Material(aiMaterial& a_Mat)
 	aiString str;
 	aiReturn retval;
 
+	aiString name;
+	retval = a_Mat.Get(AI_MATKEY_NAME, name);
+
+	if (retval != aiReturn_SUCCESS)
+	{
+		LUX_LOG(Utility::logWARNING) << "Failed to retrieve the material name from file. The field will have its default value.";
+	}
+	else
+	{
+		m_Name = name.C_Str();
+	}
+
 	// Diffuse
 	aiColor4D col;
 	retval = a_Mat.Get(AI_MATKEY_COLOR_DIFFUSE, col);
@@ -138,6 +150,7 @@ Lux::Core::Material::Material(const Material& a_Other)
 	m_ShininessStrength = a_Other.m_ShininessStrength;
 	m_Opacity = a_Other.m_Opacity;
 	m_RefractionIndex = a_Other.m_RefractionIndex;
+	m_Name = a_Other.m_Name;
 }
 
 Lux::Core::Material::~Material()
@@ -268,5 +281,16 @@ Lux::Core::Material & Lux::Core::Material::operator=(const Material& a_Other)
 	m_ShininessStrength = a_Other.m_ShininessStrength;
 	m_Opacity = a_Other.m_Opacity;
 	m_RefractionIndex = a_Other.m_RefractionIndex;
+	m_Name = a_Other.m_Name;
 	return *this;
+}
+
+const Lux::String Lux::Core::Material::GetName() const
+{
+	return m_Name;
+}
+
+void Lux::Core::Material::SetName(const String& a_Name)
+{
+	m_Name = a_Name;
 }

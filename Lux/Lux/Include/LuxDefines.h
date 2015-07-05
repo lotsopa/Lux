@@ -13,7 +13,7 @@
 #define LUX_ALIGN_BYTES(size) __declspec(align(size))
 #define LUX_ALIGN_16_BYTES LUX_ALIGN_BYTES(16)
 
-#define LUX_TEXTURES_PER_MESH 12
+#define LUX_NUM_TEXTURES_PER_MESH 12
 #define LUX_DEFAULT_TEX_SAMPLER_NAME "LuxDefaultTexSampler"
 #define LUX_DEFAULT_TEX "LuxDefaultTexture.png"
 

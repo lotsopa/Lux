@@ -34,7 +34,7 @@ Lux::Core::Internal::SubMeshDX11::SubMeshDX11(ID3D11DeviceContext* a_DeviceConte
 	m_DeviceContext->GetDevice(&device);
 	CreateBuffer(device.Get(), m_Vertices, m_NumVertices, D3D11_BIND_VERTEX_BUFFER, &m_VertexBuffer);
 	CreateBuffer(device.Get(), m_Indices, m_NumIndices, D3D11_BIND_INDEX_BUFFER, &m_IndexBuffer);
-	SafeDeleteAttributes();
+	//SafeDeleteAttributes();
 }
 
 Lux::Core::Internal::SubMeshDX11::SubMeshDX11(const SubMeshDX11& a_SubMesh) : SubMesh(a_SubMesh)
@@ -42,7 +42,7 @@ Lux::Core::Internal::SubMeshDX11::SubMeshDX11(const SubMeshDX11& a_SubMesh) : Su
 	m_DeviceContext = a_SubMesh.m_DeviceContext;
 	m_IndexBuffer = a_SubMesh.m_IndexBuffer;
 	m_VertexBuffer = a_SubMesh.m_VertexBuffer;
-	SafeDeleteAttributes();
+	//SafeDeleteAttributes();
 }
 
 Lux::Core::Internal::SubMeshDX11::SubMeshDX11(aiMesh& a_Mesh, ID3D11DeviceContext* a_DeviceContext) : SubMesh(a_Mesh), m_DeviceContext(a_DeviceContext)
@@ -51,7 +51,7 @@ Lux::Core::Internal::SubMeshDX11::SubMeshDX11(aiMesh& a_Mesh, ID3D11DeviceContex
 	m_DeviceContext->GetDevice(device.GetAddressOf());
 	CreateBuffer(device.Get(), m_Vertices, m_NumVertices, D3D11_BIND_VERTEX_BUFFER, &m_VertexBuffer);
 	CreateBuffer(device.Get(), m_Indices, m_NumIndices, D3D11_BIND_INDEX_BUFFER, &m_IndexBuffer);
-	SafeDeleteAttributes();
+	//SafeDeleteAttributes();
 }
 
 Lux::Core::Internal::SubMeshDX11::~SubMeshDX11()

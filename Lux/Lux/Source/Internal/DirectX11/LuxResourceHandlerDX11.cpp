@@ -1016,7 +1016,7 @@ bool Lux::Core::Internal::ResourceHandlerDX11::DeletePhysicsMaterial(const Strin
 
 void Lux::Core::Internal::ResourceHandlerDX11::AssignLoadedTexturesToSubMesh(SubMesh* a_SubMesh, aiMaterial* a_Mat)
 {
-	for (unsigned int i = 0; i < LUX_TEXTURES_PER_MESH; i++)
+	for (unsigned int i = 0; i < LUX_NUM_TEXTURES_PER_MESH; i++)
 	{
 		aiString texName;
 		aiReturn texFound = a_Mat->GetTexture((aiTextureType)(i+1), 0, &texName);
