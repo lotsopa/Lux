@@ -1,5 +1,10 @@
 #ifndef LUX_SUB_MESH_H
 #define LUX_SUB_MESH_H
+#include "LuxObserverPtr.h"
+#include "LuxTexture.h"
+#include "LuxTexture2D.h"
+#include "LuxShader.h"
+#include "LuxMaterial.h"
 
 namespace Lux
 {
@@ -16,20 +21,11 @@ namespace Lux
 
 			struct VertexBoneWeight
 			{
-				VertexBoneWeight() : m_VertexId(0), m_Weight(0.0f)
-				{
+				VertexBoneWeight();;
 
-				};
+				VertexBoneWeight(const unsigned int a_Idx, const float a_Weight);;
 
-				VertexBoneWeight(const unsigned int a_Idx, const float a_Weight) : m_VertexId(a_Idx), m_Weight(a_Weight)
-				{
-
-				};
-
-				~VertexBoneWeight()
-				{
-
-				};
+				~VertexBoneWeight();;
 
 				// Which vertex is influenced by the bone
 				unsigned int m_VertexId;
@@ -40,43 +36,13 @@ namespace Lux
 
 			struct Bone
 			{
-				Bone() : m_NumBoneWeights(0), m_Name(), m_BoneWeights(nullptr)
-				{
+				Bone();;
 
-				};
+				Bone(const Bone& a_Bone);
 
-				Bone(const Bone& a_Bone)
-				{
-					m_NumBoneWeights = a_Bone.m_NumBoneWeights;
-					m_Name = a_Bone.m_Name;
-					m_BoneWeights = new VertexBoneWeight[m_NumBoneWeights];
-					m_OffsetMatrix = a_Bone.m_OffsetMatrix;
+				Bone(aiBone& a_Bone);
 
-					for (unsigned int i = 0; i < m_NumBoneWeights; i++)
-					{
-						m_BoneWeights[i].m_VertexId = a_Bone.m_BoneWeights[i].m_VertexId;
-						m_BoneWeights[i].m_Weight = a_Bone.m_BoneWeights[i].m_Weight;
-					}
-				}
-
-				Bone(aiBone& a_Bone)
-				{
-					m_NumBoneWeights = a_Bone.mNumWeights;
-					m_Name = a_Bone.mName.C_Str();
-					m_BoneWeights = new VertexBoneWeight[m_NumBoneWeights];
-					m_OffsetMatrix = Utility::ConvertMatrixAssimp(a_Bone.mOffsetMatrix);
-
-					for (unsigned int i = 0; i < m_NumBoneWeights; i++)
-					{
-						m_BoneWeights[i].m_VertexId = a_Bone.mWeights[i].mVertexId;
-						m_BoneWeights[i].m_Weight = a_Bone.mWeights[i].mWeight;
-					}
-				}
-
-				~Bone()
-				{
-					Utility::SafeArrayDelete(m_BoneWeights);
-				};
+				~Bone();;
 
 				String m_Name;
 				unsigned int m_NumBoneWeights;
@@ -91,6 +57,14 @@ namespace Lux
 			inline unsigned int* GetIndices() { return m_Indices; }
 			inline unsigned int GetNumVertices() { return m_NumVertices; }
 			inline unsigned int GetNumIndices() { return m_NumIndices; }
+
+			inline ObserverPtr<Material>& GetMaterialProperties() { return m_MaterialProperties; }
+			inline void SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat) { m_MaterialProperties.reset(a_Mat.get()); }
+			inline void SetDiffuseTexture(Core::ObserverPtr<Texture2D>& a_Tex) { m_DiffuseTexture.reset(a_Tex.get()); }
+			inline Core::ObserverPtr<Texture2D>& GetDiffuseTexture() { return m_DiffuseTexture; }
+			inline Core::ObserverPtr<Shader>& GetShader() { return m_Shader; }
+			inline void SetShader(ObserverPtr<Shader>& a_Shader) { m_Shader.reset(a_Shader.get()); }
+
 		protected:
 			unsigned int m_NumVertices;
 			unsigned int m_NumIndices;
@@ -102,6 +76,10 @@ namespace Lux
 			vec3* m_TextureCoordSets[AI_MAX_NUMBER_OF_TEXTURECOORDS];
 			vec4* m_VertexColorSets[AI_MAX_NUMBER_OF_COLOR_SETS];
 			Bone** m_Bones;
+
+			ObserverPtr<Material> m_MaterialProperties;
+			ObserverPtr<Texture2D> m_DiffuseTexture;
+			ObserverPtr<Shader> m_Shader;
 
 			void SafeDeleteAttributes();
 

@@ -4,7 +4,7 @@
 #include "LuxEntity.h"
 #include "LuxComponent.h"
 #include "LuxTransform.h"
-#include "LuxMaterialResource.h"
+#include "LuxMaterial.h"
 #include "LuxMaterial.h"
 #include "LuxKey.h"
 #include "LuxMesh.h"

@@ -6,7 +6,7 @@ Lux::Graphics::MaterialShaderResource::MaterialShaderResource()
 
 }
 
-Lux::Graphics::MaterialShaderResource::MaterialShaderResource(const Core::MaterialResource& a_MatRes)
+Lux::Graphics::MaterialShaderResource::MaterialShaderResource(const Core::Material& a_MatRes)
 {
 	m_DiffuseColor = a_MatRes.GetDiffuseColor();
 	m_SpecularColor = a_MatRes.GetSpecularColor();

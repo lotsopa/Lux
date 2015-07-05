@@ -1,6 +1,6 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
-#include "LuxMaterialResource.h"
+#include "LuxMaterial.h"
 #include "LuxSubMesh.h"
 #include "LuxMesh.h"
 #include "LuxMeshAnimation.h"
@@ -88,7 +88,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 		aiString str;
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
-		MaterialResource* myMat = new MaterialResource(*impMat);
+		Material* myMat = new Material(*impMat);
 		AddResourceToMap(matName, myMat, m_MaterialMap);
 
 		// Load all textures from all the types. 
@@ -227,7 +227,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 		aiString str;
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
-		MaterialResource* myMat = new MaterialResource(*impMat);
+		Material* myMat = new Material(*impMat);
 		AddResourceToMap(matName, myMat, m_MaterialMap);
 
 		// Load all textures from all the types. 
@@ -609,11 +609,11 @@ Lux::Core::ObserverPtr<Lux::Core::Shader> Lux::Core::Internal::ResourceHandlerDX
 	return ObserverPtr<Shader>(shader);
 }
 
-Lux::Core::ObserverPtr<Lux::Core::MaterialResource> Lux::Core::Internal::ResourceHandlerDX11::CreateMaterial(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Material> Lux::Core::Internal::ResourceHandlerDX11::CreateMaterial(const String& a_Name)
 {
-	MaterialResource* mat = new MaterialResource();
+	Material* mat = new Material();
 	AddResourceToMap(a_Name, mat, m_MaterialMap);
-	return ObserverPtr<MaterialResource>(mat);
+	return ObserverPtr<Material>(mat);
 }
 
 // Source : https://takinginitiative.wordpress.com/2011/12/11/directx-1011-basic-shader-reflection-automatic-input-layout-creation/
@@ -690,7 +690,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 }
 
 
-Lux::Core::ObserverPtr<Lux::Core::MaterialResource> Lux::Core::Internal::ResourceHandlerDX11::GetMaterial(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Material> Lux::Core::Internal::ResourceHandlerDX11::GetMaterial(const String& a_Name)
 {
 	return GetResource(a_Name, m_MaterialMap);
 }

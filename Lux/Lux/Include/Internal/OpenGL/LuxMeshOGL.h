@@ -19,6 +19,16 @@ namespace Lux
 				virtual void ConnectWithShader(Shader* a_Shader);
 				virtual const unsigned int GetNumSubMeshes();
 				virtual SubMesh* GetSubMesh(const unsigned int a_Index);
+
+				// Sets the material properties for all the sub meshes
+				virtual void SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat);
+
+				// Sets the diffuse texture for all the sub meshes
+				virtual void SetDiffuseTexture(Core::ObserverPtr<Texture2D>& a_Tex);
+
+				// Sets the shader for all the sub meshes
+				virtual void SetShader(ObserverPtr<Shader>& a_Shader);
+
 			private:
 				SubMeshOGL** m_SubMeshes;
 				MeshAnimation** m_AnimationData;

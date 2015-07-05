@@ -291,14 +291,8 @@
     <ClInclude Include="Include\LuxStaticRigidBody.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxMaterialResource.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxBehaviour.h">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\LuxMaterial.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Include\LuxPhysicsMaterial.h">
       <Filter>Header Files\Core</Filter>
@@ -329,6 +323,9 @@
     </ClInclude>
     <ClInclude Include="Include\LuxLightShaderResource.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxMaterial.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -536,12 +533,6 @@
     <ClCompile Include="Source\LuxBehaviour.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxMaterialResource.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LuxMaterial.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LuxCollider.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
@@ -565,6 +556,9 @@
     </ClCompile>
     <ClCompile Include="Source\LuxLightShaderResource.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxMaterial.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

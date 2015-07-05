@@ -1,41 +1,57 @@
-#ifndef LUX_MATERIAL_H
-#define LUX_MATERIAL_H
-#include "LuxObserverPtr.h"
+#ifndef LUX_MATERIAL_RESOURCE_H
+#define LUX_MATERIAL_RESOURCE_H
 
 namespace Lux
 {
 	namespace Core
 	{
-		class MaterialResource;
-		class Texture2D;
-		class Shader;
-	}
-
-	namespace Graphics
-	{
-		class Material : public Core::Component
+		class Material
 		{
 		public:
 			Material();
+			Material(aiMaterial& a_Mat);
 			Material(const Material& a_Other);
-			virtual ~Material();
+			Material &Material::operator =(const Material& a_Other);
+			~Material();
 
-			inline Core::ObserverPtr<Core::MaterialResource>& GetMaterialProperties() { return m_MaterialProperties; }
-			inline void SetMaterialProperties(Core::ObserverPtr<Core::MaterialResource>& a_Mat) { m_MaterialProperties.reset(a_Mat.get()); }
-			inline void SetDiffuseTexture(Core::ObserverPtr<Core::Texture2D>& a_Tex) { m_DiffuseTexture.reset(a_Tex.get()); }
-			inline Core::ObserverPtr<Core::Texture2D>& GetDiffuseTexture() { return m_DiffuseTexture; }
-			inline Core::ObserverPtr<Core::Shader>& GetShader() { return m_Shader; }
-			inline void SetShader(Core::ObserverPtr<Core::Shader>& a_Shader) { m_Shader.reset(a_Shader.get()); }
+			const vec4& GetDiffuseColor() const;
+			const vec4& GetSpecularColor() const;
+			const vec4& GetEmissiveColor() const;
+			const vec4& GetAmbientColor() const;
+			const vec4& GetReflectiveColor() const;
+			const vec4& GetTransparentColor() const;
+			const float GetShininess() const;
+			const float GetShininessStrength() const;
+			const float GetReflectivity() const;
+			const float GetRefraction() const;
+			const float GetOpacity() const;
+
+			void SetDiffuseColor(const vec4& a_Col);
+			void SetSpecularColor(const vec4& a_Col);
+			void SetEmissiveColor(const vec4& a_Col);
+			void SetAmbientColor(const vec4& a_Col);
+			void SetReflectiveColor(const vec4& a_Col);
+			void SetTransparentColor(const vec4& a_Col);
+			void SetShininess(float a_Factor);
+			void SetShininessStrength(float a_Factor);
+			void SetReflectivity(float a_Factor);
+			void SetRefraction(float a_Factor);
+			void SetOpacity(float a_Factor);
 
 		private:
-			Core::ObserverPtr<Core::MaterialResource> m_MaterialProperties;
-			Core::ObserverPtr<Core::Texture2D> m_DiffuseTexture;
-			Core::ObserverPtr<Core::Shader> m_Shader;
-		protected:
-			void Reset();
-			friend class Core::ComponentFactory;
+			vec4 m_DiffuseColor;
+			vec4 m_SpecularColor;
+			vec4 m_EmissiveColor;
+			vec4 m_AmbientColor;
+			vec4 m_TransparentColor;
+			vec4 m_ReflectiveColor;
+			float m_Shininess;
+			float m_Reflectivity;
+			float m_ShininessStrength;
+			float m_Opacity;
+			float m_RefractionIndex;
 		};
 	}
-}
+	}
 
 #endif

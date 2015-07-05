@@ -94,3 +94,27 @@ Lux::Core::SubMesh* Lux::Core::Internal::MeshDX11::GetSubMesh(const unsigned int
 {
 	return m_SubMeshes[a_Index];
 }
+
+void Lux::Core::Internal::MeshDX11::SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat)
+{
+	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
+	{
+		m_SubMeshes[i]->SetMaterialProperties(a_Mat);
+	}
+}
+
+void Lux::Core::Internal::MeshDX11::SetDiffuseTexture(Core::ObserverPtr<Texture2D>& a_Tex)
+{
+	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
+	{
+		m_SubMeshes[i]->SetDiffuseTexture(a_Tex);
+	}
+}
+
+void Lux::Core::Internal::MeshDX11::SetShader(ObserverPtr<Shader>& a_Shader)
+{
+	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
+	{
+		m_SubMeshes[i]->SetShader(a_Shader);
+	}
+}

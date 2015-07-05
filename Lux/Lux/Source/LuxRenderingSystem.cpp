@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxRenderWindow.h"
 #include "LuxComponent.h"
-#include "LuxMaterialResource.h"
+#include "LuxMaterial.h"
 #include "LuxMaterial.h"
 #include "LuxEntity.h"
 #include "LuxTransform.h"
@@ -35,22 +35,19 @@ m_MeshRendererKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::MeshRenderer)),
 m_TransformKey(CONVERT_ID_TO_CLASS_STRING(Lux::Core::Transform)),
 m_ShaderKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::ShaderComponent)),
 m_CameraKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Camera)),
-m_LightKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Light)),
-m_MaterialKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Material))
+m_LightKey(CONVERT_ID_TO_CLASS_STRING(Lux::Graphics::Light))
 {
 	ADD_COMPONENT_MAP_INSERT(m_MeshRendererKey, RenderingSystem::AddComponentInternal<MeshRenderer>);
 	ADD_COMPONENT_MAP_INSERT(m_TransformKey, RenderingSystem::AddComponentInternal<Core::Transform>);
 	ADD_COMPONENT_MAP_INSERT(m_ShaderKey, RenderingSystem::AddComponentInternal<ShaderComponent>);
 	ADD_COMPONENT_MAP_INSERT(m_CameraKey, RenderingSystem::AddComponentInternal<Camera>);
 	ADD_COMPONENT_MAP_INSERT(m_LightKey, RenderingSystem::AddComponentInternal<Light>);
-	ADD_COMPONENT_MAP_INSERT(m_MaterialKey, RenderingSystem::AddComponentInternal<Material>);
 
 	REMOVE_COMPONENT_MAP_INSERT(m_MeshRendererKey, RenderingSystem::RemoveComponentInternal<MeshRenderer>);
 	REMOVE_COMPONENT_MAP_INSERT(m_TransformKey, RenderingSystem::RemoveComponentInternal<Core::Transform>);
 	REMOVE_COMPONENT_MAP_INSERT(m_ShaderKey, RenderingSystem::RemoveComponentInternal<ShaderComponent>);
 	REMOVE_COMPONENT_MAP_INSERT(m_CameraKey, RenderingSystem::RemoveComponentInternal<Camera>);
 	REMOVE_COMPONENT_MAP_INSERT(m_LightKey, RenderingSystem::RemoveComponentInternal<Light>);
-	REMOVE_COMPONENT_MAP_INSERT(m_MaterialKey, RenderingSystem::RemoveComponentInternal<Material>);
 }
 
 Lux::Graphics::RenderingSystem::~RenderingSystem()
@@ -153,12 +150,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 
 		it->second.m_Transform->GetRawPtr()->ApplyTransform();
 
-		if (!it->second.m_MeshRenderer || !it->second.m_Material)
-			continue;
-
-		Core::Shader* shader = it->second.m_Material->GetRawPtr()->GetShader().get();
-		
-		if (!shader)
+		if (!it->second.m_MeshRenderer)
 			continue;
 
 		Core::Mesh* mesh = it->second.m_MeshRenderer->GetRawPtr()->GetMesh().get();
@@ -168,9 +160,6 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 
 		mat4x4& transform = it->second.m_Transform->GetRawPtr()->GetMatrix();
 
-		unsigned int numSubMeshes = mesh->GetNumSubMeshes();
-
-		shader->Activate();
 
 		// Set the default uniform buffer
 		Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
@@ -193,49 +182,50 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		m_LightUniformBuffer.SetVariable(0, lightShaderVar);
 		m_LightUniformBuffer.SetVariable(1, eyePos);
 
-		// Material Buffer
-		Core::MaterialResource* matRes = it->second.m_Material->GetRawPtr()->GetMaterialProperties().get();
-		MaterialShaderResource matShaderRes(*matRes);
-		Core::ShaderVariable matShader(Core::VALUE_STRUCT, &matShaderRes, sizeof(MaterialShaderResource));
-		m_MatUniformBuffer.SetVariable(0, matShader);
-
-		if (!it->second.m_Init)
-		{
-			mesh->ConnectWithShader(shader);
-			shader->InitializeUniformBuffer("ObjectBuffer", m_ObjUniformBuffer, VERTEX_PROGRAM);
-			shader->InitializeUniformBuffer("LightBuffer", m_LightUniformBuffer, FRAGMENT_PROGRAM);
-			shader->InitializeUniformBuffer("MaterialBuffer", m_MatUniformBuffer, FRAGMENT_PROGRAM);
-			it->second.m_Init = true;
-		}
-
-		// Bind Samplers and Textures
-		Core::Texture2D* diffuseTex = it->second.m_Material->GetRawPtr()->GetDiffuseTexture().get();
-
-		if (!diffuseTex)
-			continue;
-
-		Core::TextureSampler* texSampler = diffuseTex->GetSampler().get();
-
-		if (!texSampler)
-			continue;
-
-		texSampler->Activate(0, FRAGMENT_PROGRAM); // 0 is the diffuse texture
-		diffuseTex->Bind(0, "DiffuseTexture", shader, FRAGMENT_PROGRAM);
-
-		shader->Update();
-
+		unsigned int numSubMeshes = mesh->GetNumSubMeshes();
 		for (unsigned int i = 0; i < numSubMeshes; ++i)
 		{
 			Core::SubMesh* subMesh = mesh->GetSubMesh(i);
 			LuxAssert(subMesh);
+			Core::Shader* shader = subMesh->GetShader().get();
+			LuxAssert(shader);
+			shader->Activate();
+
+			// Material Buffer
+			Core::Material* matRes = subMesh->GetMaterialProperties().get();
+			MaterialShaderResource matShaderRes(*matRes);
+			Core::ShaderVariable matShader(Core::VALUE_STRUCT, &matShaderRes, sizeof(MaterialShaderResource));
+			m_MatUniformBuffer.SetVariable(0, matShader);
+
+			if (!it->second.m_Init)
+			{
+				mesh->ConnectWithShader(shader);
+				shader->InitializeUniformBuffer("ObjectBuffer", m_ObjUniformBuffer, VERTEX_PROGRAM);
+				shader->InitializeUniformBuffer("LightBuffer", m_LightUniformBuffer, FRAGMENT_PROGRAM);
+				shader->InitializeUniformBuffer("MaterialBuffer", m_MatUniformBuffer, FRAGMENT_PROGRAM);
+				it->second.m_Init = true;
+			}
+			
+			// Bind Samplers and Textures
+			Core::Texture2D* diffuseTex = subMesh->GetDiffuseTexture().get();
+			LuxAssert(diffuseTex);
+
+			Core::TextureSampler* texSampler = diffuseTex->GetSampler().get();
+			LuxAssert(texSampler);
+
+			texSampler->Activate(0, FRAGMENT_PROGRAM); // 0 is the diffuse texture
+			diffuseTex->Bind(0, "DiffuseTexture", shader, FRAGMENT_PROGRAM);
+
+			shader->Update();
+
 			subMesh->PreRender();
 			m_RenderWindow->Render(subMesh);
 			subMesh->PostRender();
-		}
-		
-		diffuseTex->Unbind();
-		texSampler->Deactivate();
 
-		shader->Deactivate();
+			diffuseTex->Unbind();
+			texSampler->Deactivate();
+
+			shader->Deactivate();
+		}
 	}
 }

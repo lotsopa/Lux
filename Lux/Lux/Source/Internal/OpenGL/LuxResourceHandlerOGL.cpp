@@ -1,6 +1,6 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
-#include "LuxMaterialResource.h"
+#include "LuxMaterial.h"
 #include "LuxBufferOGL.h"
 #include "LuxVertexArrayOGL.h"
 #include "LuxSubMesh.h"
@@ -84,7 +84,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 		aiString str;
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
-		MaterialResource* myMat = new MaterialResource(*impMat);
+		Material* myMat = new Material(*impMat);
 		AddResourceToMap(matName, myMat, m_MaterialMap);
 
 		// Load all textures from all the types. 
@@ -223,7 +223,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 		aiString str;
 		impMat->Get(AI_MATKEY_NAME, str);
 		String matName = str.C_Str();
-		MaterialResource* myMat = new MaterialResource(*impMat);
+		Material* myMat = new Material(*impMat);
 		AddResourceToMap(matName, myMat, m_MaterialMap);
 
 		// Load all textures from all the types. 
@@ -724,11 +724,11 @@ unsigned int Lux::Core::Internal::ResourceHandlerOGL::LoadOGLShader(GLenum a_Sha
 	return shader;
 }
 
-Lux::Core::ObserverPtr<Lux::Core::MaterialResource> Lux::Core::Internal::ResourceHandlerOGL::CreateMaterial(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Material> Lux::Core::Internal::ResourceHandlerOGL::CreateMaterial(const String& a_Name)
 {
-	MaterialResource* mat = new MaterialResource();
+	Material* mat = new Material();
 	AddResourceToMap(a_Name, mat, m_MaterialMap);
-	return ObserverPtr<MaterialResource>(mat);
+	return ObserverPtr<Material>(mat);
 }
 
 void Lux::Core::Internal::ResourceHandlerOGL::LoadImageData(const String& a_Path, unsigned int& outWidth, unsigned int& outHeight, unsigned char* outData)
@@ -788,7 +788,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerOGL:
 	return GetResource(a_Name, m_MeshMap);
 }
 
-Lux::Core::ObserverPtr<Lux::Core::MaterialResource> Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Material> Lux::Core::Internal::ResourceHandlerOGL::GetMaterial(const String& a_Name)
 {
 	return GetResource(a_Name, m_MaterialMap);
 }

@@ -5,7 +5,7 @@ namespace Lux
 {
 	namespace Core
 	{
-		class MaterialResource;
+		class Material;
 		class SubMesh;
 		class Mesh;
 		class Key;
@@ -33,13 +33,13 @@ namespace Lux
 				virtual ObserverPtr<Texture3D> CreateTexture3DFromFile(const String& a_File, const String& a_TexName);
 				virtual ObserverPtr<Texture3D> CreateTexture3DFromMemory(FileInfo* a_Info, const String& a_TexName);
 				virtual ObserverPtr<Shader> CreateShaderFromFile(const String& a_File, const String& a_ShaderName);
-				virtual ObserverPtr<MaterialResource> CreateMaterial(const String& a_Name);
+				virtual ObserverPtr<Material> CreateMaterial(const String& a_Name);
 				virtual ObserverPtr<TextureSampler> CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
 				virtual ObserverPtr<PhysicsMaterial> CreatePhysicsMaterial(const String& a_Name, float a_Restitution = 0.0f, float a_DynamicFriction = 0.0f, float a_StaticFriction = 0.0f);
 
 				virtual ObserverPtr<Mesh> GetMesh(const String& a_Name);
 				virtual ObserverPtr<Shader> GetShader(const String& a_Name);
-				virtual ObserverPtr<MaterialResource> GetMaterial(const String& a_Name);
+				virtual ObserverPtr<Material> GetMaterial(const String& a_Name);
 				virtual ObserverPtr<Texture2D> GetTexture2D(const String& a_Name);
 				virtual ObserverPtr<Texture3D> GetTexture3D(const String& a_Name);
 				virtual ObserverPtr<Texture1D> GetTexture1D(const String& a_Name);
@@ -70,7 +70,7 @@ namespace Lux
 				typedef std::map<Key, std::unique_ptr<Texture3D>> Texture3DMap;
 				typedef std::map<Key, std::unique_ptr<Mesh>> MeshMap;
 				typedef std::map<Key, Mesh*> MeshMapSimple;
-				typedef std::map<Key, std::unique_ptr<MaterialResource>> MaterialMap;
+				typedef std::map<Key, std::unique_ptr<Material>> MaterialMap;
 				typedef std::map<Key, std::unique_ptr<Shader>> ShaderMap;
 				typedef std::map<Key, std::unique_ptr<TextureSampler>> SamplerMap;
 				typedef std::map<Key, std::unique_ptr<PhysicsMaterial>> PhysicsMaterialMap;

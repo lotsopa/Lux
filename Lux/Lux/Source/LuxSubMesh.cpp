@@ -1,5 +1,5 @@
 #include "LuxPCH.h"
-#include "LuxMaterialResource.h"
+#include "LuxMaterial.h"
 #include "LuxVertex.h"
 #include "LuxSubMesh.h"
 
@@ -218,4 +218,57 @@ void Lux::Core::SubMesh::SafeDeleteAttributes()
 	{
 		Utility::SafeArrayDelete(m_TextureCoordSets[i]);
 	}
+}
+
+Lux::Core::SubMesh::Bone::~Bone()
+{
+	Utility::SafeArrayDelete(m_BoneWeights);
+}
+
+Lux::Core::SubMesh::Bone::Bone(aiBone& a_Bone)
+{
+	m_NumBoneWeights = a_Bone.mNumWeights;
+	m_Name = a_Bone.mName.C_Str();
+	m_BoneWeights = new VertexBoneWeight[m_NumBoneWeights];
+	m_OffsetMatrix = Utility::ConvertMatrixAssimp(a_Bone.mOffsetMatrix);
+
+	for (unsigned int i = 0; i < m_NumBoneWeights; i++)
+	{
+		m_BoneWeights[i].m_VertexId = a_Bone.mWeights[i].mVertexId;
+		m_BoneWeights[i].m_Weight = a_Bone.mWeights[i].mWeight;
+	}
+}
+
+Lux::Core::SubMesh::Bone::Bone(const Bone& a_Bone)
+{
+	m_NumBoneWeights = a_Bone.m_NumBoneWeights;
+	m_Name = a_Bone.m_Name;
+	m_BoneWeights = new VertexBoneWeight[m_NumBoneWeights];
+	m_OffsetMatrix = a_Bone.m_OffsetMatrix;
+
+	for (unsigned int i = 0; i < m_NumBoneWeights; i++)
+	{
+		m_BoneWeights[i].m_VertexId = a_Bone.m_BoneWeights[i].m_VertexId;
+		m_BoneWeights[i].m_Weight = a_Bone.m_BoneWeights[i].m_Weight;
+	}
+}
+
+Lux::Core::SubMesh::Bone::Bone() : m_NumBoneWeights(0), m_Name(), m_BoneWeights(nullptr)
+{
+
+}
+
+Lux::Core::SubMesh::VertexBoneWeight::~VertexBoneWeight()
+{
+
+}
+
+Lux::Core::SubMesh::VertexBoneWeight::VertexBoneWeight(const unsigned int a_Idx, const float a_Weight) : m_VertexId(a_Idx), m_Weight(a_Weight)
+{
+
+}
+
+Lux::Core::SubMesh::VertexBoneWeight::VertexBoneWeight() : m_VertexId(0), m_Weight(0.0f)
+{
+
 }

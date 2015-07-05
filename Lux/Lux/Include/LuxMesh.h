@@ -1,6 +1,11 @@
 #ifndef LUX_MESH_H
 #define LUX_MESH_H
 #include "LuxAABB.h"
+#include "LuxObserverPtr.h"
+#include "LuxTexture.h"
+#include "LuxTexture2D.h"
+#include "LuxShader.h"
+#include "LuxMaterial.h"
 
 namespace Lux
 {
@@ -27,6 +32,15 @@ namespace Lux
 			virtual SubMesh* GetSubMesh(const unsigned int a_Index) = 0;
 
 			inline AABB& GetAABB() { return m_AABB; }
+
+			// Sets the material properties for all the sub meshes
+			virtual void SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat) = 0;
+
+			// Sets the diffuse texture for all the sub meshes
+			virtual void SetDiffuseTexture(Core::ObserverPtr<Texture2D>& a_Tex) = 0;
+
+			// Sets the shader for all the sub meshes
+			virtual void SetShader(ObserverPtr<Shader>& a_Shader) = 0;
 
 		protected:
 			AABB m_AABB;
