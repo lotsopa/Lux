@@ -142,3 +142,13 @@ void Lux::Core::Transform::SetLocalRotation(const quat& a_Rot)
 	m_LocalRotation = a_Rot;
 	m_TransformDirty = true;
 }
+
+void Lux::Core::Transform::SetParentTransform(ObjectHandle<Transform>& a_Transform)
+{
+	m_ParentTransform = a_Transform;
+}
+
+Lux::Core::ObjectHandle<Lux::Core::Transform>& Lux::Core::Transform::GetParentTransform()
+{
+	return m_ParentTransform;
+}

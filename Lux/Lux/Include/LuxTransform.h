@@ -1,6 +1,7 @@
 #ifndef LUX_TRANSFORM_H
 #define LUX_TRANSFORM_H
 #include "LuxComponent.h"
+#include "LuxObjectPool.h"
 
 namespace Lux
 {
@@ -42,6 +43,10 @@ namespace Lux
 
 			const inline bool IsDirty() { return m_TransformDirty; }
 			inline mat4x4& GetInverseTranslationMatrix() { return m_InverseTranslationMatrix; }
+
+			void SetParentTransform(ObjectHandle<Transform>& a_Transform);
+			ObjectHandle<Transform>& GetParentTransform();
+
 		private:
 			vec3 m_Right;
 			vec3 m_Up;
@@ -53,6 +58,7 @@ namespace Lux
 			quat m_LocalRotation;
 			mat4x4 m_TransformMatrix;
 			mat4x4 m_InverseTranslationMatrix;
+			ObjectHandle<Transform> m_ParentTransform;
 			bool m_TransformDirty;
 
 		protected:

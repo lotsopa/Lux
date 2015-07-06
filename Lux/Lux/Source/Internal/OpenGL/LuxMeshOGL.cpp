@@ -89,9 +89,9 @@ const unsigned int Lux::Core::Internal::MeshOGL::GetNumSubMeshes()
 	return m_NumSubMeshes;
 }
 
-Lux::Core::SubMesh* Lux::Core::Internal::MeshOGL::GetSubMesh(const unsigned int a_Index)
+Lux::Core::ObserverPtr<Lux::Core::SubMesh> Lux::Core::Internal::MeshOGL::GetSubMesh(const unsigned int a_Index)
 {
-	return m_SubMeshes[a_Index];
+	return ObserverPtr<SubMesh>(m_SubMeshes[a_Index]);
 }
 
 void Lux::Core::Internal::MeshOGL::SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat)

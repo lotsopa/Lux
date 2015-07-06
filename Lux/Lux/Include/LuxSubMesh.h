@@ -5,6 +5,7 @@
 #include "LuxTexture2D.h"
 #include "LuxShader.h"
 #include "LuxMaterial.h"
+#include "LuxAABB.h"
 
 namespace Lux
 {
@@ -82,6 +83,8 @@ namespace Lux
 			inline String GetName() { return m_Name; }
 			void SetShader(ObserverPtr<Shader>& a_Shader);
 
+			inline AABB& GetAABB() { return m_AABB; }
+
 		protected:
 			virtual void ConnectWithShader(Shader* a_Shader) = 0;
 			unsigned int m_NumVertices;
@@ -95,6 +98,7 @@ namespace Lux
 			vec3* m_TextureCoordSets[AI_MAX_NUMBER_OF_TEXTURECOORDS];
 			vec4* m_VertexColorSets[AI_MAX_NUMBER_OF_COLOR_SETS];
 			Bone** m_Bones;
+			AABB m_AABB;
 
 			ObserverPtr<Material> m_MaterialProperties;
 			ObserverPtr<Texture2D> m_Textures[LUX_NUM_TEXTURES_PER_MESH];

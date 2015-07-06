@@ -1,7 +1,7 @@
 #include "LuxPCH.h"
 #include "LuxBoxCollider.h"
 
-Lux::Physics::BoxCollider::BoxCollider() : Collider(), m_HalfExtents(1.0f)
+Lux::Physics::BoxCollider::BoxCollider() : Collider(), m_HalfExtents(0.5f)
 {
 
 }
@@ -30,15 +30,12 @@ const Lux::vec3 Lux::Physics::BoxCollider::GetHalfExtents() const
 	return m_HalfExtents;
 }
 
-void Lux::Physics::BoxCollider::SetHalfExtents(vec3& a_HlfExtents)
+void Lux::Physics::BoxCollider::SetHalfExtents(const vec3& a_HlfExtents)
 {
 	m_HalfExtents = a_HlfExtents;
 
 	if (m_Shape)
 	{
-		if (m_Shape)
-		{
-			m_Shape->setGeometry(PxBoxGeometry(Utility::ConvertVec3ToPhysX(m_HalfExtents)));
-		}
+		m_Shape->setGeometry(PxBoxGeometry(Utility::ConvertVec3ToPhysX(m_HalfExtents)));
 	}
 }

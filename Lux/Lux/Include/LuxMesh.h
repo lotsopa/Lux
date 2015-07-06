@@ -28,7 +28,7 @@ namespace Lux
 			virtual void AddSubMesh(SubMesh* a_Mesh) = 0;
 			virtual void AddAnimation(MeshAnimation* a_Anim) = 0;
 			virtual const unsigned int GetNumSubMeshes() = 0;
-			virtual SubMesh* GetSubMesh(const unsigned int a_Index) = 0;
+			virtual ObserverPtr<SubMesh> GetSubMesh(const unsigned int a_Index) = 0;
 
 			inline AABB& GetAABB() { return m_AABB; }
 

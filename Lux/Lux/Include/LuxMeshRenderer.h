@@ -7,7 +7,7 @@ namespace Lux
 {
 	namespace Core
 	{
-		class Mesh;
+		class SubMesh;
 	}
 
 	namespace Graphics
@@ -19,10 +19,10 @@ namespace Lux
 			MeshRenderer(const MeshRenderer& a_Other);
 			~MeshRenderer();
 
-			inline void SetMesh(Core::ObserverPtr<Core::Mesh>& a_Mesh) { m_Mesh.reset(a_Mesh.get()); }
-			inline Core::ObserverPtr<Core::Mesh>& GetMesh() { return m_Mesh; }
+			inline void SetMesh(Core::ObserverPtr<Core::SubMesh>& a_Mesh) { m_Mesh.reset(a_Mesh.get()); }
+			inline Core::ObserverPtr<Core::SubMesh>& GetMesh() { return m_Mesh; }
 		protected:
-			Core::ObserverPtr<Core::Mesh> m_Mesh;
+			Core::ObserverPtr<Core::SubMesh> m_Mesh;
 			void Reset();
 			friend class Core::ComponentFactory;
 		};

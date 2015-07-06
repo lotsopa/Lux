@@ -128,6 +128,26 @@ SubMesh()
 	}
 
 	m_Name = a_Mesh.mName.C_Str();
+
+	// Setup Bounding Box
+	vec3 meshMin(1e34f);
+	vec3 meshMax(-1e33f);
+
+	unsigned int vertexCount = a_Mesh.mNumVertices;
+
+	for (unsigned int j = 0; j < vertexCount; j++)
+	{
+		meshMin.x = std::min(meshMin.x, a_Mesh.mVertices[j].x);
+		meshMin.y = std::min(meshMin.y, a_Mesh.mVertices[j].y);
+		meshMin.z = std::min(meshMin.z, a_Mesh.mVertices[j].z);
+
+		meshMax.x = std::max(meshMax.x, a_Mesh.mVertices[j].x);
+		meshMax.y = std::max(meshMax.y, a_Mesh.mVertices[j].y);
+		meshMax.z = std::max(meshMax.z, a_Mesh.mVertices[j].z);
+	}
+	
+	m_AABB.SetMax(meshMax);
+	m_AABB.SetMin(meshMin);
 }
 
 Lux::Core::SubMesh::SubMesh(const SubMesh& a_SubMesh)
@@ -199,6 +219,7 @@ Lux::Core::SubMesh::SubMesh(const SubMesh& a_SubMesh)
 		m_Textures[i].reset(a_SubMesh.m_Textures[i].get());
 	}
 	m_Name = a_SubMesh.m_Name;
+	m_AABB = a_SubMesh.m_AABB;
 }
 
 Lux::Core::SubMesh::~SubMesh()

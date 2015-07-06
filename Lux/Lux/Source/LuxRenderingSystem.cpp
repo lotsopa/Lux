@@ -148,21 +148,29 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		if (!it->second.m_Transform)
 			continue;
 
-		it->second.m_Transform->GetRawPtr()->ApplyTransform();
-
 		if (!it->second.m_MeshRenderer)
 			continue;
 
-		Core::Mesh* mesh = it->second.m_MeshRenderer->GetRawPtr()->GetMesh().get();
+		Core::SubMesh* mesh = it->second.m_MeshRenderer->GetRawPtr()->GetMesh().get();
 		
 		if (!mesh)
 			continue;
 
-		mat4x4& transform = it->second.m_Transform->GetRawPtr()->GetMatrix();
+		// Make sure we multiply the transforms properly, taking into account parents
+		mat4x4 finalTransform;
+		Core::Transform* transformPtr = it->second.m_Transform->GetRawPtr();
+		bool hasParent = true;
+		do 
+		{
+			hasParent = transformPtr->GetParentTransform().IsValid();
+			transformPtr->ApplyTransform();
+			finalTransform *= transformPtr->GetMatrix();
+			transformPtr = transformPtr->GetParentTransform().GetRawPtr();
 
+		} while (hasParent);
 
 		// Set the default uniform buffer
-		Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(transform), sizeof(mat4));
+		Core::ShaderVariable worldMatVal(Core::VALUE_MAT4X4, glm::value_ptr(finalTransform), sizeof(mat4));
 		Core::ShaderVariable viewMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCameraTransform->GetRawPtr()->GetInverseTranslationMatrix()), sizeof(mat4));
 		Core::ShaderVariable projMatVal(Core::VALUE_MAT4X4, glm::value_ptr(m_MainCamera->GetRawPtr()->GetProjectionMatrix()), sizeof(mat4));
 		m_ObjUniformBuffer.SetVariable(0, viewMatVal);
@@ -181,49 +189,41 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 
 		m_LightUniformBuffer.SetVariable(0, lightShaderVar);
 		m_LightUniformBuffer.SetVariable(1, eyePos);
+		Core::Shader* shader = mesh->GetShader().get();
+		shader->Activate();
 
-		unsigned int numSubMeshes = mesh->GetNumSubMeshes();
-		for (unsigned int i = 0; i < numSubMeshes; ++i)
+		// Material Buffer
+		Core::Material* matRes = mesh->GetMaterialProperties().get();
+		MaterialShaderResource matShaderRes(*matRes);
+		Core::ShaderVariable matShader(Core::VALUE_STRUCT, &matShaderRes, sizeof(MaterialShaderResource));
+		m_MatUniformBuffer.SetVariable(0, matShader);
+
+		if (!it->second.m_Init)
 		{
-			Core::SubMesh* subMesh = mesh->GetSubMesh(i);
-			LuxAssert(subMesh);
-			Core::Shader* shader = subMesh->GetShader().get();
-			LuxAssert(shader);
-			shader->Activate();
-
-			// Material Buffer
-			Core::Material* matRes = subMesh->GetMaterialProperties().get();
-			MaterialShaderResource matShaderRes(*matRes);
-			Core::ShaderVariable matShader(Core::VALUE_STRUCT, &matShaderRes, sizeof(MaterialShaderResource));
-			m_MatUniformBuffer.SetVariable(0, matShader);
-
-			if (!it->second.m_Init)
-			{
-				shader->InitializeUniformBuffer("ObjectBuffer", m_ObjUniformBuffer, VERTEX_PROGRAM);
-				shader->InitializeUniformBuffer("LightBuffer", m_LightUniformBuffer, FRAGMENT_PROGRAM);
-				shader->InitializeUniformBuffer("MaterialBuffer", m_MatUniformBuffer, FRAGMENT_PROGRAM);
-			}
-			
-			// Bind Samplers and Textures
-			Core::Texture2D* diffuseTex = subMesh->GetTexture(Core::DIFFUSE_MAP_IDX).get();
-			LuxAssert(diffuseTex);
-
-			Core::TextureSampler* texSampler = diffuseTex->GetSampler().get();
-			LuxAssert(texSampler);
-
-			texSampler->Activate(Core::DIFFUSE_MAP_IDX, FRAGMENT_PROGRAM);
-			diffuseTex->Bind(Core::DIFFUSE_MAP_IDX, "DiffuseTexture", shader, FRAGMENT_PROGRAM);
-
-			shader->Update();
-
-			subMesh->PreRender();
-			m_RenderWindow->Render(subMesh);
-			subMesh->PostRender();
-
-			diffuseTex->Unbind();
-			texSampler->Deactivate();
-			shader->Deactivate();
+			shader->InitializeUniformBuffer("ObjectBuffer", m_ObjUniformBuffer, VERTEX_PROGRAM);
+			shader->InitializeUniformBuffer("LightBuffer", m_LightUniformBuffer, FRAGMENT_PROGRAM);
+			shader->InitializeUniformBuffer("MaterialBuffer", m_MatUniformBuffer, FRAGMENT_PROGRAM);
+			it->second.m_Init = true;
 		}
-		it->second.m_Init = true;
+		
+		// Bind Samplers and Textures
+		Core::Texture2D* diffuseTex = mesh->GetTexture(Core::DIFFUSE_MAP_IDX).get();
+		LuxAssert(diffuseTex);
+
+		Core::TextureSampler* texSampler = diffuseTex->GetSampler().get();
+		LuxAssert(texSampler);
+
+		texSampler->Activate(Core::DIFFUSE_MAP_IDX, FRAGMENT_PROGRAM);
+		diffuseTex->Bind(Core::DIFFUSE_MAP_IDX, "DiffuseTexture", shader, FRAGMENT_PROGRAM);
+
+		shader->Update();
+
+		mesh->PreRender();
+		m_RenderWindow->Render(mesh);
+		mesh->PostRender();
+
+		diffuseTex->Unbind();
+		texSampler->Deactivate();
+		shader->Deactivate();
 	}
 }

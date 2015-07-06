@@ -17,7 +17,7 @@ namespace Lux
 				void AddSubMesh(SubMesh* a_Mesh);
 				void AddAnimation(MeshAnimation* a_Anim) ;
 				virtual const unsigned int GetNumSubMeshes();
-				virtual SubMesh* GetSubMesh(const unsigned int a_Index);
+				virtual ObserverPtr<SubMesh> GetSubMesh(const unsigned int a_Index);
 
 				// Sets the material properties for all the sub meshes
 				virtual void SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat);

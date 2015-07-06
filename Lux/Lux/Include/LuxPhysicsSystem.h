@@ -194,12 +194,15 @@ namespace Lux
 				BoxCollider* colliderPtr = (BoxCollider*)colliderHandle->GetRawPtr();
 
 				// Set the bounding box, if the entity has one
-				Core::ObjectHandle<Graphics::MeshRenderer>& meshRenderer = m_SceneManager->GetComponent<Graphics::MeshRenderer>(a_Owner);
-
-				if (meshRenderer.IsValid())
+				if (m_SceneManager->HasComponent<Graphics::MeshRenderer>(a_Owner))
 				{
-					Core::AABB& aabb = meshRenderer.GetRawPtr()->GetMesh().get()->GetAABB();
-					colliderPtr->m_HalfExtents = aabb.GetHalfExtents() * transformHandle.GetRawPtr()->GetScale();
+					Core::ObjectHandle<Graphics::MeshRenderer>& meshRenderer = m_SceneManager->GetComponent<Graphics::MeshRenderer>(a_Owner);
+
+					if (meshRenderer.IsValid())
+					{
+						Core::AABB& aabb = meshRenderer.GetRawPtr()->GetMesh().get()->GetAABB();
+						colliderPtr->m_HalfExtents = aabb.GetHalfExtents() * transformHandle.GetRawPtr()->GetScale();
+					}
 				}
 				
 				
@@ -220,7 +223,7 @@ namespace Lux
 									Utility::ThrowError("Failed to create Physics Material.");
 							}
 
-							colliderPtr->m_Shape = m_Physics->createShape(PxBoxGeometry(Utility::ConvertVec3ToPhysX(colliderPtr->m_HalfExtents)), *mat->m_Properties);
+							colliderPtr->m_Shape = m_Physics->createShape(PxBoxGeometry(Utility::ConvertVec3ToPhysX(colliderPtr->m_HalfExtents)), *mat->m_Properties, true);
 
 							if (!colliderPtr->m_Shape)
 								Utility::ThrowError("Unable to create Box Collider. Unable to create shape.");
@@ -261,19 +264,22 @@ namespace Lux
 				Core::ObjectHandle<Collider>* colliderHandle = (Core::ObjectHandle<Collider>*)(a_CompPtr);
 				SphereCollider* colliderPtr = (SphereCollider*)colliderHandle->GetRawPtr();
 
+
 				// Set the bounding box, if the entity has one
-				Core::ObjectHandle<Graphics::MeshRenderer>& meshRenderer = m_SceneManager->GetComponent<Graphics::MeshRenderer>(a_Owner);
-
-				if (meshRenderer.IsValid())
+				if (m_SceneManager->HasComponent<Graphics::MeshRenderer>(a_Owner))
 				{
-					Core::AABB& aabb = meshRenderer.GetRawPtr()->GetMesh().get()->GetAABB();
+					Core::ObjectHandle<Graphics::MeshRenderer>& meshRenderer = m_SceneManager->GetComponent<Graphics::MeshRenderer>(a_Owner);
 
-					// Pick longest axis
-					vec3 halfExtents = aabb.GetHalfExtents() * transformHandle.GetRawPtr()->GetScale();
-					float longestAxis = std::max(halfExtents.x, std::max(halfExtents.y, halfExtents.z));
-					colliderPtr->m_Radius = longestAxis;
+					if (meshRenderer.IsValid())
+					{
+						Core::AABB& aabb = meshRenderer.GetRawPtr()->GetMesh().get()->GetAABB();
+
+						// Pick longest axis
+						vec3 halfExtents = aabb.GetHalfExtents() * transformHandle.GetRawPtr()->GetScale();
+						float longestAxis = std::max(halfExtents.x, std::max(halfExtents.y, halfExtents.z));
+						colliderPtr->m_Radius = longestAxis;
+					}
 				}
-
 
 				if (m_EntityMap[&a_Owner].m_RigidBody != nullptr && m_EntityMap[&a_Owner].m_RigidBody->IsValid())
 				{
@@ -292,7 +298,7 @@ namespace Lux
 									Utility::ThrowError("Failed to create Physics Material.");
 							}
 
-							colliderPtr->m_Shape = m_Physics->createShape(PxSphereGeometry(colliderPtr->m_Radius), *mat->m_Properties);
+							colliderPtr->m_Shape = m_Physics->createShape(PxSphereGeometry(colliderPtr->m_Radius), *mat->m_Properties, true);
 
 							if (!colliderPtr->m_Shape)
 								Utility::ThrowError("Unable to create Box Collider. Unable to create shape.");
@@ -333,40 +339,41 @@ namespace Lux
 				Core::ObjectHandle<Collider>* colliderHandle = (Core::ObjectHandle<Collider>*)(a_CompPtr);
 				CapsuleCollider* colliderPtr = (CapsuleCollider*)colliderHandle->GetRawPtr();
 
-				// Set the bounding box, if the entity has one
-				Core::ObjectHandle<Graphics::MeshRenderer>& meshRenderer = m_SceneManager->GetComponent<Graphics::MeshRenderer>(a_Owner);
-
 				PxTransform relativePose;
-				if (meshRenderer.IsValid())
+				if (m_SceneManager->HasComponent<Graphics::MeshRenderer>(a_Owner))
 				{
-					Core::AABB& aabb = meshRenderer.GetRawPtr()->GetMesh().get()->GetAABB();
+					// Set the bounding box, if the entity has one
+					Core::ObjectHandle<Graphics::MeshRenderer>& meshRenderer = m_SceneManager->GetComponent<Graphics::MeshRenderer>(a_Owner);
+					if (meshRenderer.IsValid())
+					{
+						Core::AABB& aabb = meshRenderer.GetRawPtr()->GetMesh().get()->GetAABB();
 
-					// Pick longest axis
-					vec3 halfExtents = aabb.GetHalfExtents() * transformHandle.GetRawPtr()->GetScale();
-					float longestAxis = std::max(halfExtents.x, std::max(halfExtents.y, halfExtents.z));
-					colliderPtr->m_HalfHeight = longestAxis;
+						// Pick longest axis
+						vec3 halfExtents = aabb.GetHalfExtents() * transformHandle.GetRawPtr()->GetScale();
+						float longestAxis = std::max(halfExtents.x, std::max(halfExtents.y, halfExtents.z));
+						colliderPtr->m_HalfHeight = longestAxis;
 
-					// Make sure we encompass the whole mesh
-					if (longestAxis == halfExtents.x)
-					{
-						colliderPtr->m_Orientation = CapsuleCollider::X_AXIS;
-						relativePose = PxTransform(PxQuat(PxHalfPi, PxVec3(1, 0, 0)));
-						colliderPtr->m_Radius = halfExtents.z;
-					}
-					else if (longestAxis == halfExtents.y)
-					{
-						colliderPtr->m_Orientation = CapsuleCollider::Y_AXIS;
-						relativePose = PxTransform(PxQuat(PxHalfPi, PxVec3(0, 0, 1)));
-						colliderPtr->m_Radius = halfExtents.x;
-					}
-					else
-					{
-						colliderPtr->m_Orientation = CapsuleCollider::Z_AXIS;
-						relativePose = PxTransform(PxQuat(PxHalfPi, PxVec3(0, 1, 0)));
-						colliderPtr->m_Radius = halfExtents.y;
+						// Make sure we encompass the whole mesh
+						if (longestAxis == halfExtents.x)
+						{
+							colliderPtr->m_Orientation = CapsuleCollider::X_AXIS;
+							relativePose = PxTransform(PxQuat(PxHalfPi, PxVec3(1, 0, 0)));
+							colliderPtr->m_Radius = halfExtents.z;
+						}
+						else if (longestAxis == halfExtents.y)
+						{
+							colliderPtr->m_Orientation = CapsuleCollider::Y_AXIS;
+							relativePose = PxTransform(PxQuat(PxHalfPi, PxVec3(0, 0, 1)));
+							colliderPtr->m_Radius = halfExtents.x;
+						}
+						else
+						{
+							colliderPtr->m_Orientation = CapsuleCollider::Z_AXIS;
+							relativePose = PxTransform(PxQuat(PxHalfPi, PxVec3(0, 1, 0)));
+							colliderPtr->m_Radius = halfExtents.y;
+						}
 					}
 				}
-
 
 				if (m_EntityMap[&a_Owner].m_RigidBody != nullptr && m_EntityMap[&a_Owner].m_RigidBody->IsValid())
 				{
@@ -385,7 +392,7 @@ namespace Lux
 									Utility::ThrowError("Failed to create Physics Material.");
 							}
 
-							colliderPtr->m_Shape = m_Physics->createShape(PxCapsuleGeometry(colliderPtr->m_Radius, colliderPtr->m_HalfHeight), *mat->m_Properties);
+							colliderPtr->m_Shape = m_Physics->createShape(PxCapsuleGeometry(colliderPtr->m_Radius, colliderPtr->m_HalfHeight), *mat->m_Properties, true);
 							colliderPtr->m_Shape->setLocalPose(relativePose);
 
 							if (!colliderPtr->m_Shape)

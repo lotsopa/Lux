@@ -14,7 +14,7 @@ namespace Lux
 			BoxCollider(const BoxCollider& a_Other);
 			virtual ~BoxCollider();
 
-			void SetHalfExtents(vec3& a_HlfExtents);
+			void SetHalfExtents(const vec3& a_HlfExtents);
 			const vec3 GetHalfExtents() const;
 		private:
 			vec3 m_HalfExtents;

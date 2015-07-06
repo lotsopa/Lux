@@ -73,25 +73,45 @@ bool TestApp::LoadContent()
 	carTransf.GetRawPtr()->Rotate(180.0f, Lux::vec3(0, 0, 1));
 	//carTransf.GetRawPtr()->SetScale(Lux::vec3(0.01f));
 	carTransf.GetRawPtr()->SetPosition(Lux::vec3(0, 0, 0));
-	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& carMeshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(carEntity);
-	carMeshRenderer.GetRawPtr()->SetMesh(carMesh);
+
+	// Make sure we have each sub mesh as a separate entity
+	unsigned int numSubMeshes = carMesh.get()->GetNumSubMeshes();
+	for (unsigned int i = 0; i < numSubMeshes; i++)
+	{
+		Lux::Core::ObjectHandle<Lux::Core::Entity>& tempEntity = m_SceneManager->CreateEntity();
+		Lux::Core::ObjectHandle<Lux::Core::Transform>& tempTransf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(tempEntity);
+		tempTransf.GetRawPtr()->SetParentTransform(carTransf);
+		Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& tempMeshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(tempEntity);
+		tempMeshRenderer.GetRawPtr()->SetMesh(carMesh.get()->GetSubMesh(i));
+	}
 
 	// Add Physics
 	Lux::Core::ObserverPtr<Lux::Core::PhysicsMaterial> defaultPhysMat = m_ResourceHandler->CreatePhysicsMaterial("DefaultMat", 0.1f, 0.5f, 0.5f);
 	Lux::Core::ObjectHandle<Lux::Physics::DynamicRigidBody>& carRigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::DynamicRigidBody>(carEntity);
 	carRigidBody.GetRawPtr()->SetPhysicsMaterial(defaultPhysMat);
 	Lux::Core::ObjectHandle<Lux::Physics::BoxCollider>& carCollider = m_SceneManager->AttachNewComponent<Lux::Physics::BoxCollider>(carEntity);
+	carCollider.GetRawPtr()->SetHalfExtents(carMesh.get()->GetAABB().GetHalfExtents() * carTransf.GetRawPtr()->GetScale());
 
 	Lux::Core::ObjectHandle<Lux::Core::Entity>& groundEntity = m_SceneManager->CreateEntity();
-	Lux::Core::ObjectHandle<Lux::Core::Transform>& groundTranf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(groundEntity);
-	groundTranf.GetRawPtr()->SetScale(Lux::vec3(100.0f, 1.0f, 100.0f));
-	groundTranf.GetRawPtr()->SetPosition(Lux::vec3(0, -5, 0));
-	Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& groundMeshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(groundEntity);
-	groundMeshRenderer.GetRawPtr()->SetMesh(cubeMesh);
+	Lux::Core::ObjectHandle<Lux::Core::Transform>& groundTransf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(groundEntity);
+	groundTransf.GetRawPtr()->SetScale(Lux::vec3(100.0f, 1.0f, 100.0f));
+	groundTransf.GetRawPtr()->SetPosition(Lux::vec3(0, -5, 0));
+
+	// Make sure we have each sub mesh as a separate entity
+	numSubMeshes = cubeMesh.get()->GetNumSubMeshes();
+	for (unsigned int i = 0; i < numSubMeshes; i++)
+	{
+		Lux::Core::ObjectHandle<Lux::Core::Entity>& tempEntity = m_SceneManager->CreateEntity();
+		Lux::Core::ObjectHandle<Lux::Core::Transform>& tempTransf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(tempEntity);
+		tempTransf.GetRawPtr()->SetParentTransform(groundTransf);
+		Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& tempMeshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(tempEntity);
+		tempMeshRenderer.GetRawPtr()->SetMesh(cubeMesh.get()->GetSubMesh(i));
+	}
 
 	Lux::Core::ObjectHandle<Lux::Physics::StaticRigidBody>& groundRigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::StaticRigidBody>(groundEntity);
 	groundRigidBody.GetRawPtr()->SetPhysicsMaterial(defaultPhysMat);
 	Lux::Core::ObjectHandle<Lux::Physics::BoxCollider>& groundCollider = m_SceneManager->AttachNewComponent<Lux::Physics::BoxCollider>(groundEntity);
+	groundCollider.GetRawPtr()->SetHalfExtents(cubeMesh.get()->GetAABB().GetHalfExtents() * groundTransf.GetRawPtr()->GetScale());
 
 	return true;
 }
