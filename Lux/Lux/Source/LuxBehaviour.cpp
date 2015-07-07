@@ -7,7 +7,7 @@
 #include "LuxMaterial.h"
 #include "LuxMaterial.h"
 #include "LuxKey.h"
-#include "LuxMesh.h"
+#include "LuxModel.h"
 #include "LuxLight.h"
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"

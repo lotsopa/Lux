@@ -17,7 +17,7 @@ namespace Lux
 				virtual void SwapBuffers();
 				virtual void Clear();
 				virtual void PollEvents();
-				virtual void Render(SubMesh* a_SubMesh);
+				virtual void Render(Mesh* a_Mesh);
 				virtual const bool IsWindowResized();
 				virtual const int GetHeight();
 				virtual const int GetWidth();

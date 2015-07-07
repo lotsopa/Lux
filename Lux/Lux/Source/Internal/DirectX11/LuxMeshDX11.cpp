@@ -1,115 +1,81 @@
 #include "LuxPCH.h"
-#include "LuxKey.h"
-#include "LuxShader.h"
-#include "LuxSubMesh.h"
-#include "LuxSubMeshDX11.h"
-#include "LuxMeshAnimation.h"
+#include "LuxVertex.h"
 #include "LuxMesh.h"
 #include "LuxMeshDX11.h"
+#include "LuxKey.h"
+#include "LuxShader.h"
 
-Lux::Core::Internal::MeshDX11::MeshDX11() : 
-m_NumSubMeshes(0),
-m_AnimationData(nullptr),
-m_SubMeshes(nullptr),
-m_NumAnimations(0),
-m_AnimCtr(0),
-m_SubMeshCtr(0)
+// Helper for creating a D3D vertex or index buffer.
+template<typename T>
+static void CreateBuffer(_In_ ID3D11Device* device, T* data, unsigned int dataSize, D3D11_BIND_FLAG bindFlags, _Outptr_ ID3D11Buffer** pBuffer)
 {
+	assert(pBuffer != 0);
 
+	D3D11_BUFFER_DESC bufferDesc = { 0 };
+
+	bufferDesc.ByteWidth = dataSize * sizeof(T);
+	bufferDesc.BindFlags = bindFlags;
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	D3D11_SUBRESOURCE_DATA dataDesc = { 0 };
+
+	dataDesc.pSysMem = data;
+
+	HRESULT hr = device->CreateBuffer(&bufferDesc, &dataDesc, pBuffer);
+	if (FAILED(hr))
+	{
+		Lux::Utility::ThrowError("Failed to create DX11 Buffer.");
+	}
 }
 
-Lux::Core::Internal::MeshDX11::MeshDX11(unsigned int a_NumMeshes, unsigned int a_NumAnims) :
-m_NumSubMeshes(a_NumMeshes),
-m_AnimationData(nullptr),
-m_NumAnimations(a_NumAnims),
-m_AnimCtr(0),
-m_SubMeshCtr(0)
+Lux::Core::Internal::MeshDX11::MeshDX11(ID3D11DeviceContext* a_DeviceContext) : Mesh(), m_DeviceContext(a_DeviceContext)
 {
-	if (m_NumSubMeshes)
-	{
-		m_SubMeshes = new SubMeshDX11*[m_NumSubMeshes];
-	}
+	Microsoft::WRL::ComPtr<ID3D11Device> device;
+	m_DeviceContext->GetDevice(&device);
+	CreateBuffer(device.Get(), m_Vertices, m_NumVertices, D3D11_BIND_VERTEX_BUFFER, &m_VertexBuffer);
+	CreateBuffer(device.Get(), m_Indices, m_NumIndices, D3D11_BIND_INDEX_BUFFER, &m_IndexBuffer);
+	//SafeDeleteAttributes();
+}
 
-	if (m_NumAnimations)
-	{
-		m_AnimationData = new MeshAnimation*[m_NumAnimations];
-	}
+Lux::Core::Internal::MeshDX11::MeshDX11(const MeshDX11& a_SubMesh) : Mesh(a_SubMesh)
+{
+	m_DeviceContext = a_SubMesh.m_DeviceContext;
+	m_IndexBuffer = a_SubMesh.m_IndexBuffer;
+	m_VertexBuffer = a_SubMesh.m_VertexBuffer;
+	//SafeDeleteAttributes();
+}
+
+Lux::Core::Internal::MeshDX11::MeshDX11(aiMesh& a_Mesh, ID3D11DeviceContext* a_DeviceContext) : Mesh(a_Mesh), m_DeviceContext(a_DeviceContext)
+{
+	Microsoft::WRL::ComPtr<ID3D11Device> device;
+	m_DeviceContext->GetDevice(device.GetAddressOf());
+	CreateBuffer(device.Get(), m_Vertices, m_NumVertices, D3D11_BIND_VERTEX_BUFFER, &m_VertexBuffer);
+	CreateBuffer(device.Get(), m_Indices, m_NumIndices, D3D11_BIND_INDEX_BUFFER, &m_IndexBuffer);
+	//SafeDeleteAttributes();
 }
 
 Lux::Core::Internal::MeshDX11::~MeshDX11()
 {
-	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-	{
-		Utility::SafePtrDelete(m_SubMeshes[i]);
-	}
-	Utility::SafeArrayDelete(m_SubMeshes);
-
-	for (unsigned int i = 0; i < m_NumAnimations; i++)
-	{
-		Utility::SafePtrDelete(m_AnimationData[i]);
-	}
-	Utility::SafeArrayDelete(m_AnimationData);
-
-	m_NumSubMeshes = 0;
-	m_NumAnimations = 0;
+	m_VertexBuffer.Reset();
+	m_IndexBuffer.Reset();
 }
 
-void Lux::Core::Internal::MeshDX11::AddSubMesh(SubMesh* a_Mesh)
+void Lux::Core::Internal::MeshDX11::PreRender()
 {
-	LuxAssert(a_Mesh);
+	const UINT strides[] = { sizeof(Vertex) };
+	const UINT offsets[] = { 0 };
 
-	if (m_SubMeshCtr >= m_NumSubMeshes)
-	{
-		Utility::ThrowError("Could not insert mesh in entity. Mesh index too high.");
-	}
-
-	m_SubMeshes[m_SubMeshCtr] = (SubMeshDX11*)a_Mesh;
-	m_SubMeshCtr++;
+	m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_DeviceContext->IASetVertexBuffers(0, 1, m_VertexBuffer.GetAddressOf(), strides, offsets);
+	m_DeviceContext->IASetIndexBuffer(m_IndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 }
 
-void Lux::Core::Internal::MeshDX11::AddAnimation(MeshAnimation* a_Anim)
+void Lux::Core::Internal::MeshDX11::PostRender()
 {
-	LuxAssert(a_Anim);
 
-	if (m_AnimCtr >= m_NumSubMeshes)
-	{
-		Utility::ThrowError("Could not insert animation in entity. Animation index too high.");
-	}
-
-	m_AnimationData[m_AnimCtr] = a_Anim;
-	m_AnimCtr++;
 }
 
-const unsigned int Lux::Core::Internal::MeshDX11::GetNumSubMeshes()
+void Lux::Core::Internal::MeshDX11::ConnectWithShader(Shader* a_Shader)
 {
-	return m_NumSubMeshes;
-}
 
-Lux::Core::ObserverPtr<Lux::Core::SubMesh> Lux::Core::Internal::MeshDX11::GetSubMesh(const unsigned int a_Index)
-{
-	return ObserverPtr<SubMesh>(m_SubMeshes[a_Index]);
-}
-
-void Lux::Core::Internal::MeshDX11::SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat)
-{
-	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-	{
-		m_SubMeshes[i]->SetMaterialProperties(a_Mat);
-	}
-}
-
-void Lux::Core::Internal::MeshDX11::SetShader(ObserverPtr<Shader>& a_Shader)
-{
-	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-	{
-		m_SubMeshes[i]->SetShader(a_Shader);
-	}
-}
-
-void Lux::Core::Internal::MeshDX11::SetTexture(TextureIndex a_Idx, Core::ObserverPtr<Texture2D>& a_Tex)
-{
-	for (unsigned int i = 0; i < m_NumSubMeshes; i++)
-	{
-		m_SubMeshes[i]->SetTexture(a_Idx, a_Tex);
-	}
 }

@@ -7,7 +7,7 @@
 #include "LuxTransform.h"
 #include "LuxKey.h"
 #include "LuxLight.h"
-#include "LuxSubMesh.h"
+#include "LuxModel.h"
 #include "LuxMesh.h"
 #include "LuxMeshRenderer.h"
 #include "LuxObjectPool.h"
@@ -151,7 +151,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		if (!it->second.m_MeshRenderer)
 			continue;
 
-		Core::SubMesh* mesh = it->second.m_MeshRenderer->GetRawPtr()->GetMesh().get();
+		Core::Mesh* mesh = it->second.m_MeshRenderer->GetRawPtr()->GetMesh().get();
 		
 		if (!mesh)
 			continue;

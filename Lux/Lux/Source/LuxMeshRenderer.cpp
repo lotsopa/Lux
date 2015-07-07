@@ -1,5 +1,5 @@
 #include "LuxPCH.h"
-#include "LuxMesh.h"
+#include "LuxModel.h"
 #include "LuxMeshRenderer.h"
 
 Lux::Graphics::MeshRenderer::MeshRenderer() : Component()

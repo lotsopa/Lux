@@ -10,8 +10,10 @@
 #include "LuxVertexArrayOGL.h"
 #include "LuxShader.h"
 #include "LuxShaderOGL.h"
-#include "LuxSubMesh.h"
-#include "LuxSubMeshOGL.h"
+#include "LuxMesh.h"
+#include "LuxMeshOGL.h"
+#include "LuxModel.h"
+#include "LuxModelOGL.h"
 
 bool Lux::Core::Internal::RenderWindowOGL::Initialize(Utility::AppInitOptions& a_AppInitOptions) 
 {
@@ -118,9 +120,9 @@ void Lux::Core::Internal::RenderWindowOGL::PollEvents()
 	glfwPollEvents();
 }
 
-void Lux::Core::Internal::RenderWindowOGL::Render(SubMesh* a_SubMesh)
+void Lux::Core::Internal::RenderWindowOGL::Render(Mesh* a_Mesh)
 {
-	SubMeshOGL* subMesh = (SubMeshOGL*)a_SubMesh;
+	MeshOGL* subMesh = (MeshOGL*)a_Mesh;
 	unsigned int numIndices = subMesh->GetNumIndices();
 	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 }

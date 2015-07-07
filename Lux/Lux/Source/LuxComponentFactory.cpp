@@ -1,6 +1,6 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
-#include "LuxMesh.h"
+#include "LuxModel.h"
 #include "LuxTransform.h"
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"

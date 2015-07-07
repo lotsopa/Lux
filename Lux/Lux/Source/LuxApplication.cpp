@@ -6,7 +6,7 @@
 #include "LuxKeyCodes.h"
 #include "LuxEntity.h"
 #include "LuxKey.h"
-#include "LuxMesh.h"
+#include "LuxModel.h"
 #include "LuxMeshRenderer.h"
 #include "LuxTransform.h"
 #include "LuxComponent.h"

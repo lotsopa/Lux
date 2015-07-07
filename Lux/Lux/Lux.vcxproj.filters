@@ -144,13 +144,7 @@
     <ClInclude Include="Include\LuxPlatform.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Include\LuxMesh.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Include\LuxMeshAnimation.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\LuxSubMesh.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Include\LuxEventSystem.h">
@@ -210,9 +204,6 @@
     <ClInclude Include="Include\Internal\OpenGL\LuxEventListenerOGL.h">
       <Filter>Header Files\Core\Internal\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Internal\OpenGL\LuxMeshOGL.h">
-      <Filter>Header Files\Core\Internal\OpenGL</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Internal\OpenGL\LuxPlatformOGL.h">
       <Filter>Header Files\Core\Internal\OpenGL</Filter>
     </ClInclude>
@@ -223,9 +214,6 @@
       <Filter>Header Files\Core\Internal\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="Include\Internal\OpenGL\LuxShaderOGL.h">
-      <Filter>Header Files\Core\Internal\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\OpenGL\LuxSubMeshOGL.h">
       <Filter>Header Files\Core\Internal\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="Include\Internal\OpenGL\LuxTexture1DOGL.h">
@@ -253,12 +241,6 @@
       <Filter>Header Files\Core\Internal\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="Include\Internal\DirectX11\LuxEventListenerDX11.h">
-      <Filter>Header Files\Core\Internal\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\DirectX11\LuxMeshDX11.h">
-      <Filter>Header Files\Core\Internal\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Internal\DirectX11\LuxSubMeshDX11.h">
       <Filter>Header Files\Core\Internal\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="Include\Internal\DirectX11\LuxShaderDX11.h">
@@ -330,6 +312,24 @@
     <ClInclude Include="Include\LuxConvexMeshCollider.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LuxModel.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LuxMesh.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxModelDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\DirectX11\LuxMeshDX11.h">
+      <Filter>Header Files\Core\Internal\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxModelOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Internal\OpenGL\LuxMeshOGL.h">
+      <Filter>Header Files\Core\Internal\OpenGL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LuxApplication.cpp">
@@ -392,13 +392,7 @@
     <ClCompile Include="Source\LuxRenderWindow.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LuxMesh.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LuxMeshAnimation.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LuxSubMesh.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\LuxPlatform.cpp">
@@ -449,9 +443,6 @@
     <ClCompile Include="Source\Internal\OpenGL\LuxEventListenerOGL.cpp">
       <Filter>Source Files\Core\Internal\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Internal\OpenGL\LuxMeshOGL.cpp">
-      <Filter>Source Files\Core\Internal\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Internal\OpenGL\LuxPlatformOGL.cpp">
       <Filter>Source Files\Core\Internal\OpenGL</Filter>
     </ClCompile>
@@ -462,9 +453,6 @@
       <Filter>Source Files\Core\Internal\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="Source\Internal\OpenGL\LuxShaderOGL.cpp">
-      <Filter>Source Files\Core\Internal\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\OpenGL\LuxSubMeshOGL.cpp">
       <Filter>Source Files\Core\Internal\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="Source\Internal\OpenGL\LuxTexture1DOGL.cpp">
@@ -492,12 +480,6 @@
       <Filter>Source Files\Core\Internal\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="Source\Internal\DirectX11\LuxEventListenerDX11.cpp">
-      <Filter>Source Files\Core\Internal\DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\DirectX11\LuxMeshDX11.cpp">
-      <Filter>Source Files\Core\Internal\DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Internal\DirectX11\LuxSubMeshDX11.cpp">
       <Filter>Source Files\Core\Internal\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="Source\Internal\DirectX11\LuxShaderDX11.cpp">
@@ -565,6 +547,24 @@
     </ClCompile>
     <ClCompile Include="Source\LuxConvexMeshCollider.cpp">
       <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxModel.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuxMesh.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxModelDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\DirectX11\LuxMeshDX11.cpp">
+      <Filter>Source Files\Core\Internal\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxModelOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Internal\OpenGL\LuxMeshOGL.cpp">
+      <Filter>Source Files\Core\Internal\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,8 +7,8 @@ namespace Lux
 	{
 		class Material;
 		class Shader;
-		class SubMesh;
 		class Mesh;
+		class Model;
 		class Key;
 		class Texture;
 		class Texture1D;
@@ -27,8 +27,8 @@ namespace Lux
 			static ResourceHandler* Create(Utility::PlatformType a_PlatformType, RenderWindow* a_RenderWindow);
 			virtual ~ResourceHandler();
 
-			virtual ObserverPtr<Mesh> CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
-			virtual ObserverPtr<Mesh> CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
+			virtual ObserverPtr<Model> CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
+			virtual ObserverPtr<Model> CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags) = 0;
 			virtual ObserverPtr<Texture2D> CreateTexture2DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
 			virtual ObserverPtr<Texture2D> CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
 			virtual ObserverPtr<Texture1D> CreateTexture1DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME) = 0;
@@ -40,7 +40,7 @@ namespace Lux
 			virtual ObserverPtr<TextureSampler> CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions) = 0;
 			virtual ObserverPtr<PhysicsMaterial> CreatePhysicsMaterial(const String& a_Name, float a_Restitution = 0.0f, float a_DynamicFriction = 0.0f, float a_StaticFriction = 0.0f) = 0;
 
-			virtual ObserverPtr<Mesh> GetMesh(const String& a_Name) = 0;
+			virtual ObserverPtr<Model> GetMesh(const String& a_Name) = 0;
 			virtual ObserverPtr<Shader> GetShader(const String& a_Name) = 0;
 			virtual ObserverPtr<Material> GetMaterial(const String& a_Name) = 0;
 			virtual ObserverPtr<Texture2D> GetTexture2D(const String& a_Name) = 0;

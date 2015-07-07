@@ -6,7 +6,7 @@ namespace Lux
 	namespace Core
 	{
 		class Component;
-		class Mesh;
+		class Model;
 		class Transform;
 		/*
 		The Entity class is just an abstract concept. It represents an object in the scene.

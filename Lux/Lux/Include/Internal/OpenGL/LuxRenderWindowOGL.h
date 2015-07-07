@@ -5,7 +5,7 @@ namespace Lux
 {
 	namespace Core
 	{
-		class SubMesh;
+		class Mesh;
 		namespace Internal
 		{
 			class EventListenerOGL;
@@ -18,7 +18,7 @@ namespace Lux
 				virtual void SwapBuffers();
 				virtual void Clear();
 				virtual void PollEvents();
-				virtual void Render(SubMesh* a_SubMesh);
+				virtual void Render(Mesh* a_SubMesh);
 				inline GLFWwindow* GetWindowHandle() { return m_WindowHandle; }
 				virtual const bool IsWindowResized();
 				virtual const int GetHeight();

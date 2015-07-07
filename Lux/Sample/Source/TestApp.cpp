@@ -29,8 +29,8 @@ bool TestApp::LoadContent()
 
 	// Load resources
 	Lux::Core::ObserverPtr<Lux::Core::Shader> defaultShader = m_ResourceHandler->CreateShaderFromFile("Default.shader", "Default");
-	Lux::Core::ObserverPtr<Lux::Core::Mesh> carMesh = m_ResourceHandler->CreateMeshFromFile("california.3ds", "Car", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
-	Lux::Core::ObserverPtr<Lux::Core::Mesh> cubeMesh = m_ResourceHandler->CreateMeshFromFile("cube.obj", "Cube", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
+	Lux::Core::ObserverPtr<Lux::Core::Model> carMesh = m_ResourceHandler->CreateMeshFromFile("california.3ds", "Car", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
+	Lux::Core::ObserverPtr<Lux::Core::Model> cubeMesh = m_ResourceHandler->CreateMeshFromFile("cube.obj", "Cube", LuxProcess_CalcTangentSpace | LuxProcess_Triangulate | LuxProcess_JoinIdenticalVertices | LuxProcess_GenSmoothNormals);
 
 	//Lux::Core::ObserverPtr<Lux::Core::Texture2D> carDiffuseTex = m_ResourceHandler->CreateTexture2DFromFile("UV_mapper.png", "CarTexture");
 	Lux::Core::ObserverPtr<Lux::Core::Texture2D> groundDiffuseTex = m_ResourceHandler->CreateTexture2DFromFile("UV_mapper.png", "GroundTexture");
@@ -75,14 +75,14 @@ bool TestApp::LoadContent()
 	carTransf.GetRawPtr()->SetPosition(Lux::vec3(0, 0, 0));
 
 	// Make sure we have each sub mesh as a separate entity
-	unsigned int numSubMeshes = carMesh.get()->GetNumSubMeshes();
-	for (unsigned int i = 0; i < numSubMeshes; i++)
+	unsigned int numMeshes = carMesh.get()->GetNumMeshes();
+	for (unsigned int i = 0; i < numMeshes; i++)
 	{
 		Lux::Core::ObjectHandle<Lux::Core::Entity>& tempEntity = m_SceneManager->CreateEntity();
 		Lux::Core::ObjectHandle<Lux::Core::Transform>& tempTransf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(tempEntity);
 		tempTransf.GetRawPtr()->SetParentTransform(carTransf);
 		Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& tempMeshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(tempEntity);
-		tempMeshRenderer.GetRawPtr()->SetMesh(carMesh.get()->GetSubMesh(i));
+		tempMeshRenderer.GetRawPtr()->SetMesh(carMesh.get()->GetMesh(i));
 	}
 
 	// Add Physics
@@ -98,14 +98,14 @@ bool TestApp::LoadContent()
 	groundTransf.GetRawPtr()->SetPosition(Lux::vec3(0, -5, 0));
 
 	// Make sure we have each sub mesh as a separate entity
-	numSubMeshes = cubeMesh.get()->GetNumSubMeshes();
-	for (unsigned int i = 0; i < numSubMeshes; i++)
+	numMeshes = cubeMesh.get()->GetNumMeshes();
+	for (unsigned int i = 0; i < numMeshes; i++)
 	{
 		Lux::Core::ObjectHandle<Lux::Core::Entity>& tempEntity = m_SceneManager->CreateEntity();
 		Lux::Core::ObjectHandle<Lux::Core::Transform>& tempTransf = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(tempEntity);
 		tempTransf.GetRawPtr()->SetParentTransform(groundTransf);
 		Lux::Core::ObjectHandle<Lux::Graphics::MeshRenderer>& tempMeshRenderer = m_SceneManager->AttachNewComponent<Lux::Graphics::MeshRenderer>(tempEntity);
-		tempMeshRenderer.GetRawPtr()->SetMesh(cubeMesh.get()->GetSubMesh(i));
+		tempMeshRenderer.GetRawPtr()->SetMesh(cubeMesh.get()->GetMesh(i));
 	}
 
 	Lux::Core::ObjectHandle<Lux::Physics::StaticRigidBody>& groundRigidBody = m_SceneManager->AttachNewComponent<Lux::Physics::StaticRigidBody>(groundEntity);

@@ -6,7 +6,7 @@ namespace Lux
 	namespace Core
 	{
 		class EventListener;
-		class SubMesh;
+		class Mesh;
 
 		class RenderWindow
 		{
@@ -18,7 +18,7 @@ namespace Lux
 			virtual void SwapBuffers() = 0;
 			virtual void Clear() = 0;
 			virtual void PollEvents() = 0;
-			virtual void Render(SubMesh* a_SubMesh) = 0;
+			virtual void Render(Mesh* a_SubMesh) = 0;
 			virtual const bool IsWindowResized() = 0;
 			virtual const int GetHeight() = 0;
 			virtual const int GetWidth() = 0;

@@ -2,7 +2,7 @@
 #include "LuxEntity.h"
 #include "LuxTransform.h"
 #include "LuxKey.h"
-#include "LuxMesh.h"
+#include "LuxModel.h"
 #include "LuxObjectPool.h"
 #include "LuxSceneManager.h"
 #include "LuxBehaviour.h"

@@ -7,34 +7,23 @@ namespace Lux
 	{
 		namespace Internal
 		{
+			class ShaderOGL;
+
 			class MeshOGL : public Mesh
 			{
 			public:
 				MeshOGL();
-				MeshOGL(unsigned int a_NumMeshes, unsigned int a_NumAnims);
+				MeshOGL(const MeshOGL& a_SubMesh);
+				MeshOGL(aiMesh& a_Mesh);
 				virtual ~MeshOGL();
-				
-				void AddSubMesh(SubMesh* a_Mesh);
-				void AddAnimation(MeshAnimation* a_Anim) ;
-				virtual const unsigned int GetNumSubMeshes();
-				virtual ObserverPtr<SubMesh> GetSubMesh(const unsigned int a_Index);
 
-				// Sets the material properties for all the sub meshes
-				virtual void SetMaterialProperties(Core::ObserverPtr<Material>& a_Mat);
-
-				// Sets the diffuse texture for all the sub meshes
-				virtual void SetTexture(TextureIndex a_Idx, Core::ObserverPtr<Texture2D>& a_Tex);
-
-				// Sets the shader for all the sub meshes
-				virtual void SetShader(ObserverPtr<Shader>& a_Shader);
-
-			private:
-				SubMeshOGL** m_SubMeshes;
-				MeshAnimation** m_AnimationData;
-				unsigned int m_NumSubMeshes;
-				unsigned int m_NumAnimations;
-				unsigned int m_SubMeshCtr;
-				unsigned int m_AnimCtr;
+				virtual void PreRender();
+				virtual void PostRender();
+			protected:
+				virtual void ConnectWithShader(Shader* a_Shader);
+				BufferOGL m_VertexBuffer;
+				BufferOGL m_IndexBuffer;
+				VertexArrayOGL m_VertexArray;
 			};
 		}
 	}

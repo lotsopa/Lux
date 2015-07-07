@@ -1,8 +1,8 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
 #include "LuxMaterial.h"
-#include "LuxSubMesh.h"
 #include "LuxMesh.h"
+#include "LuxModel.h"
 #include "LuxMeshAnimation.h"
 #include "LuxPhysicsMaterial.h"
 #include "LuxResourceHandler.h"
@@ -13,8 +13,8 @@
 #include "LuxShaderFileParser.h"
 #include "LuxRenderWindow.h"
 #include "LuxRenderWindowDX11.h"
+#include "LuxModelDX11.h"
 #include "LuxMeshDX11.h"
-#include "LuxSubMeshDX11.h"
 #include "LuxTexture.h"
 #include "LuxTexture2D.h"
 #include "LuxShaderDX11.h"
@@ -55,13 +55,13 @@ Lux::Core::Internal::ResourceHandlerDX11::~ResourceHandlerDX11()
 	m_InputLayouts.clear();
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Core::ObserverPtr<Lux::Core::Model> Lux::Core::Internal::ResourceHandlerDX11::CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	// Have we already loaded this mesh before? If we have, just return it.
-	Mesh* loadedMesh = GetLoadedMesh(a_File);
+	Model* loadedMesh = GetLoadedMesh(a_File);
 	if (loadedMesh != nullptr)
 	{
-		return ObserverPtr<Mesh>(loadedMesh);
+		return ObserverPtr<Model>(loadedMesh);
 	}
 
 	FileInfo* file = FileHandler::GetInstance().LoadFileInMemory(a_File);
@@ -115,7 +115,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 	}
 
 	// Creating a mesh and adding sub meshes
-	MeshDX11* retMesh = new MeshDX11(scene->mNumMeshes, scene->mNumAnimations);
+	ModelDX11* retMesh = new ModelDX11(scene->mNumMeshes, scene->mNumAnimations);
 
 	// Setup Bounding Box
 	vec3 meshMin(1e34f);
@@ -185,7 +185,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
-		SubMeshDX11* mesh = new SubMeshDX11(*scene->mMeshes[i], m_RenderWindow->GetDeviceContextPtr());
+		MeshDX11* mesh = new MeshDX11(*scene->mMeshes[i], m_RenderWindow->GetDeviceContextPtr());
 
 		// Set mesh material and textures
 		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
@@ -194,7 +194,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 		String matName = str.C_Str();
 		mesh->SetMaterialProperties(GetResource(matName, m_MaterialMap));
 		AssignLoadedTexturesToSubMesh(mesh, impMat);
-		retMesh->AddSubMesh(mesh);
+		retMesh->AddMesh(mesh);
 	}
 
 	// Animation data (if it exists)
@@ -207,13 +207,13 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 		}
 	}
 
-	AddResourceToMap(a_EntityName, (Mesh*)retMesh, m_MeshMap);
+	AddResourceToMap(a_EntityName, (Model*)retMesh, m_MeshMap);
 	AddFileNameToMap(a_File, retMesh);
 	Utility::SafePtrDelete(file);
-	return ObserverPtr<Mesh>(retMesh);
+	return ObserverPtr<Model>(retMesh);
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11::CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
+Lux::Core::ObserverPtr<Lux::Core::Model> Lux::Core::Internal::ResourceHandlerDX11::CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags)
 {
 	if (a_Info == nullptr)
 	{
@@ -270,7 +270,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 	}
 
 	// Creating an entity and adding meshes
-	MeshDX11* retEntity = new MeshDX11(scene->mNumMeshes, scene->mNumAnimations);
+	ModelDX11* retEntity = new ModelDX11(scene->mNumMeshes, scene->mNumAnimations);
 
 	// Setup Bounding Box
 	vec3 meshMin(1e34f);
@@ -340,7 +340,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
-		SubMeshDX11* mesh = new SubMeshDX11(*scene->mMeshes[i], m_RenderWindow->GetDeviceContextPtr());
+		MeshDX11* mesh = new MeshDX11(*scene->mMeshes[i], m_RenderWindow->GetDeviceContextPtr());
 
 		// Set mesh material and textures
 		aiMaterial* impMat = scene->mMaterials[scene->mMeshes[i]->mMaterialIndex];
@@ -349,7 +349,7 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 		String matName = str.C_Str();
 		mesh->SetMaterialProperties(GetResource(matName, m_MaterialMap));
 		AssignLoadedTexturesToSubMesh(mesh, impMat);
-		retEntity->AddSubMesh(mesh);
+		retEntity->AddMesh(mesh);
 	}
 
 	// Animation data (if it exists)
@@ -362,8 +362,8 @@ Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11
 		}
 	}
 
-	AddResourceToMap(a_EntityName, (Mesh*)retEntity, m_MeshMap);
-	return ObserverPtr<Mesh>(retEntity);
+	AddResourceToMap(a_EntityName, (Model*)retEntity, m_MeshMap);
+	return ObserverPtr<Model>(retEntity);
 }
 
 void Lux::Core::Internal::ResourceHandlerDX11::LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType)
@@ -717,7 +717,7 @@ HRESULT Lux::Core::Internal::ResourceHandlerDX11::CreateInputLayoutDescFromVerte
 	return hr;
 }
 
-Lux::Core::ObserverPtr<Lux::Core::Mesh> Lux::Core::Internal::ResourceHandlerDX11::GetMesh(const String& a_Name)
+Lux::Core::ObserverPtr<Lux::Core::Model> Lux::Core::Internal::ResourceHandlerDX11::GetMesh(const String& a_Name)
 {
 	return GetResource(a_Name, m_MeshMap);
 }
@@ -753,12 +753,12 @@ bool Lux::Core::Internal::ResourceHandlerDX11::DeleteTexture2D(const String& a_N
 	return DeleteResource(a_Name, m_Texture2DMap);
 }
 
-void Lux::Core::Internal::ResourceHandlerDX11::AddFileNameToMap(const String& a_Str, Mesh* a_Ent)
+void Lux::Core::Internal::ResourceHandlerDX11::AddFileNameToMap(const String& a_Str, Model* a_Ent)
 {
 	m_LoadedFilenameMeshes.insert(std::make_pair(Key(a_Str), a_Ent));
 }
 
-Lux::Core::Mesh* Lux::Core::Internal::ResourceHandlerDX11::GetLoadedMesh(const String& a_FileStr)
+Lux::Core::Model* Lux::Core::Internal::ResourceHandlerDX11::GetLoadedMesh(const String& a_FileStr)
 {
 	MeshMapSimple::iterator it = m_LoadedFilenameMeshes.find(Key(a_FileStr));
 
@@ -1014,7 +1014,7 @@ bool Lux::Core::Internal::ResourceHandlerDX11::DeletePhysicsMaterial(const Strin
 	return DeleteResource(a_Name, m_PhysicsMaterialMap);
 }
 
-void Lux::Core::Internal::ResourceHandlerDX11::AssignLoadedTexturesToSubMesh(SubMesh* a_SubMesh, aiMaterial* a_Mat)
+void Lux::Core::Internal::ResourceHandlerDX11::AssignLoadedTexturesToSubMesh(Mesh* a_SubMesh, aiMaterial* a_Mat)
 {
 	for (unsigned int i = 0; i < LUX_NUM_TEXTURES_PER_MESH; i++)
 	{

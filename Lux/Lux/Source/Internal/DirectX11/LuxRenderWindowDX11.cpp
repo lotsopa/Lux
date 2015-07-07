@@ -6,7 +6,9 @@
 #include "LuxRenderWindowDX11.h"
 #include "LuxKey.h"
 #include "LuxShader.h"
-#include "LuxSubMesh.h"
+#include "LuxMesh.h"
+#include "LuxMeshDX11.h"
+#include "LuxModel.h"
 
 Lux::Core::Internal::RenderWindowDX11::~RenderWindowDX11()
 {
@@ -143,9 +145,9 @@ void Lux::Core::Internal::RenderWindowDX11::PollEvents()
 	}
 }
 
-void Lux::Core::Internal::RenderWindowDX11::Render(SubMesh* a_SubMesh)
+void Lux::Core::Internal::RenderWindowDX11::Render(Mesh* a_Mesh)
 {
-	m_DeviceContext->DrawIndexed(a_SubMesh->GetNumIndices(), 0, 0);
+	m_DeviceContext->DrawIndexed(a_Mesh->GetNumIndices(), 0, 0);
 }
 
 const bool Lux::Core::Internal::RenderWindowDX11::IsWindowResized()

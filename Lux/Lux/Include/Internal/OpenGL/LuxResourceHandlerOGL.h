@@ -6,8 +6,8 @@ namespace Lux
 	namespace Core
 	{
 		class Material;
-		class SubMesh;
 		class Mesh;
+		class Model;
 		class Key;
 		class Texture;
 		class Texture1D;
@@ -24,8 +24,8 @@ namespace Lux
 			public:
 				virtual ~ResourceHandlerOGL();
 
-				virtual ObserverPtr<Mesh> CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags);
-				virtual ObserverPtr<Mesh> CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags);
+				virtual ObserverPtr<Model> CreateMeshFromFile(const String& a_File, const String& a_EntityName, unsigned int a_PostProcessFlags);
+				virtual ObserverPtr<Model> CreateMeshFromMemory(FileInfo* a_Info, const String& a_EntityName, unsigned int a_PostProcessFlags);
 				virtual ObserverPtr<Texture2D> CreateTexture2DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
 				virtual ObserverPtr<Texture2D> CreateTexture2DFromMemory(FileInfo* a_Info, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
 				virtual ObserverPtr<Texture1D> CreateTexture1DFromFile(const String& a_File, const String& a_TexName, const String& a_SamplerName = LUX_DEFAULT_TEX_SAMPLER_NAME);
@@ -37,7 +37,7 @@ namespace Lux
 				virtual ObserverPtr<TextureSampler> CreateTextureSampler(const String& a_Name, TextureSamplerOptions& a_InitOptions);
 				virtual ObserverPtr<PhysicsMaterial> CreatePhysicsMaterial(const String& a_Name, float a_Restitution = 0.0f, float a_DynamicFriction = 0.0f, float a_StaticFriction = 0.0f);
 
-				virtual ObserverPtr<Mesh> GetMesh(const String& a_Name);
+				virtual ObserverPtr<Model> GetMesh(const String& a_Name);
 				virtual ObserverPtr<Shader> GetShader(const String& a_Name);
 				virtual ObserverPtr<Material> GetMaterial(const String& a_Name);
 				virtual ObserverPtr<Texture2D> GetTexture2D(const String& a_Name);
@@ -68,8 +68,8 @@ namespace Lux
 				typedef std::map<Key, std::unique_ptr<Texture2D>> Texture2DMap;
 				typedef std::map<Key, std::unique_ptr<Texture1D>> Texture1DMap;
 				typedef std::map<Key, std::unique_ptr<Texture3D>> Texture3DMap;
-				typedef std::map<Key, std::unique_ptr<Mesh>> MeshMap;
-				typedef std::map<Key, Mesh*> MeshMapSimple;
+				typedef std::map<Key, std::unique_ptr<Model>> MeshMap;
+				typedef std::map<Key, Model*> MeshMapSimple;
 				typedef std::map<Key, std::unique_ptr<Material>> MaterialMap;
 				typedef std::map<Key, std::unique_ptr<Shader>> ShaderMap;
 				typedef std::map<Key, std::unique_ptr<TextureSampler>> SamplerMap;
@@ -84,10 +84,10 @@ namespace Lux
 				SamplerMap m_SamplerMap;
 				PhysicsMaterialMap m_PhysicsMaterialMap;
 
-				void AddFileNameToMap(const String& a_Str, Mesh* a_Ent);
-				Mesh* GetLoadedMesh(const String& a_FileStr);
+				void AddFileNameToMap(const String& a_Str, Model* a_Ent);
+				Model* GetLoadedMesh(const String& a_FileStr);
 				void LoadAllTexturesOfTypeFromMaterial(aiMaterial* a_Mat, aiTextureType a_TexType);
-				void AssignLoadedTexturesToSubMesh(SubMesh* a_SubMesh, aiMaterial* a_MatName);
+				void AssignLoadedTexturesToSubMesh(Mesh* a_SubMesh, aiMaterial* a_MatName);
 				unsigned int LoadOGLShader(GLenum a_ShaderType, FileInfo* a_FileInfo);
 
 				template<class T>
