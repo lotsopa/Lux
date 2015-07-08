@@ -28,6 +28,7 @@ void Lux::Physics::SphereCollider::Reset()
 
 void Lux::Physics::SphereCollider::SetRadius(float a_Radius)
 {
+	LuxAssert(a_Radius > 0.0f);
 	m_Radius = a_Radius;
 	if (m_Shape)
 	{

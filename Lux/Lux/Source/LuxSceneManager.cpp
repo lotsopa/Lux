@@ -104,10 +104,15 @@ void Lux::Core::SceneManager::AddDependenciesRecursive(const Key& a_CurrCompKey,
 			continue;
 		}
 
-		m_ComponentDependencyMap.insert(std::make_pair(a_CurrCompKey, iter1->second));
-
 		AddDependenciesRecursive(a_CurrCompKey, iter1->second, a_Depth++);
 
+		// Make sure we don't add the same dependency twice
+		if (ComponentDependencyExists(a_CurrCompKey, iter1->second))
+		{
+			++iter1;
+			continue;
+		}
+		m_ComponentDependencyMap.insert(std::make_pair(a_CurrCompKey, iter1->second));
 		++iter1;
 	}
 }

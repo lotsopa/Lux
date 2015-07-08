@@ -210,12 +210,16 @@ namespace Lux
 				if (ComponentDependencyExists(compKey, depKey))
 					return;
 
+				// Go recursive
+				AddDependenciesRecursive(compKey, depKey, 0);
+
+				// Make sure we don't add the same dependency twice
+				if (ComponentDependencyExists(compKey, depKey))
+					return;
+
 				// Add this dependency to the map
 				m_ComponentDependencyMap.insert(std::make_pair(compKey, depKey));
 				m_CompDepCreateMap.insert(std::make_pair(depKey, std::bind(&SceneManager::AttachDependentComponent<DependencyType>, this, std::placeholders::_1)));
-
-				// Go recursive
-				AddDependenciesRecursive(compKey, depKey, 0);
 			}
 
 			void ProcessUpdate(const float a_Dt);

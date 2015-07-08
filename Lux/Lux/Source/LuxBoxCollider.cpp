@@ -32,6 +32,7 @@ const Lux::vec3 Lux::Physics::BoxCollider::GetHalfExtents() const
 
 void Lux::Physics::BoxCollider::SetHalfExtents(const vec3& a_HlfExtents)
 {
+	LuxAssert(a_HlfExtents != vec3(0));
 	m_HalfExtents = a_HlfExtents;
 
 	if (m_Shape)

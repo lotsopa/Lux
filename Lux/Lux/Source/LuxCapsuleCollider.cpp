@@ -23,6 +23,7 @@ Lux::Physics::CapsuleCollider::~CapsuleCollider()
 
 void Lux::Physics::CapsuleCollider::SetRadius(float a_Radius)
 {
+	LuxAssert(a_Radius > 0.0f);
 	m_Radius = a_Radius;
 	if (m_Shape)
 	{
@@ -32,6 +33,7 @@ void Lux::Physics::CapsuleCollider::SetRadius(float a_Radius)
 
 void Lux::Physics::CapsuleCollider::SetHalfHeight(float a_HalfHeight)
 {
+	LuxAssert(a_HalfHeight > 0.0f);
 	m_HalfHeight = a_HalfHeight;
 	if (m_Shape)
 	{
