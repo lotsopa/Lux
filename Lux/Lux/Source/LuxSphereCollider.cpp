@@ -8,7 +8,6 @@ Lux::Physics::SphereCollider::SphereCollider() : Collider(), m_Radius(1.0f)
 
 Lux::Physics::SphereCollider::SphereCollider(const SphereCollider& a_Other)
 {
-	m_Index = a_Other.m_Index;
 	m_Radius = a_Other.m_Radius;
 	m_Shape = a_Other.m_Shape;
 	m_IsTrigger = a_Other.m_IsTrigger;

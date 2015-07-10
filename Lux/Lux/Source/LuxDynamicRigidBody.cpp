@@ -9,7 +9,6 @@ Lux::Physics::DynamicRigidBody::DynamicRigidBody() : RigidBody(), m_IsKinematic(
 Lux::Physics::DynamicRigidBody::DynamicRigidBody(const DynamicRigidBody& a_Other)
 {
 	m_Properties = a_Other.m_Properties;
-	m_Index = a_Other.m_Index;
 	m_Material.reset(a_Other.m_Material.get());
 	m_Type = a_Other.m_Type;
 	m_IsKinematic = a_Other.m_IsKinematic;

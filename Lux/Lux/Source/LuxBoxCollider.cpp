@@ -10,7 +10,6 @@ Lux::Physics::BoxCollider::BoxCollider(const BoxCollider& a_Other)
 {
 	m_HalfExtents = a_Other.m_HalfExtents;
 	m_Shape = a_Other.m_Shape;
-	m_Index = a_Other.m_Index;
 	m_IsTrigger = a_Other.m_IsTrigger;
 }
 

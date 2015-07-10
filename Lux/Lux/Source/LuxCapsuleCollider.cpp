@@ -11,7 +11,6 @@ Lux::Physics::CapsuleCollider::CapsuleCollider(const CapsuleCollider& a_Other)
 	m_HalfHeight = a_Other.m_HalfHeight;
 	m_Radius = a_Other.m_Radius;
 	m_IsTrigger = a_Other.m_IsTrigger;
-	m_Index = a_Other.m_Index;
 	m_Shape = a_Other.m_Shape;
 	m_Orientation = a_Other.m_Orientation;
 }

@@ -13,7 +13,7 @@ namespace Lux
 		The current implementation needs to know what kind of objects it will hold.
 		The memory pool also helps tremendously with reducing memory fragmentation.
 		It makes sure the memory allocated is sequential so it can provide better cache coherency.
-		The only prerequisite for the class which you plan to use the memory pool with is to have a an Index field.
+		The memory pool class can be used with ANY class type.
 		*/
 
 		template<class ObjectType>
@@ -61,6 +61,15 @@ namespace Lux
 		class ObjectPool
 		{
 		public:
+
+			struct ObjectEntry
+			{
+				ObjectEntry() : m_Next(nullptr), m_Index(0) { };
+				~ObjectEntry() {};
+				unsigned int m_Index;
+				ObjectEntry* m_Next;
+				ObjectType m_Object;
+			};
 			ObjectPool(const unsigned int a_InitialSize, const unsigned int a_GrowSize) :
 				m_MaxObjects(a_InitialSize), m_GrowSize(a_GrowSize)
 			{
@@ -86,14 +95,17 @@ namespace Lux
 			// Returns null if an object cannot be created.
 			ObjectHandle<ObjectType>& CreateObject()
 			{
-				if (m_AvailableObjects.empty())
+				if (m_FirstAvailable->m_Next == nullptr)
 				{
+					// We reached the end, need to grow the pool
 					Grow();
 				}
 
-				unsigned int idx = m_AvailableObjects.front();
-				m_AvailableObjects.pop();
-				m_ObjectHandleMap[idx].m_RawPtr = &m_ObjectMemory[idx];
+				// Remove it from the available list.
+				ObjectEntry* newObject = m_FirstAvailable;
+				m_FirstAvailable = newObject->m_Next;
+				unsigned int idx = newObject->m_Index;
+				m_ObjectHandleMap[idx].m_RawPtr = &newObject->m_Object;
 				return m_ObjectHandleMap[idx];
 			}
 
@@ -102,7 +114,12 @@ namespace Lux
 			//The passed pointer is set to null regardless.
 			bool  DeleteObject(ObjectHandle<ObjectType>& a_Obj)
 			{
-				m_AvailableObjects.push(a_Obj.m_Index);
+				// Add this object to the front of the list.
+				unsigned int idx = a_Obj.m_Index;
+				m_ObjectMemory[idx].m_Next = m_FirstAvailable;
+				m_FirstAvailable = &m_ObjectMemory[idx];
+
+				// Invalidate handle
 				a_Obj.m_RawPtr = nullptr;
 				return true;
 			}
@@ -111,58 +128,47 @@ namespace Lux
 
 			unsigned int m_MaxObjects;
 			unsigned int m_GrowSize;
-			std::vector<ObjectType> m_ObjectMemory;
-			std::queue<unsigned int> m_AvailableObjects;
-			std::map<unsigned int, ObjectHandle<ObjectType>> m_ObjectHandleMap;
+			ObjectEntry* m_ObjectMemory;
+			ObjectEntry* m_FirstAvailable;
+			std::unordered_map<unsigned int, ObjectHandle<ObjectType>> m_ObjectHandleMap;
 
 			void Grow()
 			{
-				unsigned int newVal = m_MaxObjects + m_GrowSize;
-
-				m_ObjectMemory.reserve(newVal);
-				for (unsigned int i = m_MaxObjects; i < newVal; i++)
-				{
-					m_ObjectMemory.push_back(ObjectType());
-					m_ObjectMemory[i].m_Index = i;
-					m_AvailableObjects.push(i);
-				}
-				m_MaxObjects = newVal;
-
-				for (unsigned int i = 0; i < m_MaxObjects; i++)
-				{
-					m_ObjectHandleMap[i].m_RawPtr = &m_ObjectMemory[i];
-					m_ObjectHandleMap[i].m_Index = i;
-				}
+				Reallocate(m_MaxObjects + m_GrowSize);
 			}
 
 			void FreeObjects()
 			{
-				/*for (unsigned int i = 0; i < m_MaxObjects; i++)
-				{
-					Utility::SafePtrDelete(m_ObjectMemory[i]);
-				}*/
-				std::queue<unsigned int> empty;
-				m_AvailableObjects.swap(empty);
-				std::vector<ObjectType> emptyVec;
-				m_ObjectMemory.swap(emptyVec);
-
-				for (unsigned int i = 0; i < m_MaxObjects; i++)
-				{
-					m_ObjectHandleMap[i].m_RawPtr = nullptr;
-				}
+				Utility::SafeArrayDelete(m_ObjectMemory);
+				m_ObjectHandleMap.clear();
 			}
 
 			void AllocateObjects()
 			{
-				m_ObjectMemory.reserve(m_MaxObjects);
-				for (unsigned int i = 0; i < m_MaxObjects; i++)
+				// Allocate
+				m_ObjectMemory = new ObjectEntry[m_MaxObjects];
+
+				// Set first available
+				m_FirstAvailable = &m_ObjectMemory[0];
+
+				// Set the rest
+				for (unsigned int i = 0; i < m_MaxObjects-1; i++)
 				{
-					m_ObjectMemory.push_back(ObjectType());
 					m_ObjectMemory[i].m_Index = i;
-					m_AvailableObjects.push(i);
-					m_ObjectHandleMap[i].m_RawPtr = &m_ObjectMemory[i];
+					m_ObjectMemory[i].m_Next = &m_ObjectMemory[i + 1];
+
+					// Init the handle map
+					m_ObjectHandleMap[i].m_RawPtr = &m_ObjectMemory[i].m_Object;
 					m_ObjectHandleMap[i].m_Index = i;
 				}
+
+				// Set last element's next pointer to null
+				m_ObjectMemory[m_MaxObjects - 1].m_Index = m_MaxObjects - 1;
+				m_ObjectMemory[m_MaxObjects - 1].m_Next = nullptr;
+
+				// Handle map
+				m_ObjectHandleMap[m_MaxObjects - 1].m_RawPtr = &m_ObjectMemory[m_MaxObjects - 1].m_Object;
+				m_ObjectHandleMap[m_MaxObjects - 1].m_Index = m_MaxObjects - 1;
 			}
 		};
 	}
