@@ -95,7 +95,7 @@ namespace Lux
 			// Returns null if an object cannot be created.
 			ObjectHandle<ObjectType>& CreateObject()
 			{
-				if (m_FirstAvailable->m_Next == nullptr)
+				if (m_FirstAvailable == nullptr)
 				{
 					// We reached the end, need to grow the pool
 					Grow();
