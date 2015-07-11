@@ -23,7 +23,7 @@ Lux::Core::ObjectHandle<Lux::Core::Entity>& Lux::Core::EntityFactory::CreateEnti
 	{
 		Utility::ThrowError("Fatal error. Could not create Entity.");
 	}
-	ent.GetRawPtr()->Reset();
+
 	return ent;
 }
 
