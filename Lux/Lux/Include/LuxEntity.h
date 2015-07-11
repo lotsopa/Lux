@@ -18,7 +18,6 @@ namespace Lux
 
 		private:
 			Entity();
-			unsigned int m_Index;
 			void Reset();
 			template <class T>
 			friend class ObjectPool;
