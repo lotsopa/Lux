@@ -140,7 +140,11 @@ namespace Lux
 			void FreeObjects()
 			{
 				Utility::SafeArrayDelete(m_ObjectMemory);
-				m_ObjectHandleMap.clear();
+				
+				for (unsigned int i = 0; i < m_MaxObjects; i++)
+				{
+					m_ObjectHandleMap[i].m_RawPtr = nullptr;
+				}
 			}
 
 			void AllocateObjects()
