@@ -13,6 +13,7 @@ Include this to enable all Lux functionality in your Application.
 #include "LuxModel.h"
 #include "LuxMesh.h"
 #include "LuxApplication.h"
+#include "LuxMessageManager.h"
 #include "LuxRenderWindow.h"
 #include "LuxEventListener.h"
 #include "LuxTimer.h"

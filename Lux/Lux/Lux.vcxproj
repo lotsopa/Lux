@@ -59,6 +59,7 @@
     <ClInclude Include="Include\LuxMaterial.h" />
     <ClInclude Include="Include\LuxMaterialShaderResource.h" />
     <ClInclude Include="Include\LuxMeshPostProcess.h" />
+    <ClInclude Include="Include\LuxMessageManager.h" />
     <ClInclude Include="Include\LuxObjectPool.h" />
     <ClInclude Include="Include\LuxObserverPtr.h" />
     <ClInclude Include="Include\LuxPhysicsSystem.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Source\LuxMaterial.cpp" />
     <ClCompile Include="Source\LuxMaterialShaderResource.cpp" />
     <ClCompile Include="Source\LuxMeshRenderer.cpp" />
+    <ClCompile Include="Source\LuxMessageManager.cpp" />
     <ClCompile Include="Source\LuxPhysicsMaterial.cpp" />
     <ClCompile Include="Source\LuxPhysicsSystem.cpp" />
     <ClCompile Include="Source\LuxPlatform.cpp" />
