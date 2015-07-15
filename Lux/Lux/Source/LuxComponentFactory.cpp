@@ -1,11 +1,11 @@
 #include "LuxPCH.h"
 #include "LuxKey.h"
+#include "LuxMessageManager.h"
 #include "LuxModel.h"
-#include "LuxTransform.h"
 #include "LuxObjectPool.h"
 #include "LuxComponentFactory.h"
 
-Lux::Core::ComponentFactory::ComponentFactory()
+Lux::Core::ComponentFactory::ComponentFactory(MessageManager* a_Manager) : m_MsgManager(a_Manager)
 {
 
 }

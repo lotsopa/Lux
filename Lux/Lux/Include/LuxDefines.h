@@ -52,6 +52,17 @@ namespace Lux
 		GEOMETRY_PROGRAM,
 		NUM_SHADER_PROGRAMS
 	};
+
+	/*
+	Message IDs for the MessageManager.
+	User defined messages should start from MSG_USER + 1.
+	*/
+	enum MessageID
+	{
+		MSG_MESH_SET = 0,
+		MSG_PHYS_MAT_SET,
+		MSG_USER
+	};
 }
 
 #endif

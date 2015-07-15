@@ -11,12 +11,12 @@ namespace Lux
 	namespace Core
 	{
 		class Component;
-		class Transfrom;
+		class MessageManager;
 
 		class ComponentFactory
 		{
 		public:
-			ComponentFactory();
+			ComponentFactory(MessageManager* a_MsgManager);
 			~ComponentFactory();
 
 			/*
@@ -27,6 +27,7 @@ namespace Lux
 			{
 				ObjectPool<T>* thisPool = (ObjectPool<T>*)m_ComponentPoolMap.at(Key(typeid(T).name()));
 				ObjectHandle<T>& objPtr = thisPool->CreateObject();
+				objPtr.GetRawPtr()->m_MessageManager = m_MsgManager; // We are guaranteed to have this member
 				return objPtr;
 			}
 
@@ -98,6 +99,7 @@ namespace Lux
 			typedef std::map<Key, void*> ComponentPoolMap;
 			ComponentPoolMap m_ComponentPoolMap;
 			ComponentDelFuncMap m_ComponentDeleteMap;
+			MessageManager* m_MsgManager;
 		};
 	}
 }

@@ -24,10 +24,7 @@ namespace Lux
 
 			inline const RigidBodyType GetType() { return m_Type; }
 
-			inline void SetPhysicsMaterial(Core::ObserverPtr<Core::PhysicsMaterial>& a_Material)
-			{
-				m_Material.reset(a_Material.get());
-			}
+			void SetPhysicsMaterial(Core::ObserverPtr<Core::PhysicsMaterial>& a_Material);
 
 			inline Core::ObserverPtr<Core::PhysicsMaterial>& GetPhysicsMaterial()
 			{

@@ -19,7 +19,7 @@ namespace Lux
 			MeshRenderer(const MeshRenderer& a_Other);
 			~MeshRenderer();
 
-			inline void SetMesh(Core::ObserverPtr<Core::Mesh>& a_Mesh) { m_Mesh.reset(a_Mesh.get()); }
+			void SetMesh(Core::ObserverPtr<Core::Mesh>& a_Mesh);
 			inline Core::ObserverPtr<Core::Mesh>& GetMesh() { return m_Mesh; }
 		protected:
 			Core::ObserverPtr<Core::Mesh> m_Mesh;

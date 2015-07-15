@@ -11,6 +11,7 @@ namespace Lux
 		class Entity;
 		class System;
 		class RenderWindow;
+		class MessageManager;
 		struct ComponentLayout;
 
 		class SceneManager
@@ -225,7 +226,7 @@ namespace Lux
 			void ProcessUpdate(const float a_Dt);
 
 			inline RenderWindow* GetRenderWindow() { return m_RenderWindow; }
-
+			inline MessageManager* GetMsgManager() { return m_MsgManager; }
 		private:
 
 			void AddDependenciesRecursive(const Key& a_CurrCompKey, const Key& a_CheckKey, unsigned int a_Depth);
@@ -307,6 +308,7 @@ namespace Lux
 			SystemsMap m_SystemsMap;
 			ComponentSystemMultiMap m_ComponentSystemMap;
 			RenderWindow* m_RenderWindow;
+			MessageManager* m_MsgManager;
 			friend class Behaviour;
 			friend class BehaviourSystem;
 			friend struct ComponentLayout;

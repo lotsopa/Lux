@@ -1,4 +1,5 @@
 #include "LuxPCH.h"
+#include "LuxMessageManager.h"
 #include "LuxComponent.h"
 #include "LuxEntity.h"
 #include "LuxTransform.h"
@@ -88,9 +89,6 @@ Lux::Physics::PhysicsSystem::~PhysicsSystem()
 
 void Lux::Physics::PhysicsSystem::ProcessUpdate(const float a_DeltaTime)
 {
-	// Process and update components if necessary
-	ProcessComponents();
-
 	if (m_StepTimer.ElapsedSeconds(m_StepTimeSec))
 	{
 		m_Scene->simulate(m_StepTimeSec);
@@ -109,6 +107,17 @@ void Lux::Physics::PhysicsSystem::ProcessUpdate(const float a_DeltaTime)
 bool Lux::Physics::PhysicsSystem::Init(Core::SceneManager* a_SceneManager)
 {
 	Core::System::Init(a_SceneManager);
+	Core::MessageManager* msgManager = m_SceneManager->GetMsgManager();
+	Core::MessageCallback msgCallback;
+	msgCallback.Init<PhysicsSystem>(std::bind(&Lux::Physics::PhysicsSystem::MeshSet, this, std::placeholders::_1));
+
+	bool callbackRegisterResult = msgManager->RegisterMsgCallback(MSG_MESH_SET, msgCallback);
+	LuxAssert(callbackRegisterResult);
+
+	msgCallback.Init<PhysicsSystem>(std::bind(&Lux::Physics::PhysicsSystem::PhysMatSet, this, std::placeholders::_1));
+	callbackRegisterResult = msgManager->RegisterMsgCallback(MSG_PHYS_MAT_SET, msgCallback);
+	LuxAssert(callbackRegisterResult);
+
 	return true;
 }
 
@@ -180,33 +189,22 @@ void Lux::Physics::PhysicsSystem::UpdateObjectPositions()
 	}
 }
 
-void Lux::Physics::PhysicsSystem::ProcessComponents()
+void Lux::Physics::PhysicsSystem::MeshSet(void* a_Ptr)
 {
-	EntityMap::iterator it;
+	// TODO
+}
 
-	for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
+void Lux::Physics::PhysicsSystem::PhysMatSet(void* a_Ptr)
+{
+	Core::PhysicsMaterial* mat = (Core::PhysicsMaterial*)a_Ptr;
+	if (mat != nullptr)
 	{
-		if (it->second.IsNull())
-			continue;
-
-		if (it->second.m_RigidBody)
+		if (!mat->m_Properties)
 		{
-			if (it->second.m_RigidBody->IsValid())
-			{
-				RigidBody* rigidBody = it->second.m_RigidBody->GetRawPtr();
-				// Check if we need to create a material
-				if (rigidBody->m_Material)
-				{
-					Core::PhysicsMaterial* mat = rigidBody->m_Material.get();
-					if (!mat->m_Properties)
-					{
-						mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
+			mat->m_Properties = m_Physics->createMaterial(mat->m_StaticFriction, mat->m_DynamicFriction, mat->m_Restitution);
 
-						if (!mat->m_Properties)
-							Utility::ThrowError("Failed to create Physics Material.");
-					}
-				}
-			}
+			if (!mat->m_Properties)
+				Utility::ThrowError("Failed to create Physics Material.");
 		}
 	}
 }

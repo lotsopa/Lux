@@ -37,6 +37,9 @@ namespace Lux
 			virtual void AddComponent(void* a_Component, const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity);
 			virtual void RemoveComponent(const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity);
 
+			void MeshSet(void* a_Ptr);
+			void PhysMatSet(void* a_Ptr);
+
 		private:
 			physx::PxFoundation* m_Foundation;
 			physx::PxDefaultErrorCallback m_ErrorCallback;
@@ -108,7 +111,6 @@ namespace Lux
 
 			bool EntityEntryExists(Core::ObjectHandle<Core::Entity>& a_Entity);
 			void UpdateObjectPositions();
-			void ProcessComponents();
 
 			// Add Components
 			template<class ComponentType>

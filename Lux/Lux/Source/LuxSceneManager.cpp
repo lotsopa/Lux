@@ -1,5 +1,6 @@
 #include "LuxPCH.h"
 #include "LuxKeyCodes.h"
+#include "LuxMessageManager.h"
 #include "LuxObjectPool.h"
 #include "LuxEntity.h"
 #include "LuxComponent.h"
@@ -26,7 +27,8 @@ Lux::Core::SceneManager::SceneManager(RenderWindow* a_RenderWindow) :
 m_NumComponentTypes(0),
 m_RenderWindow(a_RenderWindow)
 {
-	m_ComponentFactory = new ComponentFactory();
+	m_MsgManager = new MessageManager();
+	m_ComponentFactory = new ComponentFactory(m_MsgManager);
 	m_EntityFactory = new EntityFactory(LUX_ENTITY_MEMORY_POOL_INITIAL_SIZE, LUX_ENTITY_MEMORY_POOL_GROW_AMOUNT);
 	m_SystemFactory = new SystemFactory();
 }
@@ -41,6 +43,7 @@ Lux::Core::SceneManager::~SceneManager()
 	Utility::SafePtrDelete(m_ComponentFactory);
 	Utility::SafePtrDelete(m_EntityFactory);
 	Utility::SafePtrDelete(m_SystemFactory);
+	Utility::SafePtrDelete(m_MsgManager);
 
 	SystemsMap::iterator sysIt;
 

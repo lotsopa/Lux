@@ -9,6 +9,7 @@ namespace Lux
 		class SceneManager;
 		class Platform;
 		class ResourceHandler;
+		class MessageManager;
 	}
 
 	class Application

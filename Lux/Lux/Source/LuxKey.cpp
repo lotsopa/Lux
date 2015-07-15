@@ -38,3 +38,8 @@ const size_t Lux::Core::Key::GetHashedValue() const
 {
 	return m_HashedValue;
 }
+
+const bool Lux::Core::Key::IsEmpty() const
+{
+	return m_Name.empty();
+}

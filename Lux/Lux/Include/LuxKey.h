@@ -16,6 +16,7 @@ namespace Lux
 			const std::string& GetName() const;
 			void SetName(const String& a_Name);
 			const size_t GetHashedValue() const;
+			const bool IsEmpty() const;
 
 			bool operator<(const Key& key1) const { return m_HashedValue < key1.m_HashedValue; }
 

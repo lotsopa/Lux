@@ -22,3 +22,9 @@ void Lux::Physics::RigidBody::Reset()
 	m_Type = RIGID_BODY_STATIC;
 }
 
+void Lux::Physics::RigidBody::SetPhysicsMaterial(Core::ObserverPtr<Core::PhysicsMaterial>& a_Material)
+{
+	m_Material.reset(a_Material.get());
+	m_MessageManager->BroadcastMessage(MSG_PHYS_MAT_SET, a_Material.get());
+}
+
