@@ -1,6 +1,9 @@
 #ifndef LUX_COMPONENT_H
 #define LUX_COMPONENT_H
 #include "LuxMessageManager.h"
+#include "LuxObjectPool.h"
+#include "LuxEntity.h"
+
 namespace Lux
 {
 	namespace Core
@@ -21,7 +24,9 @@ namespace Lux
 			template <class T>
 			friend class ObjectPool;
 			friend class ComponentFactory;
+			friend class SceneManager;
 			MessageManager* m_MessageManager;
+			ObjectHandle<Entity>* m_Owner;
 		};
 	}
 }

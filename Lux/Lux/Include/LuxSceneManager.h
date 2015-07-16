@@ -92,6 +92,7 @@ namespace Lux
 				}
 
 				ObjectHandle<ComponentType>& comp = m_ComponentFactory->CreateComponent<ComponentType>();
+				comp.GetRawPtr()->m_Owner = &a_Ent;
 				ComponentLayout& layout = m_EntityComponentMap.at(&a_Ent);
 				unsigned int idx = m_ComponentIndexMap.at(compKey);
 				layout.m_Components[idx].m_Data = &comp;
