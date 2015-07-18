@@ -61,6 +61,7 @@ namespace Lux
 	{
 		MSG_MESH_SET = 0,
 		MSG_PHYS_MAT_SET,
+		MSG_MAIN_CAMERA_SET,
 		MSG_USER
 	};
 }

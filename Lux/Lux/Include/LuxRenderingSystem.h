@@ -33,6 +33,8 @@ namespace Lux
 			virtual bool Init(Core::SceneManager* a_SceneManager);
 			virtual void AddComponent(void* a_Component, const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity);
 			virtual void RemoveComponent(const Core::Key& a_CompType, Core::ObjectHandle<Core::Entity>& a_Entity);
+
+			void MainCameraSet(void* a_Ptr);
 		private:
 			Core::RenderWindow* m_RenderWindow;
 
@@ -138,11 +140,6 @@ namespace Lux
 			template<> void AddComponentInternal<Camera>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
 				m_EntityMap[&a_Owner].m_Camera = (Core::ObjectHandle<Camera>*)(a_CompPtr);
-
-				if (m_EntityMap[&a_Owner].m_Camera->GetRawPtr()->IsMainCamera())
-				{
-					m_MainCamera = m_EntityMap[&a_Owner].m_Camera;
-				}
 			}
 
 			template<> void AddComponentInternal<Light>(void* a_CompPtr, Core::ObjectHandle<Core::Entity>& a_Owner)
@@ -170,9 +167,6 @@ namespace Lux
 
 			template<> void RemoveComponentInternal<Camera>(Core::ObjectHandle<Core::Entity>& a_Owner)
 			{
-				if (m_EntityMap[&a_Owner].m_Camera->GetRawPtr()->IsMainCamera())
-					m_MainCamera = nullptr;
-
 				m_EntityMap[&a_Owner].m_Camera = nullptr;
 			}
 

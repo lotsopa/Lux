@@ -52,7 +52,7 @@ bool TestApp::LoadContent()
 	Lux::Core::ObjectHandle<Lux::Core::Transform>& cameraTransform = m_SceneManager->AttachNewComponent<Lux::Core::Transform>(cameraObj);
 	Lux::Core::ObjectHandle<Lux::Graphics::Camera>& mainCam = m_SceneManager->AttachNewComponent<Lux::Graphics::Camera>(cameraObj);
 	mainCam.GetRawPtr()->SetProjectionPersp(60.0f, 800.0f / 600.0f, 0.1f, 1000.0f);
-	mainCam.GetRawPtr()->SetMainCamera(true);
+	mainCam.GetRawPtr()->SetAsMainCamera();
 	cameraTransform.GetRawPtr()->SetPosition(Lux::vec3(0, 0, 10));
 
 	// Add behaviour to the camera

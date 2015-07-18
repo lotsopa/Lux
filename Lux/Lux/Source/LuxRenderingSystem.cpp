@@ -66,6 +66,11 @@ bool Lux::Graphics::RenderingSystem::Init(Core::SceneManager* a_SceneManager)
 {
 	Core::System::Init(a_SceneManager);
 	m_RenderWindow = m_SceneManager->GetRenderWindow();
+	Core::MessageManager* msgManager = m_SceneManager->GetMsgManager();
+	Core::MessageCallback msgCallback;
+	msgCallback.Init<RenderingSystem>(std::bind(&Lux::Graphics::RenderingSystem::MainCameraSet, this, std::placeholders::_1));
+	bool callbackRegisterResult = msgManager->RegisterMsgCallback(MSG_MAIN_CAMERA_SET, msgCallback);
+	LuxAssert(callbackRegisterResult);
 	return true;
 }
 
@@ -105,34 +110,8 @@ bool Lux::Graphics::RenderingSystem::EntityEntryExists(Core::ObjectHandle<Core::
 
 void Lux::Graphics::RenderingSystem::RenderPass()
 {
-	if (!m_LightEntry)
+	if (!m_LightEntry || !m_MainCamera || !m_MainCameraTransform)
 		return;
-
-	EntityMap::iterator it;
-	if (!m_MainCamera)
-	{
-		bool end = true;
-		for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
-		{
-			if (it->second.m_Camera)
-			{
-				if (it->second.m_Camera->GetRawPtr()->IsMainCamera())
-				{
-					if (it->second.m_Transform)
-					{
-						m_MainCamera = it->second.m_Camera;
-						m_MainCameraTransform = it->second.m_Transform;
-						m_EntityMap.erase(it);
-						end = false;
-						break;
-					}
-				}
-			}
-		}
-
-		if (end)
-			return;
-	}
 
 	// Resize Window if needed
 	if (m_RenderWindow->IsWindowResized())
@@ -142,7 +121,7 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 	}
 	
 	m_MainCameraTransform->GetRawPtr()->ApplyTransform();
-
+	EntityMap::iterator it;
 	for (it = m_EntityMap.begin(); it != m_EntityMap.end(); ++it)
 	{
 		if (!it->second.m_Transform)
@@ -226,4 +205,12 @@ void Lux::Graphics::RenderingSystem::RenderPass()
 		texSampler->Deactivate();
 		shader->Deactivate();
 	}
+}
+
+void Lux::Graphics::RenderingSystem::MainCameraSet(void* a_Ptr)
+{
+	Core::ObjectHandle<Core::Entity>* entity = (Core::ObjectHandle<Core::Entity>*)a_Ptr;
+
+	m_MainCamera = &m_SceneManager->GetComponent<Camera>(*entity);
+	m_MainCameraTransform = &m_SceneManager->GetComponent<Core::Transform>(*entity);
 }

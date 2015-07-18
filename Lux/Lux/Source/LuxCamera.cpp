@@ -34,7 +34,6 @@ void Lux::Graphics::Camera::SetProjectionOrtho(const float a_Right, const float 
 void Lux::Graphics::Camera::Reset()
 {
 	m_ProjectionMatrix = mat4x4(1.0f);
-	m_IsMainCamera = false;
 	m_ZFar = 1000.0f;
 	m_ZNear = 0.1f;
 	m_Aspect = 16.0f / 9.0f;
@@ -49,4 +48,9 @@ void Lux::Graphics::Camera::ChangeAspect(const float a_Aspect)
 {
 	m_Aspect = a_Aspect;
 	m_ProjectionMatrix = perspective(radians(m_FovY), m_Aspect, m_ZNear, m_ZFar);
+}
+
+void Lux::Graphics::Camera::SetAsMainCamera()
+{
+	m_MessageManager->BroadcastMessage(MSG_MAIN_CAMERA_SET, m_Owner);
 }
