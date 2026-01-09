@@ -4,7 +4,7 @@ Lux is a personal side project I started working on in the summer of 2014. It st
 
 It uses memory pools in order to maximize cache coherency, a handle based resouce management to ensure no memory leaks are introduced, as well as a clean and easy to extend API. It comes with some built-in component types, however the user can easily add their own, thanks to the latest C++11 features and functional programming principles.
 
-Switching renderers is as easy as changing an enumerator in the application initialization parameters, no strings attached. The sample application shows both the DirectX 11 and OpenGL 4.5 renderer. Lux is still in active development and more exciting features are planned.
+Switching renderers is as easy as changing an enumerator in the application initialization parameters, no strings attached. The sample application shows both the DirectX 11 and OpenGL 4.5 renderer.
 
 ### Features ###
 
@@ -16,9 +16,3 @@ Switching renderers is as easy as changing an enumerator in the application init
 * Behaviour System
 * Memory Pools to optimize cache coherency
 * Handle based resource management to reduce the likeliness of memory leaks.
-
-### Contact ###
-
-* Email: apostol_dadachev@yahoo.com
-* Twitter: @ApostolDadachev
-* Facebook: Apostol Dadachev
